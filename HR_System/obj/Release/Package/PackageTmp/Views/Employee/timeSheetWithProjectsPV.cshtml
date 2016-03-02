@@ -1,0 +1,214 @@
+﻿@model IEnumerable<DAO.TimeSheetMaster>
+@using DAL;
+@using DAO;
+<script src="@Url.Content("~")js/dataTables.dateFormat.js"></script>
+<script src="@Url.Content("~")js/jquery.dataTables.columnFilter.js"></script>
+<script>
+    $(".mws-datatable-fn").dataTable({
+        sPaginationType: "full_numbers",
+        "aaSorting": [[0, 'desc']],
+        "aoColumns": [
+            { "sType": "numeric" },
+          null,
+          null,
+          { "sType": "date-uk" },
+           { "sType": "date-uk" },
+          null,
+          null,
+          null,
+          null
+        ]
+    });
+</script>
+@{
+    int i = 1;
+    int sum = 0;
+    Guid? EmployeeId = ViewBag.EmployeeId as Guid?;
+    string returnUrl = ViewBag.returnUrl != null ? ViewBag.returnUrl.ToString() : "";
+    if (string.IsNullOrEmpty(returnUrl))
+    {
+        returnUrl = Url.Content("~/Employee/ManageStaff");
+    }
+}
+
+
+
+<div class="mws-panel grid_8" style="text-align: right; box-shadow: none;">
+</div>
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        <span style="width: 400px; display: inline-block;"><i class="icon-table"></i>Employees Projects
+                     @if (EmployeeId.HasValue)
+                     {
+                         @:for @HR_System.Models.MVCUtility.getEmployeeName(EmployeeId)
+            }
+        </span>
+
+
+        <div class="toolbar">
+            @if (EmployeeId.HasValue)
+            {
+                <a style="margin-right:10px;" href="@returnUrl" >Back</a> 
+            }
+            <a href="javascript:"><i class="icon-refresh" onclick="hr.loadTimesheetForProjects('@returnUrl');"></i></a>
+
+
+        </div>
+    </div>
+    <div class="mws-panel-body no-padding">
+        <table class="mws-datatable-fn hide-c mws-table">
+            <thead>
+
+                <tr role="row">
+                    <th>SNo.</th>
+                    <th>Name</th>
+                    <th>Project</th>
+                    @*<th class="sorting_desc" role="columnheader" tabindex="0" aria-controls="demo-dtable-01" rowspan="1" colspan="1" style="width: 148px;" aria-sort="descending" aria-label="Death rate per 1,000 people: activate to sort column ascending">License key</th>*@
+                    <th>Month</th>
+                    <th>Year</th>
+                    <th>Total Hour</th>
+                    <th>Percentage</th>
+
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody role="alert" aria-live="polite" aria-relevant="all">
+
+
+                @foreach (var item in Model)
+                {
+
+                    {
+
+                        dbHRSystemEntities db = new dbHRSystemEntities();
+
+
+                        clsEmployeeTimeSheet timesheet = new clsEmployeeTimeSheet();
+                        List<Project> lstEmpProject = new List<Project>();
+                        List<EmployeeProject> lstProjects = timesheet.listProjects(item.EmpID);
+
+                        foreach (EmployeeProject emp_project in lstProjects)
+                        {
+                            Project project = timesheet.GetEmployeeProject(emp_project.ProjectID);
+
+                            lstEmpProject.Add(project);
+                        }
+
+
+
+                        foreach (Project p in lstEmpProject)
+                        {
+                          
+                            
+                    <tr>
+
+                        <td>@i </td>
+
+                        <td>
+                            @if (item.Employee.FirstNameAr != null)
+                            {
+                                @Html.DisplayFor(modelItem => item.Employee.FirstNameAr)
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(modelItem => item.Employee.FirstNameEn)
+                            }
+
+                        </td>
+                        <td>
+                            @{
+                            bool result = false;
+                            List<TimeSheet> listTimes = db.TimeSheets.Where(a => a.TimeSheetMasterID == item.TimeSheetMasterID).ToList().Where(a => a.Date.Value.ToString("yyyy") == item.Year && a.Date.Value.ToString("MMM") == item.Month && a.ProjectID == p.ProjectId).ToList();
+
+                            foreach (TimeSheet t in listTimes)
+                            {
+                                if (t.ProjectID == p.ProjectId)
+                                {
+                                    result = true;
+                                    break;
+                                }
+                                else
+                                {
+
+                                    result = false;
+                                }
+                            }
+                            }
+
+                            @p.ProjectName
+
+                        </td>
+                        <td>
+
+                            @item.Month
+
+                        </td>
+                        <td>
+
+                            @if (item.Year != null)
+                            {
+                                @Html.DisplayFor(modelItem => item.Year)
+                            }
+
+                        </td>
+                        <td>
+                            @{
+                            
+                            var listT = db.TimeSheets.Where(a => a.TimeSheetMasterID == item.TimeSheetMasterID).ToList().Where(a => a.Date.Value.ToString("yyyy") == item.Year && a.Date.Value.ToString("MMM") == item.Month && a.ProjectID == p.ProjectId).Sum(a => a.Hours);
+                    
+                    
+                            }
+                            @listT
+
+                        </td>
+                        <td>
+                            @{
+                            decimal? per;
+
+                            var data = listTimes.Count();
+
+                            if (data == 0)
+                            {
+                                per = 0;
+                            }
+                            else
+                            {
+                                data = 8 * data;
+                                per = (listT / data) * 100;
+                            }
+                            if (per.HasValue)
+                            {
+                                per = Math.Round(per.Value, 2);
+                            }
+                            }
+                            @per %
+                        </td>
+                        @* <td>
+                            @if (item.Status != null)
+                            { 
+                                @Html.ActionLink(@item.Status, "", "", new { }, new { @class = "btn btn-primary" })
+                            }
+
+                        </td>*@
+                        <td>
+                            @Html.ActionLink("View", "editTimeSheet", "Employee", new { month = @item.Month, year = @item.Year, timM_ID = @item.TimeSheetMasterID }, new { @class = "btn btn-info" })
+                        </td>
+
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.Status) && item.Status.ToLower().Trim() == "approved")
+                            {   
+                                @Html.ActionLink("Print", "printTimesheet", "Employee", new { month = @item.Month, year = @item.Year, timM_ID = @item.TimeSheetMasterID }, new { @class = "btn btn-info", onclick = "openPrintPopup(this, event)" })
+                            }
+                        </td>
+                    </tr>
+                            i++;
+                        }
+                    }
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>

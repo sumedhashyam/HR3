@@ -1,0 +1,81 @@
+﻿@model IEnumerable<HR_System.Models.EmployeeLeaveModified>
+@using DAO
+@{
+    Employee _Employee = ViewBag.Employee as Employee;
+    bool isEmployeee = ViewBag.isEmployeee != null ? Convert.ToBoolean(ViewBag.isEmployeee.ToString()) : false;
+}
+
+@{
+    ViewBag.Title = "Leave Balance";
+    Layout = "~/Views/Shared/PrintLayout.cshtml";
+}
+<img src="/images/mws-logo.png" alt="mws admin">
+@{
+    if (!isEmployeee)
+    {
+        Html.RenderPartial("EmployeeDetail", _Employee);
+    }
+}
+
+<link href="../../Content/print.css" rel="stylesheet" />
+
+<div style="text-align: center">
+    <h4>Leave Balance for the Year <span id="year">@ViewBag.year</span></h4>
+    <span id="empid" style="display:none;">@ViewBag.EmployeeID</span>
+</div>
+@*<img src="/images/mws-logo.png" alt="mws admin">*@
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        &nbsp;   
+    </div>
+    <div class="mws-panel-body no-padding">
+        <table class="mws-datatable-fn mws-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>Type</th>
+                    <th>Postp. Leave</th>
+                    <th>Prev. Balance</th>
+                    <th>Carry Over</th>
+                    <th>Total (Prev. Balance + Carry over + Postp. Leave)</th>
+                    <th>Balance</th>
+                   
+                </tr>
+            </thead>
+            <tbody>
+                @{int i = 1;}
+                @foreach (var item in Model)
+                {
+                   
+                    <tr>
+
+                        <td>@item.LeaveTypeName</td>
+                        <td>@{string pLeave = item.PostponedLeave != null ? item.PostponedLeave.ToString() : "0";}@pLeave</td>
+
+                        <td>@item.PrevLeaves</td>
+                        <td>@item.IssuedLeaves</td>
+                        <td>
+                            @if (item.TotalLeaves % 2 == 0)
+                            {
+                                @item.TotalLeaves.ToString()
+
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(modelItem => item.TotalLeaves)
+                            }
+
+                        </td>
+                        <td>@item.BalanceLeaves</td>
+                    </tr>
+                        i++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="leaveDetail">
+</div>

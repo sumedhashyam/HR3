@@ -1,0 +1,110 @@
+﻿@model IEnumerable<DAO.EmployeeProject>
+@using DAO
+@{
+    Employee _Employee = ViewBag.Employee as Employee;
+}
+
+<script>
+    collspan();
+    $("#ddlYear").val($("#year").html());
+    $(".mws-datatable-fn").dataTable({
+        sPaginationType: "full_numbers"
+    });
+</script>
+
+
+@{Html.RenderPartial("EmployeeDetail", _Employee);}
+<div style="text-align: center">
+    <h4>Project List for the Year <span id="year">@ViewBag.year</span></h4>
+    <span id="empid" style="display: none;">@ViewBag.EmployeeID</span>
+</div>
+<div class="mws-panel grid_8 mws-collapsible mws-collapsed mws-form" @*style="margin-top: 35px;"*@>
+    <div class="mws-panel-header">
+        <span style="width: 200px; display: inline-block;">Filter Result</span>
+    </div>
+    <div class="mws-panel-body no-padding" style="position: relative">
+        <div class="mws-form-inline">
+            <div class="mws-form-row">
+
+                <div class="grid_2" style="/*padding: 20px*/ margin-left: 0px;">
+                    <label @*style="display: inline-block;margin-right: 10px;"*@ class="mws-form-label">Select Year</label>
+                    <div  @*style="display: inline-block;"*@ class="mws-form-item">
+                        @Html.DropDownList("ddlYear", ViewBag.yearsList as List<SelectListItem>, new { onchange = "reports.loadAllProjectListNew()", style = "width:220px;" })
+                    </div>
+                </div>
+            </div>
+            <div style="clear: both"></div>
+        </div>
+    </div>
+</div>
+
+<div class="mws-panel grid_8"></div>
+
+<div class="mws-panel grid_8" id="data-grid">
+    <div class="mws-panel-header">
+        <span style="width: 200px; display: inline-block;"><i class="icon-table"></i>Projects</span>
+        <div class="toolbar">
+            <a style="margin-right:20px" href="@Url.Content("~/Report")">Back</a>
+            @Html.ActionLink("Print", "PrintProjectList", "Report", new { @id = @ViewBag.EmployeeID, @year = @ViewBag.year }, new { onclick = "openPrintPopup(this,event)" })
+            &nbsp;
+            <a><i class="icon-refresh" onclick="reports.loadEmployeeProjects('@_Employee.EmployeeID','@ViewBag.year');"></i></a>
+        </div>
+
+    </div>
+    <div class="mws-panel-body no-padding">
+        <table class="mws-datatable-fn mws-table">
+
+            <thead>
+                <tr role="row">
+                    <th>Project Name
+                    </th>
+                    <th>From Date
+                    </th>
+                    <th>To Date
+                    </th>
+                    <th>Is Active
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @if (item.Project != null)
+                            {
+                                @Html.DisplayFor(modelItem => item.Project.ProjectName) <span>-</span>@Html.DisplayFor(modelItem=>item.Project.ProjectNumber)
+                            }
+                        </td>
+                        <td>
+                            @if (item.FromDate.HasValue)
+                            {
+                                @item.FromDate.Value.ToString("dd-MMM-yyyy")
+                            }
+
+                        </td>
+                        <td>
+                            @if (item.ToDate.HasValue)
+                            {
+                                @item.ToDate.Value.ToString("dd-MMM-yyyy")
+                            }
+                        </td>
+                        <td>
+                            @if (item.IsActive == true)
+                            {
+                                @:Yes
+                            }
+                            else
+                            {
+                                @:No
+                            }
+
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

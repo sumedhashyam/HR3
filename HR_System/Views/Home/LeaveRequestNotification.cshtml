@@ -1,0 +1,43 @@
+﻿@model IEnumerable<DAO.EmployeeLeaveRequest>
+@{
+    List<DAO.EmployeeLeaveRequest> li = Model.Where(a => a.Status.ToLower().Trim() == "pending").ToList();
+}
+<div id="mws-user-notif" class="mws-dropdown-menu">
+    <a href="#" data-toggle="dropdown" class="mws-dropdown-trigger"><i class="icon-bell"></i></a>
+
+    <!-- Unread notification count -->
+    <span class="mws-dropdown-notif">@li.Count()</span>
+
+    <!-- Notifications dropdown -->
+    <div class="mws-dropdown-box">
+        <div class="mws-dropdown-content">
+            <ul class="mws-notifications">
+                @foreach (var item in li)
+                {
+                    <li class="read">
+                        <a href="@Url.Content("~/Leave/DetailForLeave?req_ID=" + item.EmployeeLeaveRequestID)">
+                            <span class="message">
+                                @if (item.Employee != null)
+                                {
+                                    @string.Format("{0} {1} ", item.Employee.FirstNameEn, item.Employee.LastNameEn)
+                                }
+                            </span>
+                            @if (item.HalfDay == true && item.ActualDate == 1)
+                            {
+                                <span class="time">1/2 Days Leave Request Pending</span>
+                            }
+                            else
+                            {
+                                <span class="time">@item.ActualDate Days Leave Request Pending</span>
+                            }
+                        </a>
+                    </li>
+                }
+
+            </ul>
+            <div class="mws-dropdown-viewall">
+                <a href="@Url.Content("~/Employee/detailedLeaveForSupervisor")">View All Leaves Notifications</a>
+            </div>
+        </div>
+    </div>
+</div>

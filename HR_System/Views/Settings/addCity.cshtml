@@ -1,0 +1,91 @@
+﻿@model DAO.City
+@{
+    ViewBag.Title = "addCity";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+
+    string read = "";
+    MembershipUser user = Membership.GetUser();
+    if (user == null)
+    {
+        Response.Redirect("/Account/Logon");
+    }
+    string[] role = Roles.GetRolesForUser(user.UserName);
+    foreach (var r in role)
+    {
+        if (r.ToLower() == "superadmin")
+        {
+            read = "";
+        }
+        else
+        {
+            read = "ReadOnly";
+        }
+    }
+}
+@*<h2>Add City</h2>*@
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<div class="mws-panel grid_8" style="text-align: right; box-shadow: none;">
+    @*  @Html.ActionLink("Back", "City", "Settings", null, new { @class = "btn btn-primary" })*@
+</div>
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        <div class="toolbar">
+            <a>@Html.ActionLink("Back", "City", "Settings", null, new { @style = "margin-right:19px;" })</a>
+            @* <a href="javascript:"><i class="icon-refresh" onclick=" hr.loadCity();"></i></a>*@
+            @* <a href="javascript:">Add New</a>*@
+
+        </div>
+        <span><i class="icon-ok"></i>Add City</span>
+    </div>
+    <div class="mws-panel-body no-padding">
+
+        @using (Html.BeginForm("addCity", "Settings", FormMethod.Post, new { @class = "mws-form" }))
+        {
+            @Html.ValidationSummary(true)
+
+          
+            <div id="mws-validate-error" class="mws-form-message error" style="display: none;"></div>
+            <div class="mws-form-inline">
+                <div class="mws-form-row">
+                    <label class="mws-form-label">Select Country</label>
+                    <div class="mws-form-item">
+                        @{ List<SelectListItem> locationList = (List<SelectListItem>)ViewData["countryList"];
+                        }
+                        @if(read=="")
+                        {
+                        @Html.DropDownListFor(a => a.CountryOfficeID, locationList, new { @class = "grid_3" })
+                        @Html.ValidationMessageFor(model => model.CountryOfficeID)
+                        }
+                        else
+                        {
+                          // @Html.HiddenFor(a=>a.CountryOfficeID)
+                            <input type="hidden" name="CountryOfficeID" value="@ViewBag._CountryId" />
+                            if(ViewBag._CountryName!=null)
+                            {
+                            <input type="text" value="@ViewBag._CountryName" readonly="true" class="grid_3" />
+                            }
+                        }
+
+                    </div>
+                </div>
+                <div class="mws-form-row">
+                    <label class="mws-form-label">City Name</label>
+                    <div class="mws-form-item">
+                        @Html.TextBoxFor(model => model.City1, new { @class = "required grid_3" })
+                        @Html.ValidationMessageFor(model => model.City1)
+                    </div>
+                </div>
+
+
+
+            </div>
+            <div class="mws-button-row">
+                <input type="submit" class="btn btn-info" value="Save Changes">
+                @Html.ActionLink("Cancel", "City", "Settings", null, new { @class = "btn btn-danger" })
+            </div>
+        }
+
+    </div>
+</div>

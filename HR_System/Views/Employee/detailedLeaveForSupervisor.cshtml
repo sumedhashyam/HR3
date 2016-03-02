@@ -1,0 +1,58 @@
+﻿@model DAO.EmployeeLeaveRequest
+@{
+    ViewBag.Title = "detailedLeaveForSupervisor";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+}
+@{
+    Guid? EmployeeId = ViewBag.EmployeeId as Guid?;
+    string returnUrl = ViewBag.returnUrl != null ? ViewBag.returnUrl.ToString() : "";
+}
+
+
+@*<script src="../../bootstrapNew/js/bootstrap.min.js"></script>*@
+@{
+    if (EmployeeId.HasValue)
+    {
+    <input type="hidden" id="hfEmployeeID" value="@EmployeeId" />
+    }
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        //$('.modal').modal();
+        hr.loadAllLeaveReqForSupervisor('pending','@returnUrl');
+    });
+
+    function cancelRequest(btn) {
+        if (confirm('Are you sure you want to cancel this request ?')) {
+            var notes = $(btn).closest('td').find('textarea').val();
+            var requestID = $(btn).attr('requestId');
+
+            saveNotesAndCancelRequest(requestID, notes);
+            //$('input[name=leaveRequestID]').val(requestID);
+            //$('input[name=successUrl]').val(url);
+        }
+
+    }
+
+    function saveNotesAndCancelRequest(requestID, notes) {
+        doAjax(leaveController + "cancelLeave", { req_ID: requestID, notes: notes }, function (data) {
+            if (data.success) {
+                hr.loadAllLeaveReqForSupervisor(null);
+                //window.location.href = url;
+            } else {
+                showError(data.msg);
+            }
+        });
+    }
+</script>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+@{Html.RenderPartial("Notification");}
+<div id="main-content" class="row-fluid">
+</div>
+
+
+
+<input type="hidden" value="" name="leaveRequestID" />
+<input type="hidden" value="" name="successUrl" />
+

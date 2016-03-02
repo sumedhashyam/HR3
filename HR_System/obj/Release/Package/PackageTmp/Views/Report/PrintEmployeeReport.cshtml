@@ -1,0 +1,65 @@
+﻿@model IEnumerable<DAO.Employee>
+@{
+    ViewBag.Title = "Employees Report";
+    Layout = "~/Views/Shared/PrintLayout.cshtml";
+}
+
+<link href="../../Content/print.css" rel="stylesheet" />
+<img src="/images/mws-logo.png" alt="mws admin">
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        <span style="width: 200px; display: inline-block;"><i class="icon-table"></i>Employees Report</span>        
+
+    </div>
+    <div class="mws-panel-body no-padding">
+        <table class="mws-datatable-fn mws-table">
+            <thead>
+                <tr role="row">
+                    <th>Employee Name En</th>
+                    <th>Hire Date</th>
+                    <th>Department</th>
+                    <th>Location</th>
+
+                </tr>
+            </thead>
+            @using DAO;
+            <tbody role="alert" aria-live="polite" aria-relevant="all">
+
+                @{
+                    string returnUrl = Url.Content("~/Report/Index");
+                }
+                @foreach (var item in Model)
+                {
+                       
+                    <tr>
+
+                        <td>
+                            @string.Format("{0} {1} {2} {3}", item.FirstNameEn, item.SecondNameEn, item.ThirdNameEn, item.LastNameEn)
+                        </td>
+                        <td>@if (item.HireDate != null)
+                            {
+                            @item.HireDate.Value.ToShortDateString()
+                            }
+                        </td>
+                        <td>@if (item.DepartmentID != null)
+                            {
+                            @item.Department.DepartmentNameEn
+                            }
+                        </td>
+                        <td>
+                            @if (item.OfficeLocationID != null)
+                            {
+                                @item.EmployeeLocation.LocationName
+                            }
+                        </td>
+
+                    </tr>
+                }
+
+
+            </tbody>
+        </table>
+    </div>
+
+</div>
+

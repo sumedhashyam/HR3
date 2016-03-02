@@ -1,0 +1,99 @@
+﻿@model IEnumerable<HR_System.Models.ReportTimeSheet>
+@{
+    ViewBag.Title = "TIMESHEET DETAIL REPORT";
+    Layout = "~/Views/Shared/PrintLayout.cshtml";
+}
+<link href="../../Content/print.css" rel="stylesheet" />
+
+<img src="/images/mws-logo.png" alt="mws admin">
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        <span style="width: 200px; display: inline-block;"><i class="icon-table"></i>Time Sheets Details</span>
+
+
+    </div>
+    <div class="mws-panel-body no-padding">
+        <table class="mws-datatable-fn mws-table">
+
+            <thead>
+                <tr role="row">
+                    <th>Month Year</th>
+                    <th>Employee Name</th>
+                    <th>Project Name
+                    </th>
+                    <th>Project Number
+                    </th>
+                    <th>Working Hours
+                    </th>
+                    <th>Percentage
+                    </th>
+                    <th>Status
+                    </th>
+
+
+
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var item in Model)
+                {
+                    decimal totalEmpHours = Model.Where(A => A.TimeSheetMasterID == item.TimeSheetMasterID).Sum(A => A.TotalHours);
+                    decimal projectHour = item.TotalHours;
+                    decimal percentage = 0;
+                    try
+                    {
+                        percentage = (projectHour * 100) / totalEmpHours;
+                        percentage = Math.Round(percentage, 2);
+                    }
+                    catch (Exception ee) { }
+                    <tr>
+                        <td>
+                            @item.Month @item.Year
+
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EmployeeName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ProjectName)
+                        </td>
+                        <td>
+                            @item.ProjectNumber
+                        </td>
+                        <td>
+                            @item.TotalHours Hrs
+                        </td>
+
+                        <td>@percentage %</td>
+                        <td>
+
+                            @if (item.IsSubmit == false && string.IsNullOrEmpty(item.Status))
+                            {
+                                @:Not Submitted  
+                            }
+
+                            else if (item.IsSubmit == true && string.IsNullOrEmpty(item.Status))
+                            {
+                                @:Pending
+                            }
+                            else if (item.Status.ToLower().Trim() == "disapproved")
+                            {
+                                @:Disapproved
+                            }
+                            else if (item.Status.ToLower().Trim() == "approved")
+                            {
+                            
+                                @:Approved
+                             }
+
+                        </td>
+                        
+
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>

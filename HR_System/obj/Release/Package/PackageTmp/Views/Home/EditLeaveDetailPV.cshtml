@@ -1,0 +1,76 @@
+﻿@model IEnumerable<DAO.EmployeeLeaf>
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script>
+    addDatepicker();
+</script>
+<div class="row-fluid">
+    <div class="span12 widget">
+        <div class="widget-content form-container">
+            <div class="wizard-nav wizard-nav-horizontal">
+                <ul id="navigation">
+                    <li data-wzd-id="wzd_180ppj0k51dh91h061c4v_0" class="current"><span><i class="icon-book"></i>Personal Information</span></li>
+                    <li data-wzd-id="wzd_180ppj0k51dh91h061c4v_1"><span><i class="icon-user"></i>Job Information</span></li>
+                    <li data-wzd-id="wzd_180ppj0k51dh91h061c4v_2"><span><i class="icon-pencil"></i>Leave Type</span></li>
+
+                </ul>
+                <button type="button" class="btn responsive-prev-btn" disabled="disabled"><i class="icon-caret-left"></i></button>
+                <button type="button" class="btn responsive-next-btn"><i class="icon-caret-right"></i></button>
+            </div>
+            <div id="wizard-demo-2" class="form-horizontal wizard-form wizard-form-horizontal" data-forward-only="false">
+            
+                @using (Html.BeginForm("EditLeaveDetailPV", "Home", FormMethod.Post, new { id = "formEditLeaveDetailPV" }))
+                {
+                    @Html.ValidationSummary(true)
+                     <input type="hidden" id="id" name="id" value="@ViewBag.EmployeeID" />
+                    Guid id = new Guid(ViewBag.EmployeeID);
+                    <fieldset class="wizard-step">
+                         @using DAO
+                     @{
+                    dbHRSystemEntities db = new dbHRSystemEntities();
+                    var i = 1;
+                    var result = from leave in db.EmployeeLeaves
+                                 where leave.EmpId == id
+                                 select new
+                                 {
+                                     id=leave.EmployeeLeaveID,
+                                     lid = leave.LeaveTypeID,
+                                     empid=leave.EmpId,
+                                     issuedlv=leave.IssuedLeaves,
+                                     BalanceLeaves=leave.BalanceLeaves,
+                                     TotalLeaves=leave.TotalLeaves,
+                                     Year =leave.Year
+                                 };
+
+                    foreach (var item in result)
+                    {
+                            <div class="control-group">
+                                <label class="control-label">@item.lid<span class="required">*</span></label>
+                                <div class="controls">
+                                    @Html.CheckBox("leave_" + i, false)
+                                    @Html.Hidden("leaveid_" + i, item.lid)
+                                    <input type="text" name="noOfLeaves_ @i"/>
+                                </div>
+                            </div>
+                        i++;
+                            
+                    } 
+                    <input type="hidden" name="count" value="@i" />   
+                       }
+                      
+                       
+                    </fieldset>
+              
+                    <div class="form-actions btn-toolbar">
+                        <button type="button" class="btn" disabled="disabled">Prev</button>
+                        <input type="submit" class="btn" value="Save" onclick="return hr.UpdateLeave()" />
+                        <button type="button" class="btn btn-primary pull-right" name="wizard-submit" style="display: none;">Submit</button>
+                    </div>
+                }
+            </div>
+        </div>
+
+    </div>
+
+</div>

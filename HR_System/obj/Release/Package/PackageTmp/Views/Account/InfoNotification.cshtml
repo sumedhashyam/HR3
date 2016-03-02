@@ -1,0 +1,61 @@
+﻿@{
+    ViewBag.Title = "InfoNotification";
+    Layout = "~/Views/Shared/MainLayout.cshtml";
+    @*DAO.InformationalNotification _model = ViewBag.model as DAO.InformationalNotification;*@
+}
+
+<div id="main-header" class="page-header">
+    <ul class="breadcrumb">
+        <li><a href="@Url.Content("~/Home/Index")"><i class="icon-home"></i>FMS</a> <span class="divider">»</span> </li>
+        <li><a href="@Url.Content("~/Account/AllNotifications")">Notification</a> <span class="divider">»</span> </li>
+        <li>Notification Detail </li>
+    </ul>
+
+</div>
+<div id="main-content">
+    <div class="row-fluid">
+
+        <br>
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="widget">
+                    <div class="widget-header">
+                        <span class="title">Notification</span>
+                        <div class="toolbar">
+                            <div class="btn-group">
+                                <span class="btn save-button">
+                                    <a href="@Url.Content("~/Account/AllNotifications")">Back</a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="widget-content form-container">
+
+
+
+                        <div class="control-group" style="height: 100px; padding-top: 30px;">
+                            <label for="EmpFirstName" class="control-label">Message</label>
+                            <div class="controls">
+                                @_model.Message
+                                @if (_model.CreatedOn.HasValue)
+                                {
+
+                                    string _hours = "( " + (DateTime.Now - _model.CreatedOn.Value).Hours.ToString() + " hours ago )";
+
+                                    @_hours 
+                                }
+                            </div>
+                        </div>
+
+
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

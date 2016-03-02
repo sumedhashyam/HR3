@@ -1,0 +1,198 @@
+﻿@model DAO.EmployeeProject
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+
+<script type="text/javascript">
+    //addDatepickerNext();
+    addDatepickerForProject();
+    changeDateFormat();
+</script>
+<style type="text/css">
+    .wizard-step .control-group .controls
+    {
+        margin: 0 !important;
+    }
+
+    .wizard-step .control-group
+    {
+        padding: 0!important;
+    }
+
+    .error
+    {
+        border: 1px dashed red;
+    }
+</style>
+<div class="add-new">
+    <div class="toolbar">
+        <a href="/Home/Employee/" style="margin-right: 19px;">Back</a>
+    </div>
+</div>
+
+<input type="hidden" id="empid" name="empid" value="@ViewBag.EmployeeID" />
+<div class="row-fluid">
+</div>
+
+
+
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        <span><i class="icon-magic"></i>Save Employee Project Detail</span>
+    </div>
+    <div class="mws-panel-body no-padding">
+        @using (Html.BeginForm("ProjectDetailPV", "Home", FormMethod.Post, new { id = "formProjectDetailPV" }))
+        {
+            <input type="hidden" id="id" name="id" value="@ViewBag.EmployeeID" />
+       
+            <div class="span12 widget">
+                <div class="widget-content form-container">
+                    <div class="wizard-nav wizard-nav-horizontal">
+                        <ul>
+                            @{ Guid empid = new Guid(ViewBag.EmployeeID.ToString());}
+                            <li data-wzd-id="wzd_180ppj0k51dh91h061c4v_0"  onclick="hr.loadEditEmployeePV('@ViewBag.EmployeeID')"><span><i class="icon-book"></i>Personal Information</span></li>
+                            <li data-wzd-id="wzd_180ppj0k51dh91h061c4v_1" onclick="hr.loadJobinfoTab('@ViewBag.EmployeeID')"><span><i class="icon-user"></i>Job Information</span></li>
+                            <li data-wzd-id="wzd_180ppj0k51dh91h061c4v_2" onclick="hr.loadEmpLeaveinfoTab()"><span><i class="icon-pencil"></i>Leave Type</span></li>
+                            <li data-wzd-id="wzd_180ppj0k51dh91h061c4v_1" class="current"><span><i class="icon-user"></i>Project</span></li>
+                        </ul>
+                        <button type="button" class="btn responsive-prev-btn" disabled="disabled"><i class="icon-caret-left"></i></button>
+                        <button type="button" class="btn responsive-next-btn"><i class="icon-caret-right"></i></button>
+                    </div>
+                    <div id="wizard-demo-2" class="form-horizontal wizard-form wizard-form-horizontal" data-forward-only="false">
+
+
+                        @Html.ValidationSummary(true)
+
+                        <fieldset class="wizard-step">
+
+                            @using DAO
+                            @{
+                               Guid CurrentCountryID = new Guid(ViewBag.CurrentCountryID.ToString());
+                               dbHRSystemEntities db = new dbHRSystemEntities();
+                               var i = 1;
+                               Guid eid = new Guid(ViewBag.EmployeeID.ToString());
+                               Guid employeeID = new Guid(ViewBag.EmployeeID.ToString());
+                               Employee _employee = db.Employees.Where(a => a.EmployeeID == employeeID).FirstOrDefault();
+                               List<Project> allProjects = db.Projects.Where(a => a.CountryID == _employee.CountryID).ToList();
+                               List<EmployeeProject> employeeProjects = _employee.EmployeeProjects.ToList();
+                               //List<EmployeeProject> employeeProjects = db.EmployeeProjects.Where(a => a.EmployeeID == eid).ToList();
+
+                               List<TimeSheet> employeesTimesheet = (from item in _employee.TimeSheetMasters
+                                                                     join t in db.TimeSheets
+                                                                     on item.TimeSheetMasterID equals t.TimeSheetMasterID
+                                                                     select t).ToList();
+
+                               foreach (var item in allProjects)
+                               {
+                                   bool usedInTimesheet = false;
+                                   EmployeeProject empLeave = employeeProjects.Where(a => a.ProjectID == item.ProjectId).FirstOrDefault();
+                                   bool isChecked = false;
+                                   string issuedlv = "";
+                                   if (empLeave != null)
+                                   {
+                                       usedInTimesheet = employeesTimesheet.Where(a => a.ProjectID == item.ProjectId).Count() > 0; ;
+                                       isChecked = true;
+
+                                   }
+                                <div class="tr-row">
+
+                                    <div class="control-group" style="width: 253px; display: inline-block;">
+
+                                        <div class="controls" style="width: 20px; display: inline-block; margin-bottom: 10px;">
+                                            @if (usedInTimesheet)
+                                            {
+                                                @Html.CheckBox("leave_" + i, isChecked, new { disabled = "disabled" })
+                                                <input type="hidden" name='@string.Format("leave_{0}", i)' value="true" />
+                                            }
+                                            else
+                                            {
+                                                @Html.CheckBox("leave_" + i, isChecked)
+                                            }
+                                            @Html.Hidden("leaveid_" + i, item.ProjectId)
+                                            <input type="text" name="noOfLeaves_ @i" value="@issuedlv" style="display:none;"/>
+                                        </div>
+                                        <label class="control-label">@item.ProjectName</label>
+                                    </div>
+
+                                    <div class="control-group" style="width: 200px; display: inline-block; margin-bottom: 10px;">
+
+                                        <div class="controls">
+                                            @Html.DropDownList("ddl_" + i + "", ViewBag._JobID as IEnumerable<SelectListItem>, new { @class = "jobtype" })
+
+                                            @{ List<SelectListItem> locationList = (List<SelectListItem>)ViewBag._JobID;
+                                            }
+                                            @if (empLeave != null && empLeave.JobID != null)
+                                            {
+                                                string nameDDL = "ddl_" + i;
+                                                <script>
+                                                    $('select[name=@nameDDL]').val('@empLeave.JobID');
+                                                </script>
+                                            }
+
+                                        </div>
+                                    </div>
+                                    <div class="control-group " style="width: 200px; display: inline-block; margin-bottom: 10px;">
+
+                                        <div class="controls">
+                                            @if (empLeave != null)
+                                            {
+                                                <input  type="text" placeholder="From date" name="fromDate-@i" class="fromdate datepicker"  value="@empLeave.FromDate"/>
+                                            }
+                                            else
+                                            {
+                                                <input type="text" placeholder="From date" name="fromDate-@i" class="fromdate datepicker" />
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="control-group" style="width: 200px; display: inline-block; margin-bottom: 10px;">
+
+                                        <div class="controls">
+                                            @if (empLeave != null)
+                                            {                               
+                                                <input type="text" placeholder="To date" name="ToDate-@i" class="todate datepicker" value="@empLeave.ToDate" />
+                                            }
+                                            else
+                                            {
+                                                <input  type="text" placeholder="To date" name="ToDate-@i" class="todate datepicker" />
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="control-group" style="width: 150px; display: inline-block; margin-bottom: 10px;">
+                                        <select class="working" id="working" name="@string.Format("working_{0}", i)">
+                                            <option value="">Status</option>
+                                            <option value="true">Working</option>
+                                            <option value="false">Not-Working</option>
+                                        </select>
+                                        @if (empLeave != null && empLeave.Working != null)
+                                        {
+                                            string status = empLeave.Working.ToString().ToLower();
+                                            string workingDDL = string.Format("working_{0}", i);
+                                            <script>
+                                                $('select[name=@workingDDL]').val('@status');
+                                            </script>
+                                        }
+                                    </div>
+                                </div>
+                                        i++;
+
+                               }
+                    
+                                <input type="hidden" name="count" value="@i" />   
+                            }
+
+
+                        </fieldset>
+
+                        <div class="form-actions btn-toolbar">
+                            <input type="button" class="btn" value="Prev" onclick="hr.loadEmpLeaveinfoTab()" />
+                            <input type="submit" class="btn" value="Save & Finish" onclick="return hr.AddProject()" />
+                            <button type="button" class="btn btn-primary pull-right" name="wizard-submit" style="display: none;">Submit</button>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        }
+    </div>
+</div>

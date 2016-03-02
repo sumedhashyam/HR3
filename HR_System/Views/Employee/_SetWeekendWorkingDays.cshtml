@@ -1,0 +1,148 @@
+﻿@model IEnumerable<DAO.Employee>
+@using DAL;
+@using DAO;
+
+@{
+    //string []weekDay=new string[]{};
+    string weekDay = "";
+    int u = 1;
+    int year = System.DateTime.Now.Date.Year;
+    int month = System.DateTime.Now.Date.Month;
+    int days = DateTime.DaysInMonth(year, month);
+}
+
+<h2>Set Weekend Working Days</h2>
+@using (Html.BeginForm("_SetWeekendWorkingDays", "Employee", FormMethod.Post, new { id = "formSetWeekendWorkingDaysPV" }))
+{
+    <div class="mws-panel grid_8">
+        <div class="mws-panel-header">
+            <span style="display: inline-block;"><i class="icon-table"></i>Set Working Day For </span>
+
+
+        </div>
+        <input type="hidden" name="month-days" value="@days" />
+        <div class="mws-panel-body no-padding">
+            @foreach (var item in Model)
+            {
+
+    
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="font-size: 16px;">Set Working Day For: 
+            @{string englishName = "";
+              DateTime todayDate = DateTime.Now.Date;
+              Guid? supervisorID = (item.SupervisorID.HasValue && item.SupervisorID.Value != Guid.Empty) ? item.SupervisorID : ((todayDate >= item.AltFromDate && todayDate <= item.AltEndDate) ? (new Guid(item.AlternativeSupervisorID.ToString())) : new Guid());
+              englishName = item.FirstNameEn + " " + item.SecondNameEn + " " + item.ThirdNameEn + " " + item.LastNameEn;
+              List<WeekendWorkingDay> wwd = new List<WeekendWorkingDay>();
+                  List<WeekendWorkingDay> allwwd = ViewBag._PreviousData;
+                  Boolean isTrue =false;
+                  if (allwwd != null && allwwd.Count > 0)
+                  {
+                      wwd = allwwd.Where(a => a.EmployeeID == item.EmployeeID).ToList();
+
+                  }
+                  }
+
+             
+                                @englishName
+
+                                <input type="hidden"  name="supervisor-@u" value="@supervisorID"/>
+                                <input type="hidden"  name="EmployeeID" value="@item.EmployeeID"/>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th align="left">&emsp;Date</th>
+
+                            @{
+                          
+              if (item.Weekends != null && item.Weekends.Count > 0)
+              {
+                  int j = 0;
+                  foreach (var weekendday in item.Weekends)
+                  {
+                      weekDay = weekDay + weekendday.WeekEndName;
+
+                  }
+                  if (weekDay.Count() > 0)
+                  {
+                      for (int i = 1; i <= days; i++)
+                      {
+                          DateTime currentDate = new DateTime(year, month, i);
+                          if (weekDay.Contains(currentDate.DayOfWeek.ToString()))
+                          {
+                                <td>@currentDate.Day  @{string monthName = "-" + currentDate.ToString("MMM", System.Globalization.CultureInfo.InvariantCulture);}@monthName</td>
+                          }
+                      }
+                  }
+              }
+                            }
+
+
+
+                        </tr>
+                    </thead>
+
+                    <tbody role="alert" aria-live="polite" aria-relevant="all">
+
+                        <tr>
+                            <th align="left">&emsp;Working Day:</th>
+                            @{
+                           
+              if (item.Weekends != null && item.Weekends.Count > 0)
+              {
+                  
+                  int j = 0;
+                  foreach (var weekendday in item.Weekends)
+                  {
+                      weekDay = weekDay + weekendday.WeekEndName;
+
+                  }
+                  if (weekDay.Count() > 0)
+                  {
+
+                      
+                                      
+                      int i = 1;
+                      for (i = 1; i <= days; i++)
+                      {
+                          DateTime currentDate = new DateTime(year, month, i);
+                          if (weekDay.Contains(currentDate.DayOfWeek.ToString()))
+                          {
+                                <td style="width: 50px;">
+                                    @{ if(wwd != null && wwd.Count > 0)
+                                       {
+                                           WeekendWorkingDay isExists = wwd.Where(a => a.WeekendDate == currentDate && a.EmployeeID == item.EmployeeID && a.SupervisorID == supervisorID).FirstOrDefault();
+                                           isTrue = isExists!=null?true:false;                                           
+                                       }
+                                        }
+                                    <input type="hidden" value="@currentDate" name="hdn-date-@i" />
+                                    @Html.CheckBox("chk-"+i,isTrue)
+                                    @*<input type="checkbox" id="User-@u-chk-@i" name=""  value="@isTrue" />*@&emsp;
+                                </td>
+                          }
+                      }
+                  }
+              }
+                            }
+
+                        </tr>
+
+                    </tbody>
+                </table>
+
+                <div class="form-actions btn-toolbar">
+                    <input type="button" class="btn btn-primary" style="margin-left: 15px;" value="Save" onclick="hr.saveWeekendWorkingDays();" />
+
+                    <a type="button" class="btn btn-default " href="@Url.Content("~/Employee/ManageStaff")">Cancel</a>
+
+
+                </div>
+              u++;
+            }
+
+
+
+        </div>
+    </div> 
+}    

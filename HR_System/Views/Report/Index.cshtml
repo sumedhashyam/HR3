@@ -1,0 +1,14 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+}
+
+<script type="text/javascript">
+    $(function () {
+        reports.loadEmployees();
+    });
+</script>
+  @{Html.RenderPartial("Notification");}
+<div id="main-content" class="row-fluid">
+
+</div>

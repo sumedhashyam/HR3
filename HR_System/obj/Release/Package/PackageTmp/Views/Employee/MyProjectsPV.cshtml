@@ -1,0 +1,148 @@
+﻿@using DAL;
+@using DAO;
+
+
+
+
+<div class="mws-panel grid_8" style="text-align: right; box-shadow: none;">
+</div>
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        <span style="width: 200px; display: inline-block;"><i class="icon-table"></i>My Projects per Timesheet</span>
+
+
+        <div class="toolbar">
+
+            <a href="javascript:"><i class="icon-refresh" onclick="hr.loadMyprojects();"></i></a>
+
+
+        </div>
+    </div>
+    <div class="mws-panel-body no-padding">
+        <table class="mws-datatable-fn hide-c mws-table">
+            <thead>
+
+                <tr role="row">
+                    <th></th>
+                    <th>Year</th>
+                    <th>Month</th>
+                    <th>Project</th>
+                    <th>Total Hour</th>
+                    <th>Percentage</th>
+                    <th></th>
+                    <th></th>
+
+                </tr>
+            </thead>
+
+            <tbody role="alert" aria-live="polite" aria-relevant="all">
+                @{
+                  
+                    Guid? employeeID = HR_System.Models.MVCUtility.getCurrentEmployeeID();
+
+
+
+                    dbHRSystemEntities db = new dbHRSystemEntities();
+
+                    List<TimeSheetMaster> usersTimesheets = db.TimeSheetMasters.Where(a => a.EmpID == employeeID).ToList();
+                    List<Project> projectList = db.Projects.ToList();
+                   
+                          
+                }
+                @{
+                    string returnUrl = Url.Content("~/Employee/MyProjects");
+                    usersTimesheets = usersTimesheets.OrderBy(a => a.MonthNumber).ToList();
+                }
+                @foreach (var item in usersTimesheets)
+                {
+                    string status = "";
+                    if (item.IsSubmit == false && item.Status == null)
+                    {
+                        status = "NOT SUBMITTED";
+                    }
+
+                    else if (item.IsSubmit == true && item.Status == null)
+                    {
+                        status = "PENDING";
+                    }
+                    else if (item.Status.ToLower().Trim() == "disapproved")
+                    {
+                        status = "DISAPPROVED";
+                    }
+                    else if (item.Status.ToLower().Trim() == "approved")
+                    {
+                        status = "APPROVED";
+                    }
+
+                    decimal totalTimesheetHour = item.TimeSheets.Where(a => a.TimeSheetMasterID == item.TimeSheetMasterID).Sum(a => a.Hours) ?? 0;
+                    List<Guid?> LI = (from tl in item.TimeSheets
+                                      select tl.ProjectID).Distinct().ToList();
+
+                    foreach (var subItem in LI.Where(a => a.HasValue))
+                    {
+                        try
+                        {
+
+                            Guid projectID = new Guid(subItem.ToString());
+                            Project p = projectList.Where(a => a.ProjectId == projectID).First();
+                            decimal totalProjectHours = item.TimeSheets.Where(a => a.TimeSheetMasterID == item.TimeSheetMasterID && a.ProjectID == projectID).Sum(a => a.Hours) ?? 0;
+                    <tr>
+                        <td>@p.ProjectName</td>
+
+                        <td>
+                            @item.Year
+                        </td>
+                        <td>
+                            @item.Month
+                        </td>
+                        <td>
+                            @p.ProjectName
+                        </td>
+                        <td>
+                            @totalProjectHours
+                        </td>
+                        <td>
+                            @{
+                            decimal per = 0;
+                            try
+                            {
+                                per = (totalProjectHours * 100) / totalTimesheetHour;
+                                per = Math.Round(per, 2);
+                            }
+                            catch (Exception ee)
+                            {
+                            }
+                            }
+                            @per %
+                        </td>
+
+                        <td>
+
+                            @Html.ActionLink("View TS", "editTimeSheet", "Employee", new { month = @item.Month, year = @item.Year, timM_ID = @item.TimeSheetMasterID, returnUrl = returnUrl }, new { @class = "btn btn-info" })
+
+                        </td>
+
+                        <td>
+                            @*  @Html.ActionLink("Summary", "printTimesheet", "Employee", new { month = @item.Month, year = @item.Year, timM_ID = @item.TimeSheetMasterID }, new { @class = "btn btn-info" })*@
+                            @Html.ActionLink("Summary", "TimesheetSummary", "Employee", new { EmployeeID = item.EmpID, TimesheetMasterId = item.TimeSheetMasterID, returnUrl = returnUrl }, new { @class = "btn btn-info" })
+                        </td>
+                    </tr>
+                        }
+                        catch (Exception ee) { }
+                    }
+
+
+
+
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+<script>
+     $(".mws-datatable-fn").dataTable();
+</script>

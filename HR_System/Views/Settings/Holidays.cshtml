@@ -1,0 +1,34 @@
+﻿@model DAO.Holiday
+@{
+    ViewBag.Title = "Holidays";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+}
+<script src="@Url.Content("~/plugins/fullcalendar/fullcalendar.min.js")"></script>
+<style type="text/css">
+    .add-new {
+        position: absolute;
+        z-index: 99999;
+        right: 22px;
+        margin-top: 15px;
+    }
+</style>
+<script src="@Url.Content("~/bootstrapnew/js/bootstrap.min.js")"></script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        //loadCalender();
+        hr.Holiday();
+    });
+
+</script>
+<h2>Holidays</h2>
+@{Html.RenderPartial("Notification");}
+<div id="main-content" class="row-fluid">
+      <!-- Panels Start -->
+
+    <div class="mws-panel grid_8">
+       
+
+</div>
+</div>

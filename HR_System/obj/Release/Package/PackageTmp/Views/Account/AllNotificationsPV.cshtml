@@ -1,0 +1,136 @@
+﻿@*@model IEnumerable<DAO.NotificationMaster>*@
+<script type="text/javascript">
+
+    applyDatatable();
+</script>
+
+<div id="partnerList">
+    <div class="row-fluid">
+        <div class="span12 widget">
+            <div class="widget-header">
+                <span class="title">Notifications</span>
+                <div class="toolbar">
+                    <div class="btn-group">
+
+                        <span class="btn dropdown-toggle" data-toggle="collapse" data-target="#data-search">
+                            <i class="icos-refresh-2" onclick="fms.loadAllNotifications()" id="reloadEmpList"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="widget-content table-container">
+                <table class="table table-striped table-flipscroll">
+                    <thead>
+                        <tr>
+                            <th>Notification Type
+                            </th>
+                            <th>Type
+                            </th>
+                            <th>Notification
+                            </th>
+
+                            <th>Time</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+
+                        @foreach (var item in Model)
+                        {
+                             
+                              
+                            <tr>
+                                <td>
+                                    @if (item.isInfo)
+                                    {
+                                        @:Informational
+                                        
+                                    }
+                                    else
+                                    {
+                                        @:Action Type
+                                    }
+                                </td>
+                                <td>
+                                    @if (!item.isInfo)
+                                    {
+                                        if (item.notification.Type.ToLower() == "ass")
+                                        {
+                                        @:Assesment
+                                    }
+                                        else if (item.notification.Type.ToLower() == "gtt")
+                                        {
+                                        @:Grant Tracking
+                                    }
+                                        else if (item.notification.Type.ToLower() == "annual_trip_report")
+                                        {
+                                        @:Annual Trip Report
+                                    }
+                                        else if (item.notification.Type.ToLower() == "annual_trip_report_question")
+                                        {
+                                        @:Annual Trip Report Questions
+                                     }
+                                        else if (item.notification.Type.ToLower() == "routine_trip_report")
+                                        {
+                                        @:Routine Trip Report
+                                    }
+                                        else if (item.notification.Type.ToLower() == "routine_trip_report_question")
+                                        {
+                                        @:Routine Trip Report Questions
+                                    }
+                                        else
+                                        {
+                                        @:Not Defined
+                                    }
+                                    }
+
+
+
+                                </td>
+                                <td>
+                                    @if (item.isInfo)
+                                    {
+                                        @item.infoNotification.Message
+                                    }
+                                    else
+                                    {
+                                        @item.notification.Comment
+                                    }
+                                </td>
+
+                                <td>@item.notificationDate
+                                </td>
+                                <td>
+                                    @if (item.isInfo)
+                                    {
+                                        @Html.ActionLink("View Detail", "InfoNotification", new { notificationID = item.infoNotification.NotificationID }, new { @class = "btn btn-info" })
+                                   
+                                    }
+                                    else
+                                    {
+                                        @Html.ActionLink("View Detail", "Notification", new { notificationID = item.notification.NotificationID, recordId = item.notification.RecoredID, type = item.notification.Type, level = item.level }, new { @class = "btn btn-info" })
+                                    }
+                                </td>
+                                <td>
+                                    @{
+                                    Guid userid = NewMvcProject.Models.MVCUtility.getCurrentUserID();
+                                    MembershipUser u = Membership.GetUser(userid);
+                                    bool superAdmin = Roles.IsUserInRole(u.UserName, NewMvcProject.Models.SiteRoles.SuperAdmin);
+                                    }
+                                    @if (item.isInfo)
+                                    {
+
+                                        @Html.ActionLink("Delete", "DeleteNotifications", new { id = item.infoNotification.NotificationID, IsAdmin = superAdmin }, new { @class = "btn btn-danger", onclick = "return confirm('Are you sure you want to delete this notification ?')" });
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+

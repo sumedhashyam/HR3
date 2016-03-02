@@ -1,0 +1,144 @@
+﻿@model DAO.Holiday
+@{
+    ViewBag.Title = "editHoliday";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+}
+<script>
+    $(document).ready(function () {
+
+        $(".mws-datepicker").datepicker({
+            //showOtherMonths: true
+        });
+        changeDateFormat();
+
+        if ($("#CountryID").length > 0) {
+            var ddl = $("#CountryID");
+            getOfficeLocation(ddl);
+        }
+    });
+    var firstTime = true;
+
+    function getOfficeLocation(ddl) {
+        $('#LocationID').html('');
+        var countryID = $(ddl).val();
+        $('#LocationID').append("<option value=''>Select</option>");
+        if (!isNullOrEmpty(countryID)) {
+            doAjax(settingController + "getOfficeLocations", { countryID: countryID }, function (data) {
+                $.each(data, function (i) {
+                    $('#LocationID').append("<option value=" + data[i].value + ">" + data[i].text + "</option>");
+                });
+                if (firstTime) {
+                    setSavedLocation();
+                    firstTime = false;
+                }
+            });
+        }
+    }
+
+    function setSavedLocation() {
+        var locationID = $('#hfLocationID').val();
+
+        $('#LocationID').val(locationID);
+    }
+</script>
+@*LocationForHoliday*@
+
+<h2>Edit Holiday</h2>
+<script src="@Url.Content("~/Scripts/jquery-1.7.1.min.js")"></script>
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+@{Html.RenderPartial("Notification");}
+
+<input type="hidden" id="hid" value="@ViewBag._Hid"/>
+<div id="main-content" class="row-fluid">
+    <div class="mws-panel grid_8">
+        @using (Html.BeginForm("editHoliday", "Settings", FormMethod.Post, new { @class = "mws-form", id = "formEditHolidayPV" }))
+        {
+            <div class="mws-panel-header">
+                <span style="width: 200px; display: inline-block;"><i class="icon-ok"></i>Edit Holiday</span>
+                <div class="toolbar">
+                    @Html.ActionLink("Back", "Holidays", "Settings", null, new { })
+                </div>
+            </div>
+            <div class="mws-panel-body no-padding">
+                <input type="hidden" value="@ViewBag._date" name="eventdate"/>
+
+                @Html.ValidationSummary(true)
+                @*<input type="hidden" value="@Model.HolidayID" name="id"/>*@
+                @Html.HiddenFor(model => model.HolidayID)
+
+                <div id="mws-validate-error" class="mws-form-message error" style="display: none;"></div>
+                <div class="mws-form-inline">
+                    @if (ViewData["countryList"] != null)
+                    { 
+                        <div class="mws-form-row">
+                            <label class="mws-form-label">Country</label>
+                            <div class="mws-form-item">
+                                @Html.DropDownList("CountryID", (List<SelectListItem>)ViewData["countryList"], new { @class = "large", onchange = "getOfficeLocation(this)" })
+                                @Html.ValidationMessageFor(model => model.CountryID)
+
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <input type="hidden" name="countryID" value="@ViewBag._countryID" />
+                    }
+
+                    <input type="hidden" id="hfLocationID" value="@Model.LocationID" />
+
+                    <div class="mws-form-row">
+                        <label class="mws-form-label">Office Location</label>
+                        <div class="mws-form-item">
+                            @{ List<SelectListItem> LocationList = (List<SelectListItem>)ViewData["LocationForHoliday"];  
+                            }
+
+                            @Html.DropDownListFor(model => model.LocationID, LocationList, new { @class = "large" })
+
+                            @Html.ValidationMessageFor(model => model.LocationID)
+
+                        </div>
+                    </div>
+
+
+                    <div class="mws-form-row">
+                        <label class="mws-form-label">Holiday Name</label>
+                        <div class="mws-form-item">
+
+
+                            @Html.TextBoxFor(model => Model.HolidayName, new { @class = "large" })
+                            @Html.HiddenFor(model => Model.HolidayName)
+                            @Html.ValidationMessageFor(model => Model.HolidayName)
+                        </div>
+                    </div>
+                    <div class="mws-form-row">
+                        <label class="mws-form-label">Holiday Date</label>
+                        <div class="mws-form-item">
+
+                            @Html.TextBoxFor(a => a.HolidayDate, new { @class = "mws-datepicker datepicker large" })
+                            @Html.ValidationMessageFor(model => model.HolidayDate)
+                        </div>
+                    </div>
+                    <div class="mws-form-row">
+                        <label class="mws-form-label">Apply To Staff</label>
+                        <div class="mws-form-item">
+                            @{
+                               bool _checked = Model.ApplyToStaff == true ? true : false;
+                            }
+                            @Html.CheckBox("ApplyToStaff", _checked)
+
+                        </div>
+                    </div>
+                </div>
+                <div class="mws-button-row modal-footer">
+                    <input type="submit" class="btn btn-info" value="Save Changes">
+                    @Html.ActionLink("Cancel", "Holidays", "Settings", new { @class = "btn" })
+                </div>
+
+
+            </div>
+        }
+    </div>
+
+</div>

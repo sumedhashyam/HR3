@@ -1,0 +1,294 @@
+﻿<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+<script>
+    function bindOnchnageOfNumber() {
+        $(".numeric").bind('keyup mouseup', function () {
+            var value = $(this).val();
+          
+            if (!isNullOrEmpty(value)) {
+                setLeaveData();
+            } else {
+                setLeaveData();
+            }
+        });
+    }
+
+    function setLeaveData(){
+        if($('.leavesLines').length>0){
+            $('.leavesLines').each(function(i){
+                var balanceLeave=parseInt($(this).find('.lblBalanceLeave').html());
+                var totalLeaves=parseInt($(this).find('.hfTotalLeaves').val());
+                var leaves=parseFloat($(this).find('.txtLeave').val());
+               // console.log(leaves);
+                leaves= isNaN(leaves)?0:leaves;
+                leaves=parseFloat(leaves);
+             
+                var newTotal=balanceLeave+leaves;
+                $(this).find('.lblTotalLeaves').html(newTotal);
+            });
+        }
+    }
+</script>
+<script>
+    addDatepicker();
+    // makeNumeric();
+    makeDecimal();
+    bindOnchnageOfNumber();
+
+</script>
+<style type="text/css">
+    .basic-label
+    {
+        width: 120px;
+        display: inline-block;
+        text-align: center;
+    }
+
+    .emp_week
+    {
+        list-style: none;
+        width: 50%;
+        font-size: 15px;
+    }
+
+        .emp_week li
+        {
+            display: inline-block;
+            width: 30%;
+        }
+
+        .emp_week input[type=checkbox]
+        {
+            margin-right: 10px;
+        }
+</style>
+<div class="add-new">
+    <div class="toolbar">
+        <a href="/Home/Employee/" style="margin-right: 19px;">Back</a>
+    </div>
+</div>
+
+<input type="hidden" id="empid" name="empid" value="@ViewBag.EmployeeID" />
+<div class="row-fluid">
+</div>
+
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        <span><i class="icon-magic"></i>Save Employee Leave Detail</span>
+    </div>
+    <div class="mws-panel-body no-padding">
+        @using (Html.BeginForm("LeaveDetailPV", "Home", FormMethod.Post, new { id = "formLeaveDetailPV" }))
+        {
+            <input type="hidden" id="id" name="id" value="@ViewBag.EmployeeID" />
+       
+            <div class="span12 widget">
+                <div class="widget-content form-container">
+                    <div class="wizard-nav wizard-nav-horizontal">
+                        <ul>
+                            @{ Guid empid = new Guid(ViewBag.EmployeeID.ToString());}
+                            <li data-wzd-id="wzd_180ppj0k51dh91h061c4v_0"  onclick="hr.loadEditEmployeePV('@ViewBag.EmployeeID')"><span><i class="icon-book"></i>Personal Information</span></li>
+                            <li data-wzd-id="wzd_180ppj0k51dh91h061c4v_1" onclick="hr.loadJobinfoTab('@ViewBag.EmployeeID')"><span><i class="icon-user"></i>Job Information</span></li>
+                            @*  <li data-wzd-id="wzd_180ppj0k51dh91h061c4v_2" onclick="hr.loadEmpLeaveinfoTab()"><span><i class="icon-pencil"></i>Leave Type</span></li>*@@*<li data-wzd-id="wzd_180ppj0k51dh91h061c4v_2" class="current"><span><i class="icon-pencil"></i>Leave Type</span></li>*@
+                            <li data-wzd-id="wzd_180ppj0k51dh91h061c4v_1" class="current"><span><i class="icon-pencil"></i>Leave Type</span></li>
+                            <li data-wzd-id="wzd_180ppj0k51dh91h061c4v_2" onclick="hr.loadEmpProjectinfoTab()"><span><i class="icon-user"></i>Project</span></li>
+                        </ul>
+                        <button type="button" class="btn responsive-prev-btn" disabled="disabled"><i class="icon-caret-left"></i></button>
+                        <button type="button" class="btn responsive-next-btn"><i class="icon-caret-right"></i></button>
+                    </div>
+                    <div id="wizard-demo-2" class="form-horizontal wizard-form wizard-form-horizontal" data-forward-only="false">
+
+
+                        @Html.ValidationSummary(true)
+
+                        <fieldset class="wizard-step">
+                            @using DAO
+                            @{
+                               dbHRSystemEntities db = new dbHRSystemEntities();
+                               var i = 1;
+                               Guid eid = new Guid(ViewBag.EmployeeID.ToString());
+
+                               List<LeaveType> allLeaves = db.LeaveTypes.ToList();
+                               List<EmployeeLeaf> usersLeav = db.EmployeeLeaves.Where(a => a.EmpId == eid && a.Year == DateTime.Now.Year).ToList();
+                              
+                                <div class="control-group">
+                                    <label class="control-label">&nbsp;</label>
+                                    <div class="controls">
+                                        <label class="basic-label">Previous</label>
+                                        <label class="basic-label">Current</label>
+                                        <label class="basic-label">Total</label>
+                                    </div>
+                                </div>
+                                
+                               
+                                foreach (var item in allLeaves)
+                               {
+                                   decimal issuedLeaves = 0;
+
+                                   EmployeeLeaf empLeave = usersLeav.Where(a => a.LeaveTypeID == item.LeaveTypeID).FirstOrDefault();
+                                   bool isChecked = false;
+                                   //int? count = 0;
+                                   decimal issuedlv = 0;
+                                   decimal balanceLeave = 0;
+                                   decimal totalLeaves = 0;
+                                   if (empLeave != null)
+                                   {
+                                       isChecked = true;
+                                       //count = empLeave.TotalLeaves;
+                                       issuedlv = empLeave.IssuedLeaves ?? 0;
+                                       balanceLeave = empLeave.BalanceLeaves ?? 0;
+                                       totalLeaves = issuedlv + balanceLeave;
+                                   }
+
+                                   //issuedLeaves = Convert.ToInt32(issuedlv);
+                                   issuedLeaves = Convert.ToDecimal(issuedlv);
+                                  
+    
+                                <div class="control-group">
+                                    <label class="control-label">@item.LeaveTypeName</label>
+                                    <div class="controls leavesLines">
+                                        @Html.CheckBox("leave_" + i, isChecked)
+                                        @Html.Hidden("leaveid_" + i, item.LeaveTypeID)
+                                        @Html.Hidden("balanceLeave_" + i, balanceLeave)
+                                        @* <input type="text" name="noOfLeaves_ @i" value="@issuedlv"/>*@
+                                        <label class="lblBalanceLeave basic-label">@balanceLeave</label>
+                                        <input type="number" class="txtleaves numeric decimal txtLeave" name="noOfLeaves_ @i" min="0" max="200" value="@issuedLeaves" />
+                                        <label class="lblTotalLeaves basic-label">@totalLeaves</label>
+                                        <input type="hidden" class="hfTotalLeaves" value="@totalLeaves" />
+                                    </div>
+                                </div>
+                                   i++;
+
+                               }
+                                <input type="hidden" name="count" value="@i" />   
+                           
+                          
+
+                                <h3>Select Employee Weekend
+                                </h3>
+                                <div>
+                                    @{
+                               List<Weekend> objWeekend = (List<Weekend>)ViewBag.Weekend;
+
+                               if (objWeekend.Count() > 0)
+                               {
+                                        <ul class="emp_week">
+                                            <li>
+                                                @if (objWeekend.Where(a => a.WeekEndName == "Monday").FirstOrDefault() == null)
+                                                {
+                                                    <input type="checkbox" name="Monday" value="Monday" />
+                                                }
+                                                else
+                                                {
+                                                    <input type="checkbox" name="Monday" checked="checked" value="Monday" />
+                                                }
+                                                Monday
+                                            </li>
+                                            <li>
+                                                @if (objWeekend.Where(a => a.WeekEndName == "Tuesday").FirstOrDefault() == null)
+                                                {
+                                                    <input type="checkbox" name="Tuesday" value="Tuesday" />
+                                                }
+                                                else
+                                                {
+                                                    <input type="checkbox" name="Tuesday" checked="checked" value="Tuesday" />
+                                                }Tuesday
+                                            </li>
+                                            <li>
+                                                @if (objWeekend.Where(a => a.WeekEndName == "Wednesday").FirstOrDefault() == null)
+                                                {
+                                                    <input type="checkbox" name="Wednesday" value="Wednesday" />
+                                                }
+                                                else
+                                                {
+                                                    <input type="checkbox" name="Wednesday" checked="checked" value="Wednesday" />
+                                                }Wednesday
+                                            </li>
+                                            <li>
+                                                @if (objWeekend.Where(a => a.WeekEndName == "Thursday").FirstOrDefault() == null)
+                                                {
+                                                    <input type="checkbox" name="Thursday" value="Thursday" />
+                                                }
+                                                else
+                                                {
+                                                    <input type="checkbox" name="Thursday" checked="checked" value="Thursday" />
+                                                }Thursday
+                                            </li>
+                                            <li>
+                                                @if (objWeekend.Where(a => a.WeekEndName == "Friday").FirstOrDefault() == null)
+                                                {
+                                                    <input type="checkbox" name="Friday" value="Friday" />
+                                                }
+                                                else
+                                                {
+                                                    <input type="checkbox" name="Friday" checked="checked" value="Friday" />
+                                                }Friday
+                                            </li>
+                                            <li>
+                                                @if (objWeekend.Where(a => a.WeekEndName == "Saturday").FirstOrDefault() == null)
+                                                {
+                                                    <input type="checkbox" name="Saturday" value="Saturday" />
+                                                }
+                                                else
+                                                {
+                                                    <input type="checkbox" name="Saturday" checked="checked" value="Saturday" />
+                                                }Saturday
+                                            </li>
+                                            <li>
+                                                @if (objWeekend.Where(a => a.WeekEndName == "Sunday").FirstOrDefault() == null)
+                                                {
+                                                    <input type="checkbox" name="Sunday" value="Sunday" />
+                                                }
+                                                else
+                                                {
+                                                    <input type="checkbox" name="Sunday" checked="checked" value="Sunday" />
+                                                }Sunday
+                                            </li>
+                                        </ul>
+                               }
+                               else
+                               {
+                                        <ul class="emp_week">
+                                            <li>
+                                                <input type="checkbox" name="Monday" value="Monday" />Monday
+                                            </li>
+                                            <li>
+                                                <input type="checkbox" value="Tuesday" name="Tuesday" />Tuesday
+                                            </li>
+                                            <li>
+                                                <input type="checkbox" value="Wednesday" name="Wednesday" />Wednesday
+                                            </li>
+                                            <li>
+                                                <input type="checkbox" value="Thursday" name="Thursday" />Thursday
+                                            </li>
+                                            <li>
+                                                <input type="checkbox" value="Friday" name="Friday" />Friday
+                                            </li>
+                                            <li>
+                                                <input type="checkbox" value="Saturday" name="Saturday" />Saturday
+                                            </li>
+                                            <li>
+                                                <input type="checkbox" value="Sunday" name="Sunday" />Sunday
+                                            </li>
+                                        </ul>
+                               }
+                                 
+                                       
+                                    }
+                                </div>  
+                            }
+                        </fieldset>
+
+                        <div class="form-actions btn-toolbar">
+                            <input type="button" class="btn" value="Prev" onclick="hr.loadJobinfo('@ViewBag.EmployeeID    ')" />
+                            <input type="submit" class="btn" value="Save & Move Next" onclick="return hr.AddLeave()" />
+                            <button type="button" class="btn btn-primary pull-right" name="wizard-submit" style="display: none;">Submit</button>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        }
+    </div>
+</div>

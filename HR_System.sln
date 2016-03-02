@@ -1,0 +1,47 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HR_System", "HR_System\HR_System.csproj", "{4124D2F0-BAB4-43A0-A903-7F7B1C58C575}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAO", "DAO\DAO.csproj", "{BD3557E0-3CD9-4132-A322-2BE1ECD4C57B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL", "DAL\DAL.csproj", "{14127DF8-9FE2-4248-BDD7-B31D4E5B182B}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 4
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://sumedha-pc:8080/tfs/defaultcollection
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = DAL\\DAL.csproj
+		SccProjectName1 = DAL
+		SccLocalPath1 = DAL
+		SccProjectUniqueName2 = DAO\\DAO.csproj
+		SccProjectName2 = DAO
+		SccLocalPath2 = DAO
+		SccProjectUniqueName3 = HR_System\\HR_System.csproj
+		SccProjectName3 = HR_System
+		SccLocalPath3 = HR_System
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4124D2F0-BAB4-43A0-A903-7F7B1C58C575}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4124D2F0-BAB4-43A0-A903-7F7B1C58C575}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4124D2F0-BAB4-43A0-A903-7F7B1C58C575}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4124D2F0-BAB4-43A0-A903-7F7B1C58C575}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD3557E0-3CD9-4132-A322-2BE1ECD4C57B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD3557E0-3CD9-4132-A322-2BE1ECD4C57B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD3557E0-3CD9-4132-A322-2BE1ECD4C57B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD3557E0-3CD9-4132-A322-2BE1ECD4C57B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14127DF8-9FE2-4248-BDD7-B31D4E5B182B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14127DF8-9FE2-4248-BDD7-B31D4E5B182B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14127DF8-9FE2-4248-BDD7-B31D4E5B182B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14127DF8-9FE2-4248-BDD7-B31D4E5B182B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,76 @@
+﻿@model IEnumerable<DAO.EmployeeLeaf>
+<script src="@Url.Content("~")js/dataTables.dateFormat.js"></script>
+<script src="@Url.Content("~")js/jquery.dataTables.columnFilter.js"></script>
+@using BusinessLogics
+@using DAO;
+@using DAL;
+@{
+    List<EmployeeLeaf> lst = (List<EmployeeLeaf>)ViewData["ListLeaveType"];    
+}
+<script>
+    $(".mws-datatable-fn").dataTable({
+        sPaginationType: "full_numbers"
+    });
+
+</script>
+<script type="text/javascript">
+    $(function () {
+
+        $('.ibutton').iButton();
+        $(".paging_full_numbers a").on(function () {
+            alert("f");
+            $('.ibutton').iButton();
+        });
+    });
+</script>
+<div class="mws-panel grid_8" style="text-align: right; box-shadow: none;">
+
+    <div class="mws-panel grid_8">
+        <div class="mws-panel-header">
+            <span style="float: left;"><i class="icon-table"></i>Leave</span>
+        </div>
+        <div class="mws-panel-body no-padding">
+            <table class="mws-datatable-fn  mws-table">
+                <thead>
+
+                    <tr role="row">
+
+                        <th>Type</th>
+                        <th>Total</th>
+                       
+                        <th>Balance</th>
+
+                    </tr>
+                </thead>
+
+                <tbody role="alert" aria-live="polite" aria-relevant="all">
+
+
+                    @foreach (var item in Model)
+                    {
+                       
+                        <tr>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.LeaveType.LeaveTypeName)
+                            </td>
+                            <td>
+                                @if (item.TotalLeaves != null)
+                                {
+                                    @Html.DisplayFor(modelItem => item.TotalLeaves)
+                                }
+                            </td>
+                            <td>
+
+                            </td>
+
+                        </tr>
+                       
+                    }
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

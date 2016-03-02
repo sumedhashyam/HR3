@@ -1,0 +1,456 @@
+﻿@model IEnumerable<HR_System.Models.ReportTimeSheet>
+@using DAO
+
+<script src="@Url.Content("~")js/dataTables.dateFormat.js"></script>
+<script src="@Url.Content("~")js/jquery.dataTables.columnFilter.js"></script>
+
+<script src="../../Scripts/Custom/commonFunctions.js"></script>
+@{dbHRSystemEntities db=new dbHRSystemEntities();}
+
+
+<style type="text/css">
+    .grid_2 {
+        width: 31%;
+    }
+</style>
+<script>
+    $(".mws-datatable-fn").dataTable({
+        sPaginationType: "full_numbers"
+    });
+</script>
+<script>
+    collspan();
+    function DoFilterSearch() {
+        if ($('#FrmVacationSummaryReport').valid()) {
+
+            $.ajax({
+                type: "POST",
+                data: $('#FrmVacationSummaryReport').serialize(),
+                url: '/Report/TimesheetListDetailPV',
+                success: function (data) {
+                    $('#main-content').html(data);
+                    $(".mws-collapsible").removeClass('mws-collapsed');
+                    collspan();
+                    goToByScroll("data-grid");
+                },
+                error: function (data) {
+                    alert("error occured");
+                }
+
+            });
+        } else {
+            return false;
+        }
+    }
+
+    function openPrintPopupWithPar(btn, event) {
+        event.preventDefault();
+        var url = $(btn).attr('href');
+        url = url + "&Year=" + $("#ddlYear").val();
+        url = url + "&MonthFrom=" + $("#ddlMonthFrom").val();
+        url = url + "&MonthTo=" + $("#ddlMonthTo").val();
+        url = url + "&Location=" + $("#ddlLocation").val();
+        url = url + "&Department=" + $("#ddlDepartment").val();
+        url = url + "&EmpName=" + $("#ddlEmpName").val();
+        window.open(url, 'PingStatistics', 'status=0,toolbar=0,menubar=0,scrollbars=1,location=0,resizable=0,width=1200,height=800');
+
+    }
+
+    function resetdata() {
+        $("#ddlMonthFrom").val("");
+        $("#ddlMonthTo").val("");
+        $("#dllYear").val("");
+        $("#ddlLocation").val("");
+        $("#ddlDepartment").val("");
+        $("#ddlEmpName").val("");
+        reports.loadTimeSheetLstDetNew();
+        return false;
+    }
+
+    //function PrintAllRec() {
+    //    var str = "<style type='text/css'>p.pagebreakhere {page-break-before: always}</style>";
+    //    var count = $(".mws-table tbody tr a").length;
+    //    var innercount = 1;
+    //    $('.mws-table tbody tr').each(function () {
+
+    //        doAjax($(this).find('a').attr('href'), null, function (data) {
+    //            str = str + data;
+    //            str = str + "<p class='pagebreakhere'></p>";
+
+    //            //$('#store').append(data);
+    //            if (innercount == count) {
+
+    //                var recipe = window.open('', 'RecipeWindow', "toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=980, height=700, top=" + (screen.height - 500) + ", left=" + (screen.width - 540));
+    //                recipe.document.open();
+    //                recipe.document.write(str);
+    //                recipe.document.close();
+    //            }
+    //            else {
+
+    //                innercount = innercount + 1;
+    //            }
+    //        });
+
+    //    });
+
+
+    //}
+
+
+
+    function PrintAllRec() {
+
+        var str = "<style type='text/css'>p.pagebreakhere {page-break-before: always}</style>";
+        var count = $(".mws-table tbody tr a").length;
+        var innercount = 1;
+        var c = 0;
+        var afterSearch = new Array();
+        var arr1 = new Array();
+        var arr2 = new Array();
+        var arr3 = new Array();
+        var arr4 = new Array();
+        var rows = $(".mws-table").dataTable().fnGetNodes();
+        $(rows).each(function () {
+            //for (var i = 0; i < rows.length; i++) {
+            // Get HTML of 3rd column (for example)
+            var link = $(this).find('a').attr('href');
+            var month = getParameterByName("month", link);
+            var year = getParameterByName("year", link);
+            var id = getParameterByName("timM_ID", link);
+            var pagenumber = getParameterByName("pagenumber", link);
+            var cn = 1;
+
+            if (arr1.length != 0 && arr2.length != 0 && arr3.length != 0) {
+                for (var i = 0; i < arr1.length; i++) {
+                    if (month == arr1[i] && year == arr2[i] && id == arr3[i]) {
+                        cn++;
+                    }
+                }
+            }
+            if (id != null && id != "") {
+                if (cn == 1) {
+                    arr1[c] = month;
+                    arr2[c] = year;
+                    arr3[c] = id;
+                    arr4[c] = pagenumber;
+                    afterSearch[c] = "/Employee/printTimesheet?month=" + arr1[c] + "&year=" + arr2[c] + "&timM_ID=" + arr3[c] + "&pagenumber=" + arr4[c];
+                    c++;
+                }
+            }
+        });
+
+        var i = 0;
+        while (i < (afterSearch.length)) {
+            doAjax(afterSearch[i], null, function (data) {
+
+                str = str + data;
+                str = str + "<p class='pagebreakhere'></p>";
+                
+                if (innercount == afterSearch.length) {
+                    var recipe = window.open('', 'RecipeWindow', "toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=980, height=700, top=" + (screen.height - 500) + ", left=" + (screen.width - 540));
+                    recipe.document.open();                    
+                    recipe.document.write(str);
+                    recipe.document.close();
+                }
+                else {
+                    innercount = innercount + 1;
+                }
+
+            });
+            i = i + 1;
+        }
+
+    }
+
+
+   
+
+</script>
+
+<form id="FrmVacationSummaryReport" class="mws-form">
+    <div class="mws-panel grid_8 mws-collapsible mws-collapsed">
+        <div class="mws-panel-header">
+            <span style="width: 200px; display: inline-block;">Filter</span>
+
+
+
+        </div>
+        <div class="mws-panel-body no-padding" style="position: relative">
+
+
+
+            <div class="mws-form-inline">
+                <div class="mws-form-row">
+                    <div class="grid_2">
+                        <label class="mws-form-label">Select Year</label>
+                        <div class="mws-form-item">
+                            @* @Html.DropDownList("ddlYear", ViewBag.yearsList as List<SelectListItem>, new {  })*@
+                            <select id="ddlYear" name="ddlYear" style="width: 210px;">
+                                @foreach (SelectListItem li in ViewBag._Year)
+                                {
+                                    if (li.Value == ViewBag._YearSelected)
+                                    {
+                                    <option selected="selected" value="@li.Value">
+                                        @li.Text
+                                    </option>
+                                    }
+                                    else
+                                    {
+                                    <option value="@li.Value">
+                                        @li.Text
+                                    </option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grid_2">
+                        <label class="mws-form-label">Month From</label>
+                        <div class="mws-form-item">
+                            @* @Html.DropDownList("ddlYear", ViewBag.yearsList as List<SelectListItem>, new {  })*@
+                            <select id="ddlMonthFrom" name="ddlMonthFrom" style="width: 210px;">
+                                @foreach (SelectListItem li in ViewBag._MonthFrom)
+                                {
+                                    if (li.Value == ViewBag._MonthFromSelected)
+                                    {
+                                    <option selected="selected" value="@li.Value">
+                                        @li.Text
+                                    </option>
+                                    }
+                                    else
+                                    {
+                                    <option value="@li.Value">
+                                        @li.Text
+                                    </option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grid_2">
+                        <label class="mws-form-label">Month To</label>
+                        <div class="mws-form-item">
+                            <select id="ddlMonthTo" name="ddlMonthTo" style="width: 210px;">
+                                @foreach (SelectListItem li in ViewBag._MonthTo)
+                                {
+                                    if (li.Value == ViewBag._MonthToSelected)
+                                    {
+                                    <option selected="selected" value="@li.Value">
+                                        @li.Text
+                                    </option>
+                                    }
+                                    else
+                                    {
+                                    <option value="@li.Value">
+                                        @li.Text
+                                    </option>
+                                    }
+                                }
+                            </select>
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+                <div class="mws-form-row">
+
+                    <div class="grid_2">
+                        <label class="mws-form-label">Location</label>
+                        <div class="mws-form-item">
+                            <select id="ddlLocation" name="ddlLocation" style="width: 210px;">
+                                @foreach (SelectListItem li in ViewBag._OfficeLocation)
+                                {
+                                    if (li.Value == ViewBag._OfficeLocationSelected)
+                                    {
+                                    <option selected="selected" value="@li.Value">
+                                        @li.Text
+                                    </option>
+                                    }
+                                    else
+                                    {
+                                    <option value="@li.Value">
+                                        @li.Text
+                                    </option>
+                                    }
+                                }
+                            </select>
+
+                        </div>
+                    </div>
+                    <div class="grid_2">
+                        <label class="mws-form-label">Department</label>
+                        <div class="mws-form-item">
+                            <select id="ddlDepartment" name="ddlDepartment" style="width: 210px;">
+                                @foreach (SelectListItem li in ViewBag._Department)
+                                {
+                                    if (li.Value == ViewBag._DepartmentSelected)
+                                    {
+                                    <option selected="selected" value="@li.Value">
+                                        @li.Text
+                                    </option>
+                                    }
+                                    else
+                                    {
+                                    <option value="@li.Value">
+                                        @li.Text
+                                    </option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grid_2">
+                        <label class="mws-form-label">Emp Name</label>
+                        <div class="mws-form-item">
+                            <select id="ddlEmpName" name="ddlEmpName" style="width: 210px;">
+                                @foreach (SelectListItem li in ViewBag._EmpName)
+                                {
+                                    if (li.Value == ViewBag._EmpNameSelected)
+                                    {
+                                    <option selected="selected" value="@li.Value">
+                                        @li.Text
+                                    </option>
+                                    }
+                                    else
+                                    {
+                                    <option value="@li.Value">
+                                        @li.Text
+                                    </option>
+                                    }
+                                }
+                            </select>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="mws-button-row">
+                    <input type="button" id="Search" value="Search" class="btn btn-info" onclick="return DoFilterSearch()" />
+                    <input type="button" value="reset" class="btn btn-danger" onclick="return resetdata()">
+                </div>
+                <div style="clear: both"></div>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+<div class="mws-panel grid_8" id="data-grid">
+    <div class="mws-panel-header">
+        <span style="width: 200px; display: inline-block;"><i class="icon-table"></i>TimesheetListDetail Report</span>
+        <div class="toolbar">
+            @Html.ActionLink("Print", "PrintTimesheetListDetail", "Report", new { onclick = "openPrintPopupWithPar(this,event)" })
+            &nbsp;
+            
+            <a href="#" onclick="return PrintAllRec()">Print-All </a>&nbsp;
+            <a><i class="icon-refresh" onclick="DoFilterSearch();"></i></a>
+        </div>
+
+    </div>
+    <div class="mws-panel-body no-padding">
+        <table class="mws-datatable-fn mws-table">
+
+            <thead>
+                <tr role="row">
+                    <th>Month Year</th>
+                    <th>Employee Name
+                    </th>
+                    <th>Project Name
+                    </th>
+                    <th>Project Number
+                    </th>
+                    <th>Working Hours
+                    </th>
+                    <th>Percentage
+                    </th>
+                    <th>Status
+                    </th>
+                    <th></th>
+
+
+                </tr>
+            </thead>
+            <tbody id="TableBody">
+                @if (Model != null)
+                {
+                    int i = 1;
+                    foreach (var item in Model)
+                    {
+                        decimal totalEmpHours = Model.Where(A => A.TimeSheetMasterID == item.TimeSheetMasterID).Sum(A => A.TotalHours);
+                        var timesheetDetail = db.TimeSheetMasters.Where(t => t.TimeSheetMasterID == item.TimeSheetMasterID).FirstOrDefault();
+                        int noOfHolidayes = db.Holidays.Where(a => a.LocationID == item.OfficeLocationID && a.HolidayDate.Year == item.Year && a.HolidayDate.Month == timesheetDetail.MonthNumber).Count();
+                        noOfHolidayes = noOfHolidayes > 0 ? (noOfHolidayes * 8) : 0;
+                        decimal projectHour = item.TotalHours;
+                        decimal percentage = 0;
+                        decimal totalhoursIcludedHoliday = totalEmpHours + noOfHolidayes;
+                        try
+                        {
+                            percentage = (projectHour * 100) / totalEmpHours;
+                            percentage = Math.Round(percentage, 2);
+                        }
+                        catch (Exception ee) { }
+                      
+                    <tr>
+                        <td>
+                            @item.Month @item.Year
+
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EmployeeName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ProjectName)
+                        </td>
+                        <td>
+                            @item.ProjectNumber
+                        </td>
+                        <td>
+                           @* @item.TotalHours*@  @totalhoursIcludedHoliday Hrs
+                        </td>
+
+                        <td>@percentage %</td>
+                        <td>
+
+                            @if (item.IsSubmit == false && string.IsNullOrEmpty(item.Status))
+                            {
+                                @:Not Submitted  
+                            }
+
+                            else if (item.IsSubmit == true && string.IsNullOrEmpty(item.Status))
+                            {
+                                @:Pending
+                            }
+                            else if (item.Status.ToLower().Trim() == "disapproved")
+                            {
+                                @:Disapproved
+                            }
+                            else if (item.Status.ToLower().Trim() == "approved")
+                            {
+                            
+                                @:Approved
+                             }
+
+                        </td>
+                        <td>
+                               @if(item.Status!=null&& item.Status=="approved")
+                    {
+                            @Html.ActionLink("Print", "printTimesheet", "Employee", new { month = item.Month, year = item.Year, timM_ID = @item.TimeSheetMasterID, pagenumber = i }, new { @class = "btn btn-primary", @id = "Arg", onclick = "openPrintPopup(this,event)" })
+                        
+                        }</td>
+
+                    </tr>
+                            i = i + 1;
+                    }
+                    
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<div id="store"></div>

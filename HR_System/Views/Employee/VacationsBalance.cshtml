@@ -1,0 +1,21 @@
+﻿@model DAO.EmployeeLeaf
+@{
+    ViewBag.Title = "VacationsBalance";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+}
+
+@{
+    Guid EmployeeID = new Guid(ViewBag.employeeID.ToString());
+    int _currentyear = DateTime.Now.Month >= 10 ? (DateTime.Now.Year + 1) : (DateTime.Now.Month <= 9?DateTime.Now.Year:DateTime.Now.Year);
+}
+
+<script type="text/javascript">
+    $(function () {
+        reports.loadLeaveBalance('@EmployeeID', true, '@_currentyear');
+    });
+</script>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+@{Html.RenderPartial("Notification");}
+<div id="main-content" class="row-fluid">
+</div>

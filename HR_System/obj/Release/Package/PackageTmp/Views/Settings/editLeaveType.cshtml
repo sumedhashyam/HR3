@@ -1,0 +1,128 @@
+﻿@model DAO.LeaveType
+@{
+    ViewBag.Title = "editLeaveType";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+}
+<script type="text/javascript">
+    if (typeof String.prototype.startsWith != 'function') {
+        // see below for better implementation!
+        String.prototype.startsWith = function (str) {
+            return this.indexOf(str) == 0;
+        };
+    }
+
+    var baseColor = "#35353a";
+
+    function updateBaseColor(hex, attach) {
+        baseColor = "#" + hex;
+        $("#mws-base-cp").css('backgroundColor', baseColor);
+        $(".colorpicker1").val(baseColor);
+    }
+
+    $(document).ready(function () {
+        $('form').submit(function () {
+            var color = $(".colorpicker1").val();
+            if (color != "") {
+                if (color.length != 7) {
+                    alert("enter valid colorcode");
+                    return false;
+                }
+                else if (!color.startsWith("#")) {
+                    alert("enter valid colorcode");
+                    return false;
+                }
+                else {
+                    return true;
+                }
+            }
+            else {
+                return true;
+            }
+        });
+        $(".colorpicker1").ColorPicker({
+            color: baseColor,
+            onShow: function (colpkr) {
+                $(colpkr).fadeIn(500);
+                return false;
+            },
+            onHide: function (colpkr) {
+                $(colpkr).fadeOut(500);
+                return false;
+            },
+            onChange: function (hsb, hex, rgb) {
+                updateBaseColor(hex, true);
+            }
+        });
+    });
+</script>
+@*<h2>Edit Leave Type</h2>*@
+<script src="@Url.Content("~/Scripts/jquery-1.7.1.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+@{Html.RenderPartial("Notification");}
+
+<div class="mws-panel grid_8" style="text-align: right; box-shadow: none;">
+    @* @Html.ActionLink("Back", "LeaveType", "Settings", null, new { @class = "btn btn-primary" })*@
+</div>
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        <span style="width: 200px; display: inline-block;"><i class="icon-ok"></i>Edit Leave Type</span>
+        <div class="toolbar">
+            @Html.ActionLink("Back", "LeaveType", "Settings", null, new { })
+        </div>
+    </div>
+    <div class="mws-panel-body no-padding">
+
+        @using (Html.BeginForm("editLeaveType", "Settings", FormMethod.Post, new { @class = "mws-form" }))
+        {
+            @Html.ValidationSummary(true)
+            @Html.HiddenFor(model => model.LeaveTypeID);
+          
+            <div id="mws-validate-error" class="mws-form-message error" style="display: none;"></div>
+            <div class="mws-form-inline">
+                <div class="mws-form-row">
+                    <label class="mws-form-label">Leave Type Name</label>
+                    <div class="mws-form-item">
+                        @Html.TextBoxFor(model => model.LeaveTypeName, new { @class = "large" })
+                        @Html.ValidationMessageFor(model => model.LeaveTypeName)
+                    </div>
+                </div>
+                <div class="mws-form-row">
+                    <label class="mws-form-label">Leave Type Code</label>
+                    <div class="mws-form-item">
+                        @Html.TextBoxFor(model => model.LeaveTypeCode, new { @class = "large" })
+                        @Html.ValidationMessageFor(model => model.LeaveTypeCode)
+                    </div>
+                </div>
+                <div class="mws-form-row">
+                    <label class="mws-form-label">Leave Type Color</label>
+                    <div class="mws-form-item">
+                        @Html.TextBoxFor(model => model.LeaveTypeColor, new { @class = "large colorpicker1" })
+                        @Html.ValidationMessageFor(model => model.LeaveTypeColor)
+                    </div>
+                </div>
+                <div class="mws-form-row">
+                    <label class="mws-form-label">Default Leaves</label>
+                    <div class="mws-form-item">
+                        @Html.TextBoxFor(model => model.DefaultLeaves, new { @class = "large" })
+                        @Html.ValidationMessageFor(model => model.DefaultLeaves)
+                    </div>
+                </div>
+               <div class="mws-form-row">
+                    <label class="mws-form-label">Will Holidays Count?</label>
+                    <div class="mws-form-item">
+                         @{
+                               bool _checked = Model.WillHolidaysCount == true ? true : false;
+                            }
+                        @Html.CheckBox("WillHolidaysCount",_checked)                        
+                    </div>
+                </div>
+            </div>
+            <div class="mws-button-row">
+                <input type="submit" class="btn btn-info" value="Save Changes">
+                @Html.ActionLink("Cancel", "LeaveType", "Settings", null, new { @class = "btn btn-danger" })
+            </div>
+        }
+
+    </div>
+</div>

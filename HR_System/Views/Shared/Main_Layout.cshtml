@@ -1,0 +1,502 @@
+﻿<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+
+    <!-- Viewport Metatag -->
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+    <!-- Plugin Stylesheets first to ease overrides -->
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/plugins/colorpicker/colorpicker.css")" media="screen">
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/custom-plugins/wizard/wizard.css")" media="screen">
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/plugins/fullcalendar/fullcalendar.css")" media="screen">
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/plugins/fullcalendar/fullcalendar.print.css")" media="print">
+    <!-- Required Stylesheets -->
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/bootstrap/css/bootstrap.min.css")" media="screen">
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/css/fonts/ptsans/stylesheet.css")" media="screen">
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/css/fonts/icomoon/style.css")" media="screen">
+
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/css/mws-style.css")" media="screen">
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/css/icons/icol16.css")" media="screen">
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/css/icons/icol32.css")" media="screen">
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/css/mws-style.min.css")" media="screen">
+
+    <!-- Demo Stylesheet -->
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/css/demo.css")" media="screen">
+
+    <!-- jQuery-UI Stylesheet -->
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/jui/css/jquery.ui.all.css")" media="screen">
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/jui/jquery-ui.custom.css")" media="screen">
+
+    <!-- Theme Stylesheet -->
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/css/mws-theme.css")" media="screen">
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/css/themer.css")" media="screen">
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/css/cp.css")" media="screen">
+
+    <script type="text/javascript">
+        var homeController = '@Url.Content("~/Home/")';
+        var settingController = '@Url.Content("~/Settings/")';
+        var EmployeeController = '@Url.Content("~/Employee/")';
+        var leaveController = '@Url.Content("~/Leave/")';
+        var ReportController = '@Url.Content("~/Report/")';
+        var Notification = '@Url.Content("~/Notification/")';
+        
+    </script>
+
+
+    <script src="@Url.Content("~/js/libs/jquery-1.8.3.min.js")"></script>
+
+    <link href="@Url.Content("~/plugins/ibutton/jquery.ibutton.css")" rel="stylesheet" />
+    <script src="@Url.Content("~/plugins/ibutton/jquery.ibutton.min.js")"></script>
+    <script src="@Url.Content("~/plugins/datatables/jquery.dataTables.min.js")"></script>
+
+    <script src="@Url.Content("~/bootstrap/js/bootstrap.min.js")"></script>
+
+    <script src="@Url.Content("~/Scripts/Custom/commonFunctions.js")"></script>
+
+    <script src="@Url.Content("~/Scripts/Custom/hr.js")"></script>
+    <script src="@Url.Content("~/Scripts/Custom/reports.js")"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+    @RenderSection("scripts", required: false)
+
+
+    <title>@ViewBag.Title</title>
+    <style type="text/css">
+        #mws-themer #mws-themer-content {
+            display: none;
+        }
+
+        .loading {
+            display: none;
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(247, 247, 247, 0.46);
+            z-index: 10000;
+        }
+
+        .field-validation-error {
+            color: red;
+        }
+
+        .input-validation-error {
+            border: 1px solid red !important;
+        }
+
+        .validation-summary-errors {
+            color: red;
+            padding: 15px 0px 0px 15px;
+        }
+
+        .status {
+            position: fixed;
+            top: 10%;
+            right: 1%;
+            width: 25%;
+            z-index: 9999999;
+            list-style-type: none;
+        }
+    </style>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            setTimeout(function () { $('.alert').fadeOut("slow", function () { $('.alert').remove() }) }, 5000);
+            //$(".alert").hide(3000);
+            $('[data-dismiss="alert"]').click(function () {
+                $('.alert').fadeOut();
+            });
+
+
+        });
+
+    </script>
+
+    <script>
+
+        
+    </script>
+</head>
+
+<body>
+    @{
+        
+       
+        MembershipUser user = Membership.GetUser();
+        if (user == null)
+        {
+            Response.Redirect("/Account/Logon");
+        }
+        string[] role = Roles.GetRolesForUser(user.UserName);
+
+
+        bool _superadmin = false;
+        bool _employee = false;
+        bool _setup = false;
+        bool _hr = false;
+        bool _admin = false;
+        foreach (var r in role)
+        {
+            if (r.ToLower() == HR_System.Models.SiteRoles.SuperAdmin)
+            {
+                _superadmin = true;
+            }
+            if (r.ToLower() == HR_System.Models.SiteRoles.Admin)
+            {
+                _admin = true;
+            }
+            if (r.ToLower() == HR_System.Models.SiteRoles.Employee)
+            {
+                _employee = true;
+            }
+            if (r.ToLower() == HR_System.Models.SiteRoles.HR)
+            {
+                _hr = true;
+            }
+            if (r.ToLower() == HR_System.Models.SiteRoles.Setup)
+            {
+                _setup = true;
+            }
+
+        }
+    }
+    <!--   -->
+    <!-- Themer (Remove if not needed) -->
+    <div class="loading">
+        <img src="/images/loading.gif" alt="loading" style="position: fixed; top: 42%; left: 48%;" />
+    </div>
+    <ul class="status">
+    </ul>
+    <div id="mws-themer">
+        <div id="mws-themer-content">
+            <div id="mws-themer-ribbon"></div>
+            <div id="mws-themer-toggle">
+                <i class="icon-bended-arrow-left"></i>
+                <i class="icon-bended-arrow-right"></i>
+            </div>
+            <div id="mws-theme-presets-container" class="mws-themer-section">
+                <label for="mws-theme-presets">Color Presets</label>
+            </div>
+            <div class="mws-themer-separator"></div>
+            <div id="mws-theme-pattern-container" class="mws-themer-section">
+                <label for="mws-theme-patterns">Background</label>
+            </div>
+            <div class="mws-themer-separator"></div>
+            <div class="mws-themer-section">
+                <ul>
+                    <li class="clearfix"><span>Base Color</span>
+                        <div id="mws-base-cp" class="mws-cp-trigger"></div>
+                    </li>
+                    <li class="clearfix"><span>Highlight Color</span>
+                        <div id="mws-highlight-cp" class="mws-cp-trigger"></div>
+                    </li>
+                    <li class="clearfix"><span>Text Color</span>
+                        <div id="mws-text-cp" class="mws-cp-trigger"></div>
+                    </li>
+                    <li class="clearfix"><span>Text Glow Color</span>
+                        <div id="mws-textglow-cp" class="mws-cp-trigger"></div>
+                    </li>
+                    <li class="clearfix"><span>Text Glow Opacity</span>
+                        <div id="mws-textglow-op"></div>
+                    </li>
+                </ul>
+            </div>
+            <div class="mws-themer-separator"></div>
+            <div class="mws-themer-section">
+                <button class="btn btn-danger small" id="mws-themer-getcss">Get CSS</button>
+            </div>
+        </div>
+        <div id="mws-themer-css-dialog">
+            <form class="mws-form">
+                <div class="mws-form-row">
+                    <div class="mws-form-item">
+                        <textarea cols="auto" rows="auto" readonly="readonly"></textarea>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Themer End -->
+
+    <!-- Header -->
+    <div id="mws-header" class="clearfix">
+
+        <!-- Logo Container -->
+        <div id="mws-logo-container">
+
+            <!-- Logo Wrapper, images put within this wrapper will always be vertically centered -->
+            <div id="mws-logo-wrap">
+                <a href="/Home/Index">
+                    <img src="@Url.Content("~/images/mws-logo.png")" alt="mws admin">
+                </a>
+            </div>
+        </div>
+
+        <!-- User Tools (notifications, logout, profile, change password) -->
+        <div id="mws-user-tools" class="clearfix">
+
+            <!-- Notifications -->
+            @if (_employee)
+            {
+                Html.RenderAction("LeaveNotification", "Notification");
+            }
+            @{Html.RenderAction("TimesheetNotification", "Home");}
+
+            @{Html.RenderAction("LeaveRequestNotification", "Home");}
+
+
+
+            <!-- Messages -->
+            <div id="mws-user-message" class="mws-dropdown-menu" style="display: none;">
+                <a href="#" data-toggle="dropdown" class="mws-dropdown-trigger"><i class="icon-envelope"></i></a>
+
+                <!-- Unred messages count -->
+                <span class="mws-dropdown-notif">0</span>
+
+                <!-- Messages dropdown -->
+                <div class="mws-dropdown-box">
+                    <div class="mws-dropdown-content">
+                        <ul class="mws-messages">
+                        </ul>
+                        <div class="mws-dropdown-viewall">
+                            <a href="#">View All Messages</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Information and functions section -->
+            <div id="mws-user-info" class="mws-inset" style="height: 37px;">
+
+                <!-- User Photo -->
+                <div id="mws-user-photo">
+                    @*<img src="@Url.Content("~/Images/profile.jpg")" alt="User Photo">*@
+                </div>
+
+                <!-- Username and Functions -->
+                <div id="mws-user-functions" style="width: 149px; font-size: 12px; margin-bottom: 4px;">
+                    <div id="mws-username" style="font-size: 15px;">
+                        @{string country = HR_System.Models.MVCUtility.getCurrentCountryName();
+                          string userNameWithCountry = user.UserName;
+                          if (!string.IsNullOrEmpty(country))
+                          {
+                              userNameWithCountry += " (" + country + ")";
+                          }
+ 
+                        }
+                        @userNameWithCountry
+
+                    </div>
+                    <ul style="margin-top: 4px; font-size: 13px;">
+                        <li style="display: none;"><a href="#"></a></li>
+                        <li><a href="@Url.Content("~/Account/ChangePassword")">Reset Password</a></li>
+
+                        <li><a href="@Url.Content("~/Account/LogOff")">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Start Main Wrapper -->
+    <div id="mws-wrapper">
+
+        <!-- Necessary markup, do not remove -->
+        <div id="mws-sidebar-stitch"></div>
+        <div id="mws-sidebar-bg"></div>
+
+        <!-- Sidebar Wrapper -->
+        <div id="mws-sidebar">
+
+            <!-- Hidden Nav Collapse Button -->
+            <div id="mws-nav-collapse">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <!-- Searchbox -->
+            @*            <div id="mws-searchbox" class="mws-inset">
+                <form action="typography.html">
+                    <input type="text" class="mws-search-input" placeholder="Search...">
+                    <button type="submit" class="mws-search-submit"><i class="icon-search"></i></button>
+                </form>
+            </div>*@
+
+            <!-- Main Navigation -->
+            <div id="mws-navigation">
+                <ul class="clearfix">
+
+                    @if (_superadmin || _admin)
+                    {
+                        <li><span><i class="icon-home"></i>Administrator</span>
+                            <ul class="closed">
+                                <li><a  href="@Url.Content("~/Home/UserAccess")"><i class="icon-folder-closed"></i>User Access</a></li>
+                                <li style="display: none;"><a  href="@Url.Content("~/Settings/Holiday")"><i class="icon-folder-closed"></i>Holiday List</a></li>
+                                <li><a  href="@Url.Content("~/Home/ChangeStaffPassword")"><i class="icon-folder-closed"></i>Reset Password</a></li>
+                                <li><a  href="@Url.Content("~/Home/UnlockUser")"><i class="icon-folder-closed"></i>Unlock User</a></li>
+                                <li><a  href="@Url.Content("~/Home/EmployeeRoles")"><i class="icon-folder-closed"></i>Change Roles</a></li>
+
+
+                            </ul>
+                        </li>
+                    }
+                    @if (_superadmin || _hr)
+                    {
+                        <li><span><i class="icon-list"></i>Human Resources</span>
+                            <ul class="closed" id="emp" style="display: none;">
+                                <li><a href="@Url.Content("~/Home/Employee")"><i class="icon-user"></i>Employees</a></li>
+
+                                <li><a href="@Url.Content("~/Settings/Project")"><i class="icon-cogs"></i>Projects</a></li>
+                                <li><a href="@Url.Content("~/Settings/Holidays")"><i class="icon-graph"></i>Holidays</a></li>
+                                <li><a href="@Url.Content("~/Settings/LeaveType")"><i class="icon-cogs"></i>Leave Types</a></li>
+                                <li><a href="@Url.Content("~/Employee/EmployeeFiles")"><i class="icon-cogs"></i>Employee Files</a></li>
+                                <li><a href="@Url.Content("~/Employee/HRFunctions")"><i class="icon-cogs"></i>HR Functions</a></li>
+                                <li><a href="@Url.Content("~/Employee/CarryForwardProcess")"><i class="icon-cogs"></i>Automatically CarryForward</a></li>
+
+                            </ul>
+                        </li>
+                    }
+                    @if (_superadmin || _setup)
+                    {  
+                        <li><span><i class="icon-th"></i>Setup Tables</span>
+                            <ul class="closed" id="setup" style="display: none;">
+                                @if(_superadmin)
+                                {
+                                <li><a href="@Url.Content("~/Settings/Country")"><i class="icon-list"></i>Country</a></li>
+                                }
+                                <li><a href="@Url.Content("~/Settings/city")"><i class="icon-cogs"></i>City</a></li>
+                                <li><a href="@Url.Content("~/Settings/OfficeLocation")"><i class="icon-graph"></i>Office Location</a></li>
+                                <li><a href="@Url.Content("~/Settings/Department")"><i class="icon-graph"></i>Department</a></li>
+                                <li><a href="@Url.Content("~/Settings/JobType")"><i class="icon-th"></i>Job Type</a></li>
+
+
+                            </ul>
+                        </li>
+                    }
+                    @if (_employee || _superadmin)
+                    {
+                        <li><span><i class="icon-user"></i>Employee</span>
+                            <ul class="closed" style="display: none;">
+                                @if (_employee)
+                                {
+                                    <li><a href="@Url.Content("~/Employee/requestForLeave")"><i class="icon-graph"></i>Leave Request</a></li>
+                                    <li><a href="@Url.Content("~/Employee/VacationsBalance")"><i class="icon-graph"></i>Leave Balance</a></li>
+                                    <li><a href="@Url.Content("~/Employee/leaveData")"><i class="icon-graph"></i>My Leaves</a></li>
+                                    <li><a href="@Url.Content("~/Employee/timeSheet")"><i class="icon-graph"></i>My TimeSheet</a></li>
+                                    <li><a href="@Url.Content("~/Employee/holidays")"><i class="icon-graph"></i>My Holidays</a></li>
+                                    <li><a href="@Url.Content("~/Employee/MyProjectsList")"><i class="icon-graph"></i>My Projects</a></li>
+                                    <li><a href="@Url.Content("~/Employee/MyProjects")"><i class="icon-graph"></i>My Projects per Timesheet</a></li> 
+                                   
+                                }
+                                <li><a href="@Url.Content("~/Employee/ManageStaff")"><i class="icon-graph"></i>Manage Staff</a></li>
+                                <li><a href="@Url.Content("~/Employee/PendingtimeSheets")"><i class="icon-graph"></i>Pending Timesheets</a></li>
+                                <li><a href="@Url.Content("~/Employee/PendingLeaves")"><i class="icon-graph"></i>Pending Leaves</a></li>
+                                @*<li><a href="@Url.Content("~/Employee/detailedLeaveForSupervisor")"><i class="icon-graph"></i>Pending Leaves</a></li>*@
+                            </ul>
+                        </li>
+                    }
+
+                    <li><span><i class="icon-list"></i>Reports &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <ul class="closed" id="emp" style="display: none;">
+                            <li><a href="@Url.Content("~/Report/VacationReport")"><i class="icon-cogs"></i>Vacation Report</a></li>
+                            @if (_superadmin || _admin || _hr)
+                            {
+                                <li><a href="@Url.Content("~/Report/VacationSummaryReport")"><i class="icon-cogs"></i>Employee Vacation Summary</a></li>
+                                 <li><a href="@Url.Content("~/Report/VacationBalanceReport")"><i class="icon-cogs"></i>Vacation Balance Summary</a></li>
+                            }
+
+                           
+                            <li><a href="@Url.Content("~/Report/TimesheetReport")"><i class="icon-cogs"></i>Time Sheet Report</a></li>
+                            @if (_superadmin || _admin || _hr)
+                            {
+                                <li><a href="@Url.Content("~/Report/TimesheetListDetail")"><i class="icon-cogs"></i>Timesheets List(Detailed)</a></li>
+                            }
+                            <li><a href="@Url.Content("~/Report")"><i class="icon-user"></i>Employees Reports</a></li>
+
+                        </ul>
+                    </li>
+                    @* }*@
+                    @{
+                        HR_System.Models.EmailLeaveBalance objLB = new HR_System.Models.EmailLeaveBalance();
+                        bool toolsAccess = objLB.setAccessibilityForTools();
+                       
+                    }
+                    @if (toolsAccess)
+                    {
+                        <li><span><i class="icon-th"></i>Tools</span>
+                            <ul class="closed" id="emp" style="display: none;">
+                                <li><a href="@Url.Content("~/Report/EmailLeaveBalances")"><i class="icon-cogs"></i>L.B. by Email</a></li>
+                            </ul>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Container Start -->
+        <div id="mws-container" class="clearfix">
+
+            <!-- Inner Container Start -->
+            <div class="container" style="min-height: 420px;">
+                @RenderBody()
+
+            </div>
+            <!-- Inner Container End -->
+
+            <!-- Footer -->
+            <div id="mws-footer">
+                Copyright HR System @DateTime.Now.Year. All Rights Reserved.
+            </div>
+
+        </div>
+        <!-- Main Container End -->
+
+    </div>
+
+    <!-- JavaScript Plugins -->
+
+    <script src="@Url.Content("~/js/libs/jquery.mousewheel.min.js")"></script>
+    <script src="@Url.Content("~/js/libs/jquery.placeholder.min.js")"></script>
+    <script src="@Url.Content("~/custom-plugins/fileinput.js")"></script>
+
+    <!-- jQuery-UI Dependent Scripts -->
+    <script src="@Url.Content("~/jui/js/jquery-ui-1.9.2.min.js")"></script>
+    <script src="@Url.Content("~/jui/jquery-ui.custom.min.js")"></script>
+    <script src="@Url.Content("~/jui/js/jquery.ui.touch-punch.js")"></script>
+
+    <!-- Plugin Scripts -->
+
+    <!--[if lt IE 9]>
+    <script src="@Url.Content("~/js/libs/excanvas.min.js")"></script>
+    <![endif]-->
+   @* <script src="@Url.Content("~/plugins/flot/jquery.flot.min.js")"></script>
+    <script src="@Url.Content("~/plugins/flot/plugins/jquery.flot.tooltip.min.js")"></script>
+    <script src="@Url.Content("~/plugins/flot/plugins/jquery.flot.pie.min.js")"></script>
+    <script src="@Url.Content("~/plugins/flot/plugins/jquery.flot.stack.min.js")"></script>
+    <script src="@Url.Content("~/plugins/flot/plugins/jquery.flot.resize.min.js")"></script>*@
+    <script src="@Url.Content("~/plugins/colorpicker/colorpicker-min.js")"></script>
+    <script src="@Url.Content("~/plugins/validate/jquery.validate-min.js")"></script>
+    <script src="@Url.Content("~/custom-plugins/wizard/wizard.min.js")"></script>
+
+    <!-- Core Script -->
+    <script src="@Url.Content("~/js/core/mws.js")"></script>
+
+    <!-- Themer Script (Remove if not needed) -->
+    <script src="@Url.Content("~/js/core/themer.js")"></script>
+
+    <!-- Demo Scripts (remove if not needed) -->
+    <script src="@Url.Content("~/js/demo/demo.dashboard.js")")></script>
+    @*<script src="@Url.Content("~/js/core/Datepicker.js")"></script>*@
+
+
+    @* @RenderSection("scripts", required: false)*@
+</body>
+</html>

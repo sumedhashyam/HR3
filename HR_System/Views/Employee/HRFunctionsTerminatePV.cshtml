@@ -1,0 +1,109 @@
+﻿@model DAO.Employee
+<script type="text/javascript">
+    $('.datepicker').datepicker();
+    $('.datepicker').change(function () {
+        hr.terminationBalance($(this).val(), '@ViewBag.id');
+    });
+    changeDateFormat();
+</script>
+<script type="text/javascript">
+    function DoSubmit() {
+        if ($('#FormTerm').valid()) {
+            $("#LeaveBalacneAtTermination").removeAttr("disabled");
+            $.ajax({
+                type: "POST",
+                data: $('#FormTerm').serialize(),
+                url: '/Employee/HRFunctionsTerminatePV',
+                success: function (data) {
+                    if (data.success) {
+                        window.location.href = "HRFunctions";
+                    }
+                    else {
+                        alert('Error');
+                    }
+                },
+                error: function (data) {
+                    alert("error occured");
+                }
+
+            });
+        } else {
+            return false;
+        }
+    }
+</script>
+<div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">Employee Termination </h3>
+    </div>
+    <div class="modal-body">
+
+
+        @using (Html.BeginForm("HRFunctionsTerminatePV", "Employee", FormMethod.Post, new { @class = "mws-form", @id = "FormTerm" }))
+        {
+            @Html.ValidationSummary(true)
+            @Html.HiddenFor(model => model.EmployeeID);
+            @Html.HiddenFor(Model => Model.UserID);
+            <div id="mws-validate-error" class="mws-form-message error" style="display: none;"></div>
+            <div class="mws-form-inline">
+                <div class="mws-form-row">
+                    <label class="mws-form-label">Termination Date</label>
+                    <div class="mws-form-item">
+                        @Html.TextBoxFor(model => model.Termination_Date, new { @class = "large required datepicker" })
+                        @Html.ValidationMessageFor(model => model.Termination_Date)
+                    </div>
+                </div>
+                <div class="mws-form-row">
+                    <label class="mws-form-label">Termination Reason</label>
+                    <div class="mws-form-item">
+                        @Html.TextBoxFor(model => model.Termination_Reason, new { @class = "large required" })
+                        @Html.ValidationMessageFor(model => model.Termination_Reason)
+                    </div>
+                </div>
+                <div class="mws-form-row">
+                    <label class="mws-form-label">Comments</label>
+                    <div class="mws-form-item">
+                        @Html.TextAreaFor(model => model.Comments, new { @class = "large required", @style = "height:100px" })
+                        @Html.ValidationMessageFor(model => model.Comments)
+                    </div>
+                </div>
+
+                <div class="mws-form-row">
+                    <label class="mws-form-label">Balance at Termination</label>
+                    <div class="mws-form-item">
+                        @Html.TextBoxFor(model => model.LeaveBalacneAtTermination, new { @class = "large disabled", @disabled = "disabled" })
+                    </div>
+                </div>
+
+
+
+
+
+
+                @Html.HiddenFor(model => model.IsTerminated, new { @class = "large", @id = "isTerminated" })
+
+
+
+            </div>
+            <div class="mws-button-row">
+                @if(ViewBag.TerinateType == "T")
+                {
+                    <input type="button" class="btn btn-info" onclick="return DoSubmit()" value="Save Changes" />
+                }
+                else{
+                 <a href="#" onclick="return hr.loadHRFunctionsUnTerminate('@Model.EmployeeID','@Model.UserID');" class="btn btn-info">Un-Terminate</a>
+                }
+                
+                @Html.ActionLink("Cancel", "HRFunctions", "Employee", null, new { @class = "btn btn-danger" })
+            </div>
+        }
+
+
+
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+
+    </div>
+</div>

@@ -1,0 +1,124 @@
+﻿@model IEnumerable<DAO.TimeSheetMaster>
+@using DAL;
+@using DAO;
+<script src="@Url.Content("~")js/dataTables.dateFormat.js"></script>
+<script src="@Url.Content("~")js/jquery.dataTables.columnFilter.js"></script>
+<script>
+    applyDatatable();
+</script>
+@{
+    
+    List<TimeSheetMaster> list = (List<TimeSheetMaster>)ViewData["ListTimeSheet"];
+    int i = 1;
+
+    int sum = 0;
+}
+@*<div class="mws-panel grid_8" style="text-align: right; box-shadow: none;">*@
+    @* @Html.ActionLink("Add TimeSheet", "timesheetMaster", "Employee", null, new { @class = "btn btn-primary" })*@
+@*</div>*@
+<div class="mws-panel grid_8" id="data-grid">
+    <div class="mws-panel-header">
+        <span style="width: 200px; display: inline-block;"><i class="icon-table"></i>My Timesheets</span>
+
+        <div class="toolbar">
+            <a><i class="icon-plus"></i>@Html.ActionLink("Add New TimeSheet", "timesheetMaster", "Employee", null, new { @style = "margin-right:19px;" })</a>
+            <a href="javascript:"><i class="icon-refresh" onclick=" hr.loadAllTimeSheetNow(null);"></i></a>
+        </div>
+    </div>
+    <div class="mws-panel-body no-padding">
+        <table class="mws-datatable-fn hide-c mws-table">
+            <thead>
+
+                <tr role="row">
+                    <th></th>
+                    <th>Month</th>
+                    <th>Total Hour</th>
+
+                    <th>Status</th>
+                    <th></th>
+                    <th>Summary</th>
+                    <th>Print</th>
+                </tr>
+            </thead>
+
+            <tbody role="alert" aria-live="polite" aria-relevant="all">
+
+                @{ string returnUrl = Url.Content("~/Employee/timeSheet"); }
+                @foreach (var item in Model.OrderBy(a => a.MonthNumber))
+                {
+                    bool Approved = false;
+                    <tr>
+                        <td>
+
+                            @i
+
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Month)
+                        </td>
+                        <td>
+
+                            @{
+                    dbHRSystemEntities db = new dbHRSystemEntities();
+                    int yr=int.Parse(item.Year);
+                    int noOfHolidayes = db.Holidays.Where(h => h.LocationID == item.Employee.OfficeLocationID && h.HolidayDate.Year == yr && h.HolidayDate.Month == item.MonthNumber).Count();
+                    noOfHolidayes = noOfHolidayes > 0 ? (noOfHolidayes * 8) : 0;
+
+                    var listT = db.TimeSheets.Where(a => a.TimeSheetMasterID == item.TimeSheetMasterID).ToList().Where(a => a.Date.Value.ToString("yyyy") == item.Year && a.Date.Value.ToString("MMM") == item.Month).Sum(a => a.Hours);
+                   
+                    decimal totalhoursIcludedHoliday = decimal.Parse(listT.ToString()) + noOfHolidayes;
+                    
+                            }
+                            @totalhoursIcludedHoliday
+                          @*  @listT*@
+                            <span>Hrs</span>
+                        </td>
+                        <td>
+                            @if (item.IsSubmit == false && item.Status == null)
+                            {
+                                @:Not Submitted  
+                            }
+
+                            else if (item.IsSubmit == true && item.Status == null)
+                            {
+                                @:Pending
+                            }
+                            else if (item.Status.ToLower().Trim() == "disapproved")
+                            {
+                                @:Disapproved
+                            }
+                            else if (item.Status.ToLower().Trim() == "approved")
+                            {
+                                Approved = true;
+                                @:Approved
+                             }
+                        </td>
+
+                        <td>
+                            @if (item.IsSubmit == true)
+                            {
+                                @Html.ActionLink("VIew", "editTimeSheet", "Employee", new { timM_ID = item.TimeSheetMasterID, returnUrl = returnUrl }, new { @class = "btn btn-primary" })
+                            }
+                            @if (item.IsSubmit == false || item.IsSubmit == null)
+                            { 
+                                @Html.ActionLink("Edit", "editTimeSheet", "Employee", new { timM_ID = item.TimeSheetMasterID, returnUrl = returnUrl }, new { @class = "btn btn-success" })
+                            }
+
+
+                        </td>
+                        <td>@Html.ActionLink("Summary", "TimesheetSummary", "Report", new { EmployeeID = item.EmpID, TimesheetMasterId = item.TimeSheetMasterID, returnUrl = returnUrl }, new { @class = "btn btn-info" })</td>
+                        <td>
+                            @if (Approved)
+                            {
+                                @Html.ActionLink("Print", "printTimesheet", "Employee", new { month = item.Month, year = @item.Year, timM_ID = @item.TimeSheetMasterID }, new { @class = "btn btn-primary", onclick = "openPrintPopup(this,event)" })
+                            }
+                        </td>
+                    </tr>
+                }
+
+
+            </tbody>
+        </table>
+    </div>
+</div>

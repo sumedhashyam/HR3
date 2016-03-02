@@ -1,0 +1,68 @@
+﻿@model DAO.TimeSheetMaster
+@{
+    ViewBag.Title = "timesheetMaster";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+}
+
+
+@{
+    Guid Emp_ID = (Guid)ViewData["EmpId"];    
+}
+<div class="mws-panel grid_8" style="text-align: right; box-shadow: none;">
+   
+</div>
+@{Html.RenderPartial("Notification");}
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        <span style="width: 200px;
+display: inline-block;">Add TimeSheet</span>
+        <div class="toolbar">
+            <a><i class="icon-plus"></i></a> @Html.ActionLink("Back", "timeSheet", "Employee", null)
+            
+
+        </div>
+
+        
+
+    </div>
+    <div class="mws-panel-body no-padding">
+
+        @using (Html.BeginForm("timesheetMaster", "Employee", FormMethod.Post, new { @class = "mws-form" }))
+        {
+            @Html.ValidationSummary(true)
+            @Html.Hidden("EmpId", Emp_ID)
+            <div id="mws-validate-error" class="mws-form-message error" style="display: none;"></div>
+            <div class="mws-form-inline">
+                <div class="mws-form-row">
+                    <label class="mws-form-label">Select Month</label>
+                    <div class="mws-form-item">
+                        @{ List<SelectListItem> mothList = (List<SelectListItem>)ViewData["listMonth"];
+                        }
+                        @Html.DropDownListFor(a => a.Month, mothList, new { @class = "required", @style = "width:352px;" })
+                        @Html.ValidationMessageFor(model => model.Month)
+
+                    </div>
+                </div>
+                <div class="mws-form-row">
+                    <label class="mws-form-label">Select Year</label>
+                    <div class="mws-form-item">
+                        @{ List<SelectListItem> locationList = (List<SelectListItem>)ViewData["listYear"];
+                        }
+                        @Html.DropDownListFor(a => a.Year, locationList, new { @class = "required", @style = "width:352px;" })
+                        @Html.ValidationMessageFor(model => model.Year)
+
+                    </div>
+                </div>
+
+                <div class="mws-button-row">
+                    <input type="submit" value="Submit" class="btn btn-info" />
+                    @Html.ActionLink("Cancel", "timeSheet", "Employee", null, new { @class = "btn btn-danger" })
+                </div>
+            </div>
+            
+        }
+
+    </div>
+</div>
+
+

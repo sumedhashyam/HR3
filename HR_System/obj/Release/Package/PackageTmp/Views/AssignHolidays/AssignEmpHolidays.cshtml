@@ -1,0 +1,32 @@
+﻿
+
+@{
+    ViewBag.Title = "AssignEmpHolidays";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+}
+
+<h2>AssignEmpHolidays</h2>
+
+<script src="../../Scripts/Custom/jsEmpReport.js"></script>
+
+<ul class="TopControls clearfix">
+    <li>
+         @{ List<SelectListItem> locationList = (List<SelectListItem>)ViewData["Year"];
+    }
+    @Html.DropDownList("Year", locationList, new {style = "width: 147px;" })
+  @*  @Html.ValidationMessageFor(model => model.Year)*@
+
+
+    </li>
+    <li>
+         @{ List<SelectListItem> EmpList = (List<SelectListItem>)ViewData["Employee"];
+    }
+    @Html.DropDownList("Employee",EmpList, new { style = "width: 147px;" })
+
+  @*  @Html.ValidationMessageFor(model => model.FirstNameEn)*@
+
+       
+ </li>
+    <li> <input id="btnShow" type="button" class="btn btn-primary" onclick="InsEmpHolidays();" value="Show" /></li>
+
+</ul>

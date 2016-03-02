@@ -1,0 +1,84 @@
+﻿<script>
+    $(".mws-datatable-fn").dataTable({
+        sPaginationType: "full_numbers"
+    });
+</script>
+
+
+
+<div class="mws-panel grid_8" style="text-align: right; box-shadow: none;">
+    @* @Html.ActionLink("Add New", "addDepartment", "Settings", null, new { @class = "btn btn-primary" })*@
+</div>
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        <span style="width: 200px; display: inline-block;"><i class="icon-table"></i>Departments</span>
+
+        <div class="toolbar">
+            <a><i class="icon-plus"></i>@Html.ActionLink("Add New Depatment", "addDepartment", "Settings", null, new { @style = "margin-right:19px;" })</a>
+            <a href="javascript:"><i class="icon-refresh" onclick=" hr.Department();"></i></a>
+        </div>
+    </div>
+    <div class="mws-panel-body no-padding">
+        <table class="mws-datatable-fn mws-table">
+            <thead>
+                <tr role="row">
+                    <th class="sorting" role="columnheader" tabindex="0" aria-controls="demo-dtable-01" rowspan="1" colspan="1" style="width: 226px;" aria-label="Country: activate to sort column ascending">Department code</th>
+                    <th class="sorting" role="columnheader" tabindex="0" aria-controls="demo-dtable-01" rowspan="1" colspan="1" style="width: 226px;" aria-label="Country: activate to sort column ascending">Department Name Ar</th>
+                    <th class="sorting" role="columnheader" tabindex="0" aria-controls="demo-dtable-01" rowspan="1" colspan="1" style="width: 226px;" aria-label="Country: activate to sort column ascending">Department En</th>
+                    <th class="sorting" role="columnheader" tabindex="0" aria-controls="demo-dtable-01" rowspan="1" colspan="1" style="width: 226px;" aria-label="Country: activate to sort column ascending">Active From</th>
+                    <th class="sorting" role="columnheader" tabindex="0" aria-controls="demo-dtable-01" rowspan="1" colspan="1" style="width: 226px;" aria-label="Country: activate to sort column ascending">IsActive</th>
+                    @*<th class="sorting_desc" role="columnheader" tabindex="0" aria-controls="demo-dtable-01" rowspan="1" colspan="1" style="width: 148px;" aria-sort="descending" aria-label="Death rate per 1,000 people: activate to sort column ascending">License key</th>*@
+                    <th>Edit
+
+                    </th>
+                    <th>Delete
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody role="alert" aria-live="polite" aria-relevant="all">
+
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+
+                        <td>
+                            @item.DepartmentCode
+                        </td>
+                        <td>
+                            @item.DepartmentNameAr
+                        </td>
+                        <td>
+                            @item.DepartmentNameEn
+                        </td>
+                        <td>
+                            @if (item.ActiveFromDate != null)
+                            {
+                                DateTime dt = item.ActiveFromDate;
+                                @dt.DayOfWeek 
+                              
+                                @dt.ToString("," + "dd-MMM-yyyy");
+                            }
+                        </td>
+                        <td>
+                            @item.ISActive
+                        </td>
+                        @*  <td class=" sorting_1">
+                                @Html.DisplayFor(modelItem => item.LicenseKey)
+                            </td>*@
+                        <td class=" sorting_1" align="center">
+                            @Html.ActionLink(" ", "editDepartment", new { id = item.DepartmentID }, new { @class = "btn btn-primary btn-small icon-edit", @title = "Edit" })
+                        </td>
+
+                        <td class=" sorting_1" align="center">
+                            @Html.ActionLink(" ", "delDepartment", new { id = item.DepartmentID }, new { @class = "btn btn-danger btn-small icon-trash", onclick = "return confirm('Are you sure want to delete this record ?')", @title = "Delete" })
+                        </td>
+                    </tr>
+                }
+
+
+            </tbody>
+        </table>
+    </div>
+</div>

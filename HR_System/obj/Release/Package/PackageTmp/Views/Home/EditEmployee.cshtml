@@ -1,0 +1,81 @@
+﻿@model HR_System.Models.EmpPersonalDetailModel
+@{
+    ViewBag.Title = "EditEmployee";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+}
+
+@*<h2>Edit Employee</h2>*@
+<style type="text/css">
+    .field-validation-error
+    {
+        display: block;
+    }
+
+    label.error
+    {
+        color: red;
+        margin-left: 5px;
+        display: none !important;
+    }
+
+    input.error, select.error
+    {
+        border: 1px dashed red;
+    }
+
+    fieldset
+    {
+        border: none;
+        padding: 20px;
+    }
+
+    .wizard-step .control-group .control-label
+    {
+        width: 140px;
+        float: left;
+        padding-top: 5px;
+    }
+
+    .wizard-step .control-group .controls
+    {
+        margin-left: 156px;
+    }
+
+    .wizard-step .control-group
+    {
+        padding: 10px 0px;
+    }
+
+    .form-actions
+    {
+        padding: 16px 16px 16px 16px;
+        border-top: 1px solid #bcbcbc;
+        background-color: #d2d2d2;
+        margin: 0;
+    }
+
+    .add-new
+    {
+        position: absolute;
+        z-index: 99999;
+        right: 22px;
+        margin-top: 15px;
+    }
+</style>
+
+
+<script type="text/javascript">
+
+    $(function () {
+        hr.loadEditEmployeePV('@ViewBag.EmployeeID');
+        $('#navigation li').removeClass('active');
+        $('#msystem').addClass('active');
+        //commonFunctions.changeDateFormat();
+    });
+
+</script>
+<input type="hidden" id="empid" name="id" value="@ViewBag.EmployeeID" />
+
+@{Html.RenderPartial("Notification");}
+<div id="main-content" class="row-fluid">
+</div>

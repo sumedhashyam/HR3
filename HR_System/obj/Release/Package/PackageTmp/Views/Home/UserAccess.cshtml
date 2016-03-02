@@ -1,0 +1,52 @@
+﻿@{
+    ViewBag.Title = "UserAccess";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+}
+
+@{
+        
+       
+    MembershipUser user = Membership.GetUser();
+    if (user == null)
+    {
+        Response.Redirect("/Account/Logon");
+    }
+    string[] role = Roles.GetRolesForUser(user.UserName);
+
+
+    bool _superadmin = false;
+    bool _admin = false;
+
+    foreach (var r in role)
+    {
+        if (r.ToLower() == HR_System.Models.SiteRoles.SuperAdmin)
+        {
+            _superadmin = true;
+        }
+        if (r.ToLower() == HR_System.Models.SiteRoles.Admin)
+        {
+            _admin = true;
+        }
+    }
+
+
+    if (_superadmin || _admin)
+    {
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            hr.loadUserAccessPV();
+
+        });
+    </script>
+
+    }
+    else
+    {
+        TempData["error"] = "Not Authorized";
+    }
+}
+@{Html.RenderPartial("Notification");}
+<div id="main-content" class="row-fluid">
+</div>

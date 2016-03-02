@@ -1,0 +1,85 @@
+﻿@model IEnumerable<DAO.Employee>
+<script>
+    $(".mws-datatable-fn").dataTable({
+        sPaginationType: "full_numbers"
+    });
+</script>
+
+
+
+<div class="mws-panel grid_8" style="text-align: right; box-shadow: none;">
+    @*@Html.ActionLink("Add New Employee", "AddEmployee", "Home", null, new { @class = "btn btn-primary" })*@
+</div>
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        <span style="width: 200px; display: inline-block;"><i class="icon-table"></i>Employee</span>
+        <div class="toolbar">
+@*            <a href="/Home/AddEmployee" style = "margin-right:19px;"><i class='icon-plus'></i> Add New Employee</a>*@
+            <a href="javascript:;"><i class="icon-refresh" onclick="hr.loadUserAccessPV();"></i></a>
+        </div>
+
+    </div>
+    <div class="mws-panel-body no-padding">
+        <table class="mws-datatable-fn mws-table">
+            <thead>
+                <tr role="row">
+                    <th>Employee Name En</th>
+                    <th>Hire Date</th>
+                    <th>Department</th>
+                    <th>Location</th>
+                    <th>Create User</th>
+                   
+                  </tr>
+            </thead>
+            @using DAO;
+            <tbody role="alert" aria-live="polite" aria-relevant="all">
+
+
+                @foreach (var item in Model)
+                {
+                       
+                    <tr>
+                        @*<td>
+                            @item.FirstNameAr @item.SecondNameAr @item.ThirdNameAr @item.LastNameAr
+                        </td>*@
+                        <td>
+                            @item.FirstNameEn @item.SecondNameEn @item.ThirdNameEn @item.LastNameEn
+                        </td>
+                        <td>@if (item.HireDate != null)
+                            {
+                            @item.HireDate.Value.ToShortDateString()
+                            }
+                        </td>
+                        <td>@if (item.DepartmentID != null)
+                            {
+                            @item.Department.DepartmentNameEn
+                            }
+                        </td>
+                        <td>
+                            @if (item.OfficeLocationID != null)
+                            {
+                                @item.EmployeeLocation.LocationName
+                            }
+                        </td>
+                        @*  <td>
+                            @{var status = "Unmarried";}
+                            @if (Convert.ToBoolean(item.EmployeeStatus))
+                            {
+                                status = "Married";
+
+                            }
+                            @status
+
+                        </td>*@
+                          <td class=" sorting_1" align="center">
+                            @Html.ActionLink(" ", "CreateUser", "Home", new { id = item.EmployeeID }, new { @class = "btn btn-success btn-small icon-table" })
+                        </td>
+                       </tr>
+                }
+
+
+            </tbody>
+        </table>
+    </div>
+
+</div>

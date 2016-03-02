@@ -1,0 +1,19 @@
+﻿@model DAO.EmployeeLocation
+
+@{
+    ViewBag.Title = "OfficeLocation";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+}
+
+@*<h2>Office Location</h2>*@
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        hr.loadofficeLocation();
+
+    });
+</script>
+  @{Html.RenderPartial("Notification");}
+<div id="main-content" class="row-fluid">
+
+</div>

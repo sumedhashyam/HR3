@@ -1,0 +1,145 @@
+﻿@charset "utf-8";
+/* CSS Document */
+
+#mws-sidebar-stitch
+{
+    display: none;
+}
+
+#mws-sidebar-bg
+{
+    width: 100%;
+}
+
+#mws-sidebar
+{
+    width: 100%;
+    float: none;
+}
+
+#mws-navigation > ul
+{
+    text-align: center;
+}
+
+#mws-navigation ul li
+{
+    float: left;
+    _display: inline;
+    border-right: 1px solid rgba(0, 0, 0, 0.35);
+    position: relative;
+}
+
+#mws-navigation > ul > li > ul
+{
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.80);
+    width: 100%;
+}
+
+    #mws-navigation > ul > li > ul > li
+    {
+        width: 100%;
+        border-bottom: 1px solid black;
+    }
+
+        #mws-navigation > ul > li > ul > li i
+        {
+            margin-right: 5px;
+        }
+
+        #mws-navigation > ul > li > ul > li > a
+        {
+            text-align: left;
+            padding: 8px 5px;
+        }
+
+        #mws-navigation > ul > li > ul > li:hover
+        {
+            background-color: rgba(0, 0, 0, 0.80);
+        }
+
+#mws-searchbox
+{
+    width: 30%;
+}
+
+#mws-container
+{
+    margin-left: 0;
+}
+
+/* below ie-9*/
+.lt-ie9 .mws-inset,
+.lt-ie9 #mws-navigation > ul > li > ul,
+.lt-ie9 #mws-navigation > ul > li .mws-nav-tooltip,
+.lt-ie9 #mws-navigation > ul > li > ul > li:hover,
+.lt-ie9 .dataTables_wrapper .dataTables_paginate
+{
+    background-color: #333;
+    background-repeat: repeat;
+    background-image: url(../images/core/alpha.png);
+}
+
+
+@media only screen and (max-width: 1024px) and (min-width: 600px)
+{
+    #mws-navigation ul li a,
+    #mws-navigation ul li span
+    {
+        padding: 11px 15px;
+    }
+}
+
+@media only screen and (max-width: 599px)
+{
+    #mws-navigation ul li
+    {
+        display: block;
+        float: none;
+    }
+
+    #mws-navigation > ul > li > ul
+    {
+        position: relative;
+    }
+
+        #mws-navigation > ul > li > ul > li > a
+        {
+            padding: 5px 7px;
+        }
+}
+
+.hide-c tbody tr td:first-child,
+.hide-c thead tr th:first-child
+{
+    display: none;
+}
+
+.divscroll
+{
+    overflow: auto;
+}
+
+.table
+{
+    margin: 15px;
+    border: 1px solid #CCC;
+}
+
+.refresh
+{
+    width: 200PX;
+    display: inline-block;
+    float: right;
+    margin-right: -149PX;
+}
+
+.mws-table tbody td, .mws-table tfoot td
+{
+    padding: 2px 16px;
+}
+.mws-table tbody .btn
+{
+    padding: 2px 10px;
+}

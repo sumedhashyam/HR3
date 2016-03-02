@@ -1,0 +1,40 @@
+﻿@{
+    ViewBag.Title = "UnlockUser";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+}
+
+
+
+@{Html.RenderPartial("Notification");}
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+       <span style="width: 200px; display: inline-block;"><i class="icon-table"></i>Unlock User</span> 
+        <div class="toolbar">
+        </div>
+
+    </div>
+    <div class="mws-panel-body no-padding">
+
+        @using (Html.BeginForm("addCountry", "Settings", FormMethod.Post, new { @class = "mws-form" }))
+        {
+            @Html.ValidationSummary(true)
+
+          
+            <div id="mws-validate-error" class="mws-form-message error" style="display: none;"></div>
+            <div class="mws-form-inline">
+                <div class="mws-form-row">
+                    <label class="mws-form-label">Select Employee</label>
+                    <div class="mws-form-item">
+                        @Html.DropDownList("EmployeeList", (List<SelectListItem>)ViewBag.employeeList, new { style = "width:352px;" })
+                    </div>
+                </div>
+            </div>
+            <div class="mws-button-row">
+                <a onclick="hr.unlockUser()" class="btn btn-primary">Unlock Employee</a>
+
+            </div>
+        }
+
+    </div>
+</div>
+

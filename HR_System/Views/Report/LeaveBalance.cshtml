@@ -1,0 +1,27 @@
+﻿@{
+    ViewBag.Title = "LeaveBalance";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+}
+@using HR_System.Models
+@{
+    Guid EmployeeID = new Guid(ViewBag.EmployeeID.ToString());
+    string returnUrl = Request.QueryString["returnUrl"];
+    int CurrentYear =  DateTime.Now.Month >= 10 ? (DateTime.Now.Year + 1) : (DateTime.Now.Month <= 9 ? DateTime.Now.Year : DateTime.Now.Year);
+    
+    MVCUtility _MVCUtility=new MVCUtility();
+    var iscarryForward=_MVCUtility.getLeaveSummary(EmployeeID, CurrentYear);
+    if (iscarryForward == null || iscarryForward.Count<=0)
+    {
+        CurrentYear = DateTime.Now.Year;
+    }
+}
+
+<script type="text/javascript">
+    $(function () {
+        reports.loadLeaveBalance('@EmployeeID', false, '@CurrentYear', '@returnUrl');
+    });
+</script>
+@{Html.RenderPartial("Notification");}
+<div id="main-content" class="row-fluid">
+</div>
+

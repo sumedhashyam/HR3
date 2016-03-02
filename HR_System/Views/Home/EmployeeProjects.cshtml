@@ -1,0 +1,88 @@
+﻿@model IEnumerable<DAO.EmployeeProject>
+@{
+    ViewBag.Title = "EmployeeProjects";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+}
+
+@{
+    string returnUrl = ViewBag.returnUrl != null ? ViewBag.returnUrl.ToString() : "";
+}
+
+<div class="mws-panel grid_8">
+    <h1>Projects Detail</h1>
+</div>
+<div class="mws-panel grid_8">
+
+
+    <div class="mws-panel-header">
+        <span style="width: 200px; display: inline-block;"><i class="icon-ok"></i>Projects For @ViewBag.name </span>
+        <div class="toolbar">
+            @if (!string.IsNullOrEmpty(returnUrl))
+            {
+                <a href="@returnUrl">Back</a>
+            }
+            else
+            {
+                @Html.ActionLink("Back", "Employee", "Home", null, null)
+            }
+
+        </div>
+
+    </div>
+    <div class="mws-panel-body no-padding">
+
+        <table class="mws-datatable-fn mws-table">
+            <thead>
+                <tr role="row">
+
+                    <th>Project Name En</th>
+                    <th>Project Name Ar</th>
+                    <th>From Date</th>
+                    <th>End Date</th>
+
+                </tr>
+            </thead>
+
+            <tbody role="alert" aria-live="polite" aria-relevant="all">
+
+
+                @foreach (var item in Model)
+                {
+                    if (item.Project != null)
+                    {
+                    <tr>
+
+                        <td>
+                            @item.Project.ProjectName
+                        </td>
+                        <td>
+                            @item.Project.ProjectNameAr
+                        </td>
+                        <td>
+                            @if (item.FromDate.HasValue)
+                            {
+                                @item.FromDate.Value.ToString("dd-MMM-yyyy")
+                            }
+                        </td>
+                        <td>
+                            @if (item.ToDate.HasValue)
+                            {
+                                @item.ToDate.Value.ToString("dd-MMM-yyyy")
+                            }
+                        </td>
+                    </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+    </div>
+
+
+</div>
+
+<script>
+    $(".mws-datatable-fn").dataTable({
+        sPaginationType: "full_numbers"
+    });
+</script>

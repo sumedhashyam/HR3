@@ -1,0 +1,24 @@
+﻿@{
+    ViewBag.Title = "AllNotifications";
+    Layout = "~/Views/Shared/MainLayout.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        fms.loadAllNotifications();
+    });
+</script>
+
+
+<div id="main-header" class="page-header">
+    <ul class="breadcrumb">
+        <li><a href="@Url.Content("~/Home/Index")"><i class="icon-home"></i>FMS</a><span class="divider">»</span> </li>
+        <li>Notifications<span class="divider"></span> </li>
+       
+    </ul>
+@{Html.RenderPartial("alerts");}
+</div>
+                   
+
+<div id="main-content">
+    
+</div>

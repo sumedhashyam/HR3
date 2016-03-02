@@ -1,0 +1,63 @@
+﻿
+
+
+.widget .form-container .control-group
+{
+    border-top: none;
+}
+
+#wrapper #content.sidebar-minimized #content-inner
+{
+    background-image: none;
+}
+
+#wrapper #content-outer
+{
+    background-image: none;
+}
+
+.test{
+    color: red;
+    display: none;
+}
+table thead tr th {
+        padding:5px;
+        border: 1px solid #aaa;
+        font-size:12px;
+}
+table thead tr
+{
+    border: 1px solid #aaa;
+
+}
+table td {
+     padding:5px;
+     border:1px solid #aaa;
+     border-width: 1px;
+     font-size:10px;
+}
+
+
+table
+{
+    border: 1px solid #A9C6C9;
+    width:100%;
+    margin:10px 0px 0px 0px;
+    font-family:Arial;
+    border-collapse: collapse;
+    font-size:12px;
+}
+
+h4
+{
+    text-align: center;
+}
+
+.print
+{
+    float: right;
+}
+.sitelogo
+{
+
+}

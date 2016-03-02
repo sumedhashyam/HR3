@@ -1,0 +1,30 @@
+﻿@model IEnumerable<DAO.Notification>
+<div id="mws-user-notif" class="mws-dropdown-menu">
+    <a href="#" data-toggle="dropdown" class="mws-dropdown-trigger"><i class="icon-bell-2"></i></a>
+
+    <!-- Unread notification count -->
+    <span class="mws-dropdown-notif">@Model.Count()</span>
+
+    <!-- Notifications dropdown -->
+    <div class="mws-dropdown-box">
+        <div class="mws-dropdown-content">
+            <ul class="mws-notifications">
+                @foreach (var item in Model)
+                {
+                    <li class="read">
+                        <a href="@Url.Content(item.Url)">
+                           @* <span class="message"> </span>*@
+                            <span class="time"> @item.Message</span>
+                        </a>
+                    </li>
+                }
+            </ul>
+            <div class="mws-dropdown-viewall">
+                <a href="@Url.Content("~/Notification/Index")">View All Leaves (My) Notifications</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

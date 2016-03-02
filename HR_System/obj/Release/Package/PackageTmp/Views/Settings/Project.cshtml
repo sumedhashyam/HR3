@@ -1,0 +1,19 @@
+﻿@model DAO.Project
+
+@{
+    ViewBag.Title = "Project";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+}
+
+@*<h2>Project</h2>*@
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        hr.loadProjectList();
+
+    });
+</script>
+  @{Html.RenderPartial("Notification");}
+<div id="main-content" class="row-fluid">
+
+</div>

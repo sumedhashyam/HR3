@@ -1,0 +1,118 @@
+﻿@model IEnumerable<DAO.EmployeeLeaveRequest>
+
+@{
+    ViewBag.Title = "Vacation Summary Report";
+    Layout = "~/Views/Shared/PrintLayout.cshtml";
+}
+@{
+    int i = 1;
+}
+@{
+    string status = ViewBag.status != null ? ViewBag.status.ToString().ToLower() : "all";
+}
+<input type="hidden" value="@status" id="hfStatus"/>
+<link href="../../Content/print.css" rel="stylesheet" />
+<img src="/images/mws-logo.png" alt="mws admin">
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        <span ><i class="icon-table"></i>Vacation Summary Report</span>
+        <div class="mws-form-item innerDiv">
+        </div>
+        
+    </div>
+    <div class="mws-panel-body no-padding">
+        <table class="mws-datatable-fn mws-table">
+            <thead>
+
+                <tr role="row">
+                   
+                     <th>Name</th>
+                     <th>Location</th>
+
+                    <th>Leave Type</th>
+
+                    <th>From Date</th>
+                    <th>To Date</th>
+                    <th>No. Of Days</th>
+                    <th>No. Of Leave Days</th>
+                    
+                 
+                </tr>
+            </thead>
+
+            <tbody role="alert" aria-live="polite" aria-relevant="all">
+
+
+                @foreach (var item in Model.OrderBy(a => a.FromDate))
+                {
+                    bool isHalfDay = false;
+                    if (item.HalfDay == true && item.AssignedDate == 1)
+                    {
+                        isHalfDay = true;
+                    }
+
+                
+                   
+          
+                    <tr>
+                      
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Employee.FirstNameEn)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Employee.EmployeeLocation.LocationName)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LeaveType.LeaveTypeName)
+                        </td>
+                        <td>
+                            @if (item.FromDate != null)
+                            {
+                                DateTime dt = Convert.ToDateTime(item.FromDate);
+                                @dt.DayOfWeek.ToString() @:,
+                                string srt = dt.ToString("dd-MM-yyyy");
+                                @srt
+                            }
+                        </td>
+                        <td>
+                            @if (item.ToDate != null)
+                            {
+                                DateTime dt = Convert.ToDateTime(item.ToDate);
+                                @dt.DayOfWeek.ToString() @:,
+                                string srt = dt.ToString("dd-MM-yyyy");
+                                @srt
+                            }
+                        </td>
+                        <td>
+                            @if (isHalfDay)
+                            {
+                                @:1/2
+                            }
+                            else if (item.ActualDate != null)
+                            { 
+                                @Html.DisplayFor(modelItem => item.ActualDate)
+                            }
+                        </td>
+                        <td>
+                            @if (isHalfDay)
+                            {
+                                @:1/2
+                            }
+                            else if (item.AssignedDate != null)
+                            { 
+                                @Html.DisplayFor(modelItem => item.AssignedDate)
+                            }
+
+                        </td>
+                        
+                        @*  @Html.ActionLink("Detail", "DetailForLeave", "Leave", new { req_ID = item.EmployeeLeaveRequestID }, new { @class = "btn btn-info" })*@
+                    </tr>
+                }
+
+
+            </tbody>
+        </table>
+    </div>
+
+</div>

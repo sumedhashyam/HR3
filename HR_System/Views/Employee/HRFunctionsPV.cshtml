@@ -1,0 +1,157 @@
+﻿@model IEnumerable<DAO.Employee>
+@using HR_System.Models
+<script>
+    $(".mws-datatable-fn").dataTable({
+        sPaginationType: "full_numbers"
+    });
+</script>
+<link href="@Url.Content("~/bootstrapNew/css/bootstrap.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/bootstrapNew/js/bootstrap.min.js")"></script>
+@{
+    Guid? currentEmployeeID = MVCUtility.getCurrentEmployeeID();
+}
+
+
+<script type="text/javascript">
+    function getConfirm() {
+        obj = confirm("Are You Sure?");
+        if(obj)
+        {
+
+        }
+        
+    }
+
+</script>
+
+<h2>HR Functions</h2>
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        <span style="width: 200px; display: inline-block;"><i class="icon-table"></i>HR Functions</span>
+        <div class="toolbar">
+
+            <a href="javascript:;"><i class="icon-refresh" onclick="hr.loadHRFunctions();"></i></a>
+        </div>
+
+    </div>
+    <div class="mws-panel-body no-padding">
+        <table class="mws-datatable-fn mws-table">
+            <thead>
+                <tr role="row">
+                    <th>Employee Name En</th>
+                    <th>Hire Date</th>
+                    <th>Department</th>
+                    <th>Location</th>
+                    <th>Holidays</th>
+                    <th>Projects</th>
+
+                    <th></th>
+                    <th>Terminate</th>
+                    <th>Assign Postponed Leave</th>
+                </tr>
+            </thead>
+            @using DAO;
+            <tbody role="alert" aria-live="polite" aria-relevant="all">
+
+                @{
+                    string returnUrl = Url.Content("~/Employee/HRFunctions");
+                }
+                @foreach (var item in Model)
+                {
+                       
+                    <tr>
+
+                        <td>
+                            @string.Format("{0} {1} {2} {3}", item.FirstNameEn, item.SecondNameEn, item.ThirdNameEn, item.LastNameEn)
+                        </td>
+                        <td>@if (item.HireDate != null)
+                            {
+                            @item.HireDate.Value.ToShortDateString()
+                            }
+                        </td>
+                        <td>@if (item.DepartmentID != null)
+                            {
+                            @item.Department.DepartmentNameEn
+                            }
+                        </td>
+                        <td>
+                            @if (item.OfficeLocationID != null)
+                            {
+                                @item.EmployeeLocation.LocationName
+                            }
+                        </td>
+                        <td class=" sorting_1" align="center">
+                            @Html.ActionLink(" ", "EmployeeHolidays", "Home", new { id = item.EmployeeID, returnUrl = returnUrl }, new { @class = "btn btn-success btn-small icon-table" })
+                        </td>
+                        <td class=" sorting_1" align="center">
+                            @Html.ActionLink(" ", "EmployeeProjects", "Home", new { id = item.EmployeeID, returnUrl = returnUrl }, new { @class = "btn btn-success btn-small icon-table" })
+                        </td>
+                        <td class=" sorting_1" align="center">
+                            @if (currentEmployeeID == item.EmployeeID)
+                            {
+                                <a class="btn btn-info" title="can not carry forward" disabled="disabled">Carry Forward</a>
+                            }
+                            else
+                            {
+                                <a class="btn btn-info" href="@Url.Content(string.Format("~/Report/LeaveBalance/{0}?returnUrl={1}", item.EmployeeID, returnUrl))">Carry Forward</a>
+                            }
+                        </td>
+                        <td class=" sorting_1" align="center">
+                           
+                      @{      
+                            Guid LogeduserId = (Guid)Membership.GetUser().ProviderUserKey;
+                            if (item.UserID == LogeduserId)
+                            {
+                         <a class="btn btn-info" title="Current User,can not Terminate" disabled="disabled">Terminate</a>
+                            }
+                            else if( item.IsTerminated == true)
+                            {
+                            
+                            <a onclick="hr.loadHRFunctionsTerminatePV('@item.EmployeeID','UT');" class="btn btn-info">Un-Terminate</a>
+                            }
+                            else
+                            {
+                          <a onclick="hr.loadHRFunctionsTerminatePV('@item.EmployeeID','T');" class="btn btn-info">Terminate</a>
+                            }
+                                
+                    }   
+                           
+                        </td>
+                        <td class=" sorting_1" align="center">
+                           
+                      @{      
+                            
+                            if (item.UserID == LogeduserId)
+                            {
+                         <a class="btn btn-info" title="Current User,can not Terminate" disabled="disabled" title="Assign  Postponed Leave to this Employee"><i class="icon-cogs"></i></a>
+                            }
+                            else
+                            {
+                          <a href="@Url.Content("~/Employee/AssignPostponedLeave/")@item.EmployeeID" class="btn btn-info" title="Assign  Postponed Leave to this Employee"><i class="icon-cogs"></i></a>
+                            }
+                                
+                    }   
+                           
+                        </td>
+
+                    </tr>
+                }
+
+
+            </tbody>
+        </table>
+    </div>
+
+    <style type="text/css">
+        .modal {
+            position: fixed;
+            top: 50%;
+            left: 33%;
+            z-index: 1050;
+            width: 1000px !important;
+        }
+    </style>
+
+    <div id="leaveDetail">
+    </div>
+</div>

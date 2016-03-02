@@ -1,0 +1,73 @@
+﻿@model IEnumerable<HR_System.Models.TimeSheetReport>
+        <script>
+    $(".mws-datatable-fn").dataTable({
+        sPaginationType: "full_numbers"
+    });
+</script>
+     
+
+
+<div class="mws-panel grid_8" style="text-align: right; box-shadow: none;">
+  
+</div>
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        <span style="width: 200px; display: inline-block;"><i class="icon-table"></i>Employee</span>
+        <div class="toolbar">
+          
+        </div>
+
+    </div>
+    <div class="mws-panel-body no-padding">
+        <table class="mws-datatable-fn mws-table">
+            <thead>
+                <tr role="row">
+                    <th>Employee</th>
+                    <th>Projects Name</th>
+                    <th>Project Number</th>
+                    <th>Work Hours</th>
+                    <th>Percentage</th>
+                    <th>Status</th>
+
+                </tr>
+            </thead>
+            @using DAO;
+            <tbody role="alert" aria-live="polite" aria-relevant="all">
+
+
+                @foreach (var item in Model)
+                {
+                       
+                    <tr>                      
+                        <td>
+                            @item.FirstNameEn @item.LastNameEn 
+                        </td>
+                        <td>
+                            @item.ProjectName
+                        </td>
+                        <td>
+                              @item.ProjectID
+                        </td>
+                        <td>
+                             @item.TotHours
+                        </td>
+
+                        <td>
+                             @item.ProjPercentage
+                        </td>
+                        <td>
+                             @item.ProjectStatus
+                        </td>
+                     
+
+                    </tr>
+                }
+
+
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+

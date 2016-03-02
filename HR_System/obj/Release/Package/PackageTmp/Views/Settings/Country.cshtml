@@ -1,0 +1,17 @@
+﻿@model IEnumerable<DAO.CountryOffice>
+
+@{
+    ViewBag.Title = "Country";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+}
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+       hr.loadCountry();
+    });
+</script>
+  @{Html.RenderPartial("Notification");}
+<div id="main-content" class="row-fluid">
+
+</div>

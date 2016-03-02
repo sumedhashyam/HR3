@@ -1,0 +1,258 @@
+﻿@model HR_System.Models.JobInformationModel
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<style type="text/css">
+    .wizard-step .control-group
+    {
+        padding: 10px 0px;
+        width: 50%;
+        float: left;
+    }
+    .threecontrols
+    {
+        width:100%;
+        clear:both;
+    }
+        .threecontrols .control-group
+        {
+            width:33.33%;
+        }
+</style>
+
+
+
+<script>
+
+    addDatepicker();
+   
+    showdiv();
+
+    function showdiv() {
+        var asvpId = $('#asvpId option:selected').val();
+        //var asvpId = '@Model.AlternativeSupervisorID';
+        //alert(asvpId);
+        if (asvpId != null && asvpId != "") {
+            $("#fromdate").show();
+        }
+
+
+        else {
+
+            $("#fromdate").hide();
+        }
+    }
+
+    function showdate(dis) {
+        var asvp = $(dis).val();
+        var svp = $('#svpId option:selected').val();
+        if (asvp != null && asvp != "") {
+            if (svp != asvp) {
+                $("#fromdate").show();
+            }
+            else {
+                $("#fromdate").hide();
+                alert("Supervisor can't be a alternative supervisor.Please select diffrrent Supervisor.");
+            }
+        }
+        else {
+            $("#fromdate").hide();
+        }
+    }
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#AltFromDate").datepicker({
+            numberOfMonths: 1,
+            onSelect: function (selected) {
+                $("#AltEndDate").datepicker("option", "minDate", selected)
+            }
+        });
+
+        $("#AltEndDate").datepicker({
+            numberOfMonths: 1,
+            onSelect: function (selected) {
+                $("#AltFromDate").datepicker("option", "maxDate", selected)
+            }
+        });
+    });
+    changeDateFormat();
+</script>
+
+
+@using HR_System.Models
+<div class="add-new">
+    <div class="toolbar">
+        <a href="/Home/Employee/" style="margin-right: 19px;">Back</a>
+    </div>
+</div>
+
+<input type="hidden" id="empid" name="empid" value="@ViewBag.EmployeeID" />
+<div class="row-fluid">
+</div>
+
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        <span><i class="icon-magic"></i>Save Employee Job Detail</span>
+    </div>
+    <div class="mws-panel-body no-padding">
+        @if (TempData["error"] != null)
+        { 
+            <span style="color: red">@TempData["error"]</span>
+        }
+
+        @using (Html.BeginForm("jobDetailPV", "Home", FormMethod.Post, new { id = "formJobDetailPV" }))
+        {
+            <input type="hidden" id="id" name="id" value="@ViewBag.EmployeeID" />
+            if (MVCUtility.IsSuperAdmin() || MVCUtility.IsAdmin())
+           {
+             @Html.HiddenFor(a => a.UserID)
+        }
+            <div class="span12 widget">
+                <div class="widget-content form-container">
+                    <div class="wizard-nav wizard-nav-horizontal">
+                        <ul>
+                            <li data-wzd-id="wzd_180ppj0k51dh91h061c4v_0"  onclick="hr.loadEditEmployeePV('@ViewBag.EmployeeID')"><span><i class="icon-book"></i>Personal Information</span></li>
+                            @* <li data-wzd-id="wzd_180ppj0k51dh91h061c4v_1" onclick="hr.loadJobinfoTab()"><span><i class="icon-user"  ></i>Job Information</span></li>*@
+                            <li data-wzd-id="wzd_180ppj0k51dh91h061c4v_1" class="current"><span><i class="icon-user"></i>Job Information</span></li>
+                            <li data-wzd-id="wzd_180ppj0k51dh91h061c4v_2" onclick="hr.loadEmpLeaveinfoTab()"><span><i class="icon-pencil"></i>Leave Type</span></li>
+                            <li data-wzd-id="wzd_180ppj0k51dh91h061c4v_2" onclick="hr.loadEmpProjectinfoTab()"><span><i class="icon-user"></i>Project</span></li>
+                        </ul>
+                        <button type="button" class="btn responsive-prev-btn" disabled="disabled"><i class="icon-caret-left"></i></button>
+                        <button type="button" class="btn responsive-next-btn"><i class="icon-caret-right"></i></button>
+                    </div>
+                    <div id="wizard-demo-2" class="form-horizontal wizard-form wizard-form-horizontal" data-forward-only="false">
+
+
+                        @Html.ValidationSummary(true)
+
+                        <fieldset class="wizard-step">
+
+                            <div class="control-group">
+                                <label class="control-label">Hire Date<span class="required">*</span></label>
+                                <div class="controls">
+                                    @Html.TextBoxFor(model => model.HireDate, new { @class = "datepicker", style = "width:194px;" })
+                                    @Html.ValidationMessageFor(model => model.HireDate)
+
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Office Location<span class="required">*</span></label>
+                                <div class="controls">
+
+                                    @Html.DropDownListFor(model => model.OfficeLocationID, ViewBag._OfficeLocation as IEnumerable<SelectListItem>, new { style = "width:194px;" })
+                                    @Html.ValidationMessageFor(model => model.OfficeLocationID)
+
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label">Department<span class="required">*</span></label>
+                                <div class="controls">
+
+                                    @Html.DropDownListFor(model => model.DepartmentID, ViewBag._DepartmentID as IEnumerable<SelectListItem>, new { style = "width:194px;" })
+                                    @Html.ValidationMessageFor(model => model.DepartmentID)
+
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Job Type<span class="required">*</span></label>
+                                <div class="controls">
+
+                                    @Html.DropDownListFor(model => model.JobID, ViewBag._JobID as IEnumerable<SelectListItem>, new { style = "width:194px;" })
+                                    @Html.ValidationMessageFor(model => model.JobID)
+
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Supervisor</label>
+                                <div class="controls">
+                                    @Html.DropDownListFor(model => model.SupervisorID, ViewBag._SupervisorID as IEnumerable<SelectListItem>, new { id = "svpId", @style = "width:194px;" })
+                                    @Html.ValidationMessageFor(model => model.SupervisorID)
+
+                                </div>
+                            </div>
+
+                           @* <div class="threecontrols">
+                            <div class="control-group">
+                                <label class="control-label">Job Title</label>
+                                <div class="controls">
+                                    @Html.TextBoxFor(model => model.JobTitle,  new { @style = "width:194px;" })
+                                    @Html.ValidationMessageFor(model => model.JobTitle)
+
+                                </div>
+                            </div>*@
+                            <div class="control-group">
+                                <label class="control-label">Alternate Supervisor</label>
+                                <div class="controls">
+                                    @Html.DropDownListFor(model => model.AlternativeSupervisorID, ViewBag._AltSupervisorID as IEnumerable<SelectListItem>, new { id = "asvpId", onchange = "showdate(this)", style = "width:194px;" })
+                                    @Html.ValidationMessageFor(model => model.AlternativeSupervisorID)
+
+                                </div>
+                            </div>
+
+@*                            <div class="control-group">
+                                <label class="control-label">ID#</label>
+                                <div class="controls">
+                                    @Html.TextBoxFor(model => model.E_ID)
+                                    @Html.ValidationMessageFor(model => model.E_ID)
+
+                                </div>
+                            </div>*@
+                           
+                            <div id="fromdate">
+                                <div class="control-group">
+                                    <label class="control-label">From Date*</label>
+                                    <div class="controls">
+                                        @Html.TextBoxFor(model => model.AltFromDate, new { @class = "datepicker", id = "AltFromDate", style = "width:194px;float: left;" })
+                                        @Html.ValidationMessageFor(model => model.AltFromDate)
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">End Date*</label>
+                                    <div class="controls">
+                                        @Html.TextBoxFor(model => model.AltEndDate, new { @class = "datepicker", id = "AltEndDate", style = "width:194px;" })
+                                        @Html.ValidationMessageFor(model => model.AltEndDate)
+                                    </div>
+                                </div>
+                            </div>
+                           @* </div>*@
+                           
+@*                             <div class="control-group">
+                                <label class="control-label">Insurance Number</label>
+                                <div class="controls">
+                                    @Html.TextBoxFor(model => model.InsuranceNumber)
+                                    @Html.ValidationMessageFor(model => model.InsuranceNumber)
+
+                                </div>
+                            </div>*@
+                       
+                            <div class="control-group">
+                                <label class="control-label">Employee Status<span class="required">*</span></label>
+                                <div class="controls">
+                                    @Html.DropDownListFor(model => model.EmployeeStatus, ViewBag._EmpStatus as IEnumerable<SelectListItem>, new { style = "width:194px;" })
+                                    @Html.ValidationMessageFor(model => model.EmployeeStatus)
+                                </div>
+                            </div>
+@*                                 <div class="control-group">
+                                <label class="control-label">SUN System</label>
+                                <div class="controls">
+                                    @Html.TextBoxFor(model => model.SUNSystem)
+                                    @Html.ValidationMessageFor(model => model.SUNSystem)
+
+                                </div>
+                            </div>*@
+                        </fieldset>
+                        <div class="form-actions btn-toolbar">
+                            <button type="button" class="btn"  onclick="hr.loadEditEmployeePV('@ViewBag.EmployeeID')" >Prev</button>
+                            <input type="button" class="btn" value="Save & Move Next" onclick="return hr.AddJobInformation()" />
+                            <button type="button" class="btn btn-primary pull-right" name="wizard-submit" style="display: none;">Submit</button>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        }
+    </div>
+</div>

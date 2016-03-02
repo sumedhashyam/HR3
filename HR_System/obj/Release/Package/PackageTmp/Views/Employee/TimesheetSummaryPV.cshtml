@@ -1,0 +1,218 @@
+﻿@model IEnumerable<HR_System.Models.LeaveSummaryVM>
+@using DAO
+@using HR_System.Models
+@{
+   
+    bool approved = ViewBag.approved != null ? Convert.ToBoolean(ViewBag.approved.ToString()) : false;
+    Employee _Employee = ViewBag.Employee as Employee;
+    TimeSheetMaster TimesheetMaster = ViewBag.TimesheetMaster as TimeSheetMaster;
+    bool canApproveDisapprove = ViewBag.canApproveDisapprove != null ? Convert.ToBoolean(ViewBag.canApproveDisapprove.ToString()) : false;
+    string status = ViewBag.status != null ? ViewBag.status.ToString() : "";
+    string returnUrl = ViewBag.returnUrl != null ? ViewBag.returnUrl.ToString() : null;
+    string encryptedUrl = ViewBag.encryptedUrl != null ? ViewBag.encryptedUrl.ToString() : null;
+
+    if (!string.IsNullOrEmpty(encryptedUrl))
+    {
+        try
+        {
+
+            returnUrl = DataEncryptorNew.DecryptString(encryptedUrl);
+        }
+        catch (Exception ee)
+        {
+    @ee.Message
+        }
+    }
+    //Use default return url for back button if returnurl is empty
+    if (string.IsNullOrEmpty(returnUrl))
+    {
+        returnUrl = Url.Content("~/Employee/PendingTimesheets");
+    }
+}
+
+<script>
+    //applyDatatable();
+</script>
+<style type="text/css">
+    .mws-table thead tr th
+    {
+        padding: 5px 16px;
+    }
+
+    .mws-panel .mws-panel-header
+    {
+        padding: 5px 12px 4px 12px;
+    }
+
+    .mws-panel
+    {
+        box-shadow: none;
+    }
+
+    .inline-list label
+    {
+        display: inline-block;
+        padding-right: 10px;
+    }
+
+    .control-group
+    {
+        margin: 5px 0px;
+    }
+
+    .control-label
+    {
+        margin-left: 6px;
+    }
+</style>
+
+@{Html.RenderPartial("EmployeeDetail", _Employee);}
+<div style="text-align: center">
+
+    <h4>@ViewBag.monthyear</h4>
+    <h4>@ViewBag.totalHours</h4>
+    <h4>@ViewBag.totalProductiveHours </h4>
+    <h4>STATUS : @ViewBag.status  </h4>
+    @if (ViewBag.message != null)
+    {
+        <h4>@ViewBag.message</h4>
+    }
+</div>
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        <span style="width: 200px; display: inline-block;"><i class="icon-table"></i>Time sheet statistics</span>
+        <div class="toolbar">
+            <a style="margin-right:20px" href="@returnUrl">Back</a>
+            @* <a href="javascript:void(0);" onclick="reports.loadTimesheetList('@_Employee.EmployeeID');"><i class="icon-refresh"></i></a>*@
+        </div>
+
+    </div>
+    <div class="mws-panel-body no-padding">
+        <table class="mws-datatable-fn mws-table">
+
+            <thead>
+                <tr role="row">
+                    <th>Project Name
+                    </th>
+                    <th>Project Number
+                    </th>
+                    <th>Total Hours
+                    </th>
+                    <th>Percentage
+                    </th>
+
+
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                 
+                    decimal totalHours = Model.Where(a => a.isLeave == false).Sum(a => a.hour);
+
+                    foreach (var item in Model)
+                    {
+                        decimal projectPercentage = 0;
+                        try
+                        {
+                            projectPercentage = ((item.hour * 100) / totalHours);
+                        }
+                        catch (Exception ee) { }  
+                    <tr>
+                        <td>
+                            @item.projectName
+                        </td>
+                        <td>@item.projectNumber</td>
+                        <td>
+                            @item.hour
+                        </td>
+                        <td>
+                            @if (item.isLeave)
+                            {
+                                @:0 %
+                            }
+                            else
+                            {
+                                @Math.Round(projectPercentage, 2) @:%
+                            }
+
+                        </td>
+
+
+                    </tr>
+                    }
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+@{Html.RenderAction("TimesheetLog", new { TimesheetMasterId = TimesheetMaster.TimeSheetMasterID });}
+
+<div class="mws-panel grid_8" style="text-align: center; box-shadow: 0px;">
+    @Html.ActionLink("Print", "printTimesheet", "Employee", new { month = TimesheetMaster.Month, year = TimesheetMaster.Year, timM_ID = TimesheetMaster.TimeSheetMasterID }, new { @class = "btn btn-info", onclick = "openPrintPopup(this, event)" })
+    @Html.ActionLink("More Detail", "editTimeSheet", "Employee", new { month = TimesheetMaster.Month, year = TimesheetMaster.Year, timM_ID = TimesheetMaster.TimeSheetMasterID }, new { @class = "btn btn-primary" })
+
+</div>
+@if (canApproveDisapprove)
+{
+    <div class="mws-panel grid_8" id="takedecision-div">
+        <div class="mws-panel-header">
+            <span><i class="icon-magic"></i>Take Decision</span>
+        </div>
+        <div class="mws-panel-body no-padding">
+            <div class="span12 widget">
+                <div class="widget-content form-container">
+
+                    <div id="wizard-demo-2" class="form-horizontal mws-form-inline" data-forward-only="false">
+
+
+                        <form action="@Url.Content("~/Employee/TimesheetApproval")" method="post" style="padding: 20px;">
+                            <div class="grid_4" style="margin-left: 24%;">
+                                <input type="hidden" name="EmployeeID" value="@_Employee.EmployeeID" />
+                                <input type="hidden" name="timesheetMasterID" value="@TimesheetMaster.TimeSheetMasterID" />
+                                <div class="control-group">
+                                    <label class="control-label">
+                                    </label>
+                                    <div class="controls mws-form-item inline-list" style="display: inline-block;">
+                                        <label>
+                                            <input type="radio" name="approve" value="true" checked="checked" style="margin-right: 8px;" />Approve</label>
+                                        <label>
+                                            <input type="radio" name="approve" value="false" style="margin-right: 8px;" />Reject</label>
+                                    </div>
+                                </div>
+                                <div class="control-group" style="margin-bottom: 10px; margin-top: 10px">
+                                    <label class="control-label">Notes</label>
+                                    <div class="controls mws-form-item">
+                                        <textarea name="notes" id="txtNotes" class="grid_8" style="height: 80px;"></textarea>
+                                    </div>
+                                    <div style="clear: both"></div>
+                                </div>
+                                <div class="control-group" style="clear: both">
+                                    <label class="control-label"></label>
+                                    <div class="controls mws-form-item" style="text-align: right">
+                                        <input type="submit" value="Submit" class="btn btn-info" onclick="return confirm('Are you sure you want to take decision ?')" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="clear: both"></div>
+                        </form>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (approved)
+{
+    <script type="text/javascript">
+        if ($('#takedecision-div').length > 0) {
+            $('#takedecision-div input').attr('disabled', 'disabled');
+            $('#takedecision-div textarea').attr('disabled', 'disabled');
+        }
+    </script>
+}

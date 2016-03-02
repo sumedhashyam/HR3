@@ -1,0 +1,24 @@
+﻿@{
+    ViewBag.Title = "TimesheetSummary";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+}
+
+@{
+    Guid EmployeeID = new Guid(ViewBag.EmployeeID.ToString());
+    Guid TimeSheetMasterID = new Guid(ViewBag.TimeSheetMasterID.ToString());
+    string returnUrl = ViewBag.returnUrl != null ? ViewBag.returnUrl.ToString() : null;
+    string encryptedUrl = ViewBag.encryptedUrl != null ? ViewBag.encryptedUrl.ToString() : null;
+   
+}
+
+<script type="text/javascript">
+    $(function () {
+        reports.loadTimesheetSummaryOfPendingRequest('@EmployeeID', '@TimeSheetMasterID', true, '@returnUrl')
+    });
+</script>
+<input type="hidden" value="@encryptedUrl" id="encryptedUrl" name="encryptedUrl" />
+@{Html.RenderPartial("Notification");}
+<div id="main-content" class="row-fluid">
+</div>
+
+

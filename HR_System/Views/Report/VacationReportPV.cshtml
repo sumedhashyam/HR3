@@ -1,0 +1,308 @@
+﻿@model IEnumerable<DAO.EmployeeLeaveRequest>
+@using DAO
+@using HR_System.Models;
+
+<script>
+    $(".mws-datatable-fn").dataTable({
+        sPaginationType: "full_numbers"
+    });
+</script>
+<script>
+    collspan();
+    addDatepickerSimple();
+    function DoSubmit() {
+        if ($('#FrmVacationRpSearch').valid()) {
+
+            $.ajax({
+                type: "POST",
+                data: $('#FrmVacationRpSearch').serialize(),
+                url: '/Report/VacationReportPV',
+                success: function (data) {
+                    $('#main-content').html(data);
+                    $(".mws-collapsible").removeClass('mws-collapsed');
+                    collspan();
+                    goToByScroll("data-grid");
+                },
+                error: function (data) {
+                    alert("error occured");
+                }
+
+            });
+        } else {
+            return false;
+        }
+    }
+    function openPrintPopupWithPar(btn, event) {
+        event.preventDefault();
+        var url = $(btn).attr('href');
+        url = url + "&from=" + $("#FRom_Date").val();
+        url = url + "&to=" + $("#To_Date").val();
+        url = url + "&location=" + $("#ddlLocation").val();
+        url = url + "&department=" + $("#ddlDepartment").val();
+        url = url + "&vacationtype=" + $("#ddlLeaveType").val();
+        window.open(url, 'PingStatistics', 'status=0,toolbar=0,menubar=0,scrollbars=1,location=0,resizable=0,width=1200,height=800');
+
+    }
+    function resetdata() {
+        $("#FRom_Date").val("");
+        $("#To_Date").val("");
+        $("#ddlLocation").val("");
+        $("#ddlDepartment").val("");
+        $("#ddlLeaveType").val("");
+        reports.loadResetVacationReport();
+        return false;
+    }
+</script>
+
+<div style="text-align: center">
+    <h4>Vacation Report of Year @DateTime.Now.Year</h4>
+</div>
+
+<form id="FrmVacationRpSearch" class="mws-form">
+    @{   string username = Membership.GetUser().UserName;
+         bool hr = Roles.IsUserInRole(SiteRoles.HR);
+         bool superAdmin = MVCUtility.IsSuperAdmin();
+
+
+         if (superAdmin || hr)
+         {
+        <div class="mws-panel grid_8 mws-collapsible mws-collapsed mws-form" @*style="margin-top: 35px;"*@>
+            <div class="mws-panel-header">
+                <span style="width: 200px; display: inline-block;">Filter Result</span>
+            </div>
+            <div class="mws-panel-body no-padding" style="position: relative">
+                <div class="mws-form-inline">
+                    <div class="mws-form-row">
+
+                        <div class="grid_2" style="/*padding: 20px*/ margin-left: 0px;">
+                            <label class="mws-form-label">From</label>
+                            <div class="mws-form-item">
+                                @Html.TextBox("FRom_Date", ViewBag._FRomDateSelected as string, new { @class = "text-startdate datepicker" })
+                            </div>
+                        </div>
+                        <div class="grid_2" style="margin-left: 50px;">
+                            <label class="mws-form-label">To</label>
+                            <div class="mws-form-item">
+                                @Html.TextBox("To_Date", ViewBag._ToDateSelected as string, new { @class = "text-enddate datepicker" })
+                            </div>
+                        </div>
+                        <div class="grid_2" style="margin-left: 50px;">
+                            <label class="mws-form-label">Location</label>
+                            <div class="mws-form-item">
+                                <select id="ddlLocation" name="ddlLocation" style="width: 160px;">
+                                    @foreach (SelectListItem li in ViewBag._OfficeLocation)
+                                    {
+                                        if (li.Value == ViewBag._OfficeLocationSelected)
+                                        {
+                                        <option selected="selected" value="@li.Value">
+                                            @li.Text
+                                        </option>
+                                        }
+                                        else
+                                        {
+                                        <option value="@li.Value">
+                                            @li.Text
+                                        </option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mws-form-row">
+
+                        <div class="grid_2" style="margin-left: 0px;">
+                            <label class="mws-form-label">Department</label>
+                            <div class="mws-form-item">
+                                <select id="ddlDepartment" name="ddlDepartment" style="width: 160px;">
+                                    @foreach (SelectListItem li in ViewBag._Department)
+                                    {
+                                        if (li.Value == ViewBag._DepartmentSelected)
+                                        {
+                                        <option selected="selected" value="@li.Value">
+                                            @li.Text
+                                        </option>
+                                        }
+                                        else
+                                        {
+                                        <option value="@li.Value">
+                                            @li.Text
+                                        </option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid_2" style="margin-left: 50px;">
+                            <label class="mws-form-label">Vacation Type</label>
+                            <div class="mws-form-item">
+                                <select id="ddlLeaveType" name="ddlLeaveType" style="width: 160px;">
+                                    @foreach (SelectListItem li in ViewBag._LeaveType)
+                                    {
+                                        if (li.Value == ViewBag._LeaveTypeSelected)
+                                        {
+                                        <option selected="selected" value="@li.Value">
+                                            @li.Text
+                                        </option>
+                                        }
+                                        else
+                                        {
+                                        <option value="@li.Value">
+                                            @li.Text
+                                        </option>
+                                        }
+                                    }
+                                </select>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="mws-button-row">
+                        <input type="button" id="Search" value="Search" class="btn btn-info" onclick="return DoSubmit()" />
+                        <input type="button" value="reset" class="btn btn-danger" onclick="return resetdata()">
+                    </div>
+                    <div style="clear: both"></div>
+                </div>
+            </div>
+        </div>
+               
+         }
+    }
+
+
+
+</form>
+
+<div class="mws-panel grid_8"></div>
+
+<div class="mws-panel grid_8" id="data-grid">
+    <div class="mws-panel-header">
+        <span style="width: 200px; display: inline-block;"><i class="icon-table"></i>Vacation Report</span>
+        <div class="toolbar">
+            @Html.ActionLink("Print", "PrintVacationReport", "Report", new { onclick = "openPrintPopupWithPar(this,event)" })
+            &nbsp;
+            <a @*style="margin-right:20px"*@ href="@Url.Content("~/Report")">Back</a>
+            @*<a><i class="icon-refresh" onclick="reports.loadVacationReport();"></i></a>*@
+        </div>
+
+    </div>
+    <div class="mws-panel-body no-padding">
+        <table class="mws-datatable-fn mws-table">
+
+            <thead>
+
+                <tr>
+                    <th>Employee
+                    </th>
+                    <th>Location</th>
+                    <th>Department</th>
+                    <th>Vacation/Leave
+                    </th>
+                    <th>Start Date
+                    </th>
+                    <th>End Date
+                    </th>
+                    @*<th>No. of Days
+                    </th>*@
+                    <th>No. of Leave Days
+                    </th>
+
+                    <th>Status
+                    </th>
+                    @*<th>Show
+                    </th>*@
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    bool isHalfDay = false;
+                    if (item.HalfDay == true && item.AssignedDate == 1)
+                    {
+                        isHalfDay = true;
+                    }
+
+                    bool isCancelled = false;
+                    if (item.Status.Trim().ToLower() == "approved" && item.Cancel.HasValue && item.Cancel.Value == true)
+                    {
+                        isCancelled = true;
+                    }
+                    <tr>
+                        <td>
+                            @item.Employee.FirstNameEn &nbsp;@item.Employee.LastNameEn
+                        </td>
+                        <td>
+                            @if (item.Employee.EmployeeLocation != null)
+                            {
+                                @item.Employee.EmployeeLocation.LocationName
+                            }
+                        </td>
+                        <td>
+                            @if (item.Employee.Department != null)
+                            {
+                                @item.Employee.Department.DepartmentNameEn
+                            }
+                        </td>
+                        <td>
+
+                            @if (item.LeaveType != null)
+                            {
+                                @item.LeaveType.LeaveTypeName
+                            }
+                        </td>
+                        <td>
+                            @if (item.FromDate.HasValue)
+                            {
+                                @item.FromDate.Value.DayOfWeek @:,  @item.FromDate.Value.ToString("dd-MMM-yyyy")
+                           }
+                        </td>
+                        <td>
+                            @if (item.ToDate.HasValue)
+                            {
+                                @item.ToDate.Value.DayOfWeek @:,  @item.ToDate.Value.ToString("dd-MMM-yyyy")
+                           }
+                        </td>
+                        @*  <td>
+                            @if (isHalfDay)
+                            {
+                                @:1/2
+                            }
+                            else if (item.ActualDate != null)
+                            { 
+                                @item.ActualDate
+                            }
+                        </td>*@
+                        <td>
+                            @if (isHalfDay)
+                            {
+                                @:1/2
+                            }
+                            else if (item.AssignedDate != null)
+                            { 
+                                @Html.DisplayFor(modelItem => item.AssignedDate)
+                            }
+                        </td>
+                        <td>
+                            @if (isCancelled)
+                            {
+                                @:CANCELLED
+                            }
+                            else
+                            {
+                                @item.Status.ToUpper()
+                            }
+                        </td>
+                        @*<td>
+                            <a class="btn btn-info">Show</a>
+                        </td>*@
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,166 @@
+﻿@model IEnumerable<DAO.EmployeeLeaveRequest>
+<script src="@Url.Content("~")js/dataTables.dateFormat.js"></script>
+<script src="@Url.Content("~")js/jquery.dataTables.columnFilter.js"></script>
+<script>
+    $(".mws-datatable-fn").dataTable({
+        sPaginationType: "full_numbers",
+        "aaSorting": [[2, 'asc']],
+        "aoColumns": [
+               { "sType": "numeric" },
+          null,
+          null,
+          { "sType": "date-uk" },
+           { "sType": "date-uk" },
+          null,
+          null,
+          null,
+          null
+        ]
+    });
+
+</script>
+@{
+    int i = 1;
+}
+
+
+
+@{
+   int SelectedYear=Convert.ToInt32( ViewBag._SelectedYear);
+    }
+
+@{
+    string status = ViewBag.status != null ? ViewBag.status.ToString().ToLower() : "all";
+}
+<input type="hidden" value="@status" id="hfStatus"/>
+
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        <span style="width: 200px; display: inline-block;"><i class="icon-table"></i>My Leaves</span>
+        <div class="mws-form-item innerDiv">
+        </div>
+        <div class="toolbar">
+            
+
+
+        </div>
+    </div>
+    <div class="mws-panel-body no-padding">
+        <table class="mws-datatable-fn hide-c mws-table">
+            <thead>
+
+                <tr role="row">
+                    <th></th>
+
+                    <th>Leave Type</th>
+
+                    <th>From Date</th>
+                    <th>To Date</th>
+                    <th>No. Of Days</th>
+                    <th>No. Of Leave Days</th>
+                    <th>IsCancelled</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody role="alert" aria-live="polite" aria-relevant="all">
+
+
+                @foreach (var item in Model.OrderBy(a => a.FromDate))
+                {
+                    bool isHalfDay = false;
+                    if (item.HalfDay == true && item.AssignedDate == 1)
+                    {
+                        isHalfDay = true;
+                    }
+
+                    bool isCancelled = false;
+                    if (item.Status.Trim().ToLower() == "approved" && item.Cancel.HasValue && item.Cancel.Value == true)
+                    {
+                        isCancelled = true;
+                    }
+          
+                    <tr>
+                        <td>
+
+                            @i
+
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LeaveType.LeaveTypeName)
+                        </td>
+                        <td>
+                            @if (item.FromDate != null)
+                            {
+                                DateTime dt = Convert.ToDateTime(item.FromDate);
+                                @dt.DayOfWeek.ToString() @:,
+                                string srt = dt.ToString("dd-MM-yyyy");
+                                @srt
+                            }
+                        </td>
+                        <td>
+                            @if (item.ToDate != null)
+                            {
+                                DateTime dt = Convert.ToDateTime(item.ToDate);
+                                @dt.DayOfWeek.ToString() @:,
+                                string srt = dt.ToString("dd-MM-yyyy");
+                                @srt
+                            }
+                        </td>
+                        <td>
+                            @if (isHalfDay)
+                            {
+                                @:1/2
+                            }
+                            else if (item.ActualDate != null)
+                            { 
+                                @Html.DisplayFor(modelItem => item.ActualDate)
+                            }
+                        </td>
+                        <td>
+                            @if (isHalfDay)
+                            {
+                                @:1/2
+                            }
+                            else if (item.AssignedDate != null)
+                            { 
+                                @Html.DisplayFor(modelItem => item.AssignedDate)
+                            }
+
+                        </td>
+                        <td>
+                            @if (item.Cancel != null)
+                            {
+                                if (item.Cancel == true)
+                                { 
+                                <span>Yes</span>
+                                }
+                                else
+                                { <span>No</span>}
+                            }
+
+                        </td>
+                        <td>
+                            @if (isCancelled)
+                            {
+                                @:CANCELLED
+                            }
+                            else
+                            {
+                                @item.Status.ToUpper()
+                            }
+                        </td>
+                        <td>
+                            @Html.ActionLink("Detail", "DetailForLeave", "Leave", new { req_ID = item.EmployeeLeaveRequestID,Return_Url="PendingLeaves",YearFilter=@SelectedYear }, new { @class = "btn btn-info" })
+                        </td>
+                    </tr>
+                }
+
+
+            </tbody>
+        </table>
+    </div>
+
+</div>

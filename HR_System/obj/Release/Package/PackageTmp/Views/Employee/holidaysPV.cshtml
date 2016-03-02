@@ -1,0 +1,74 @@
+﻿@model IEnumerable<DAO.EmployeeHoilday>
+
+
+@using BusinessLogics
+@using DAO;
+@using DAL;
+
+<script>
+    //$(".mws-datatable-fn").dataTable({
+    //    sPaginationType: "full_numbers"
+    //});
+    console.log("in");
+
+    $(".mws-datatable-fn").dataTable({
+        "aoColumns": [
+                            { "sType": "date-uk-month" },
+                            { "sType": "text" }
+        ]
+    });
+</script>
+<script type="text/javascript">
+    $(function () {
+
+        $('.ibutton').iButton();
+        $(".paging_full_numbers a").on(function () {
+            alert("f");
+            $('.ibutton').iButton();
+        });
+    });
+</script>
+<div class="mws-panel grid_8" style="text-align: right; box-shadow: none;">
+    <div class="mws-panel grid_8">
+        <div class="mws-panel-header">
+            <span style="float: left;"><i class="icon-table"></i>Holidays</span>
+        </div>
+        <div class="mws-panel-body no-padding">
+            <table class="mws-datatable-fn  mws-table">
+                <thead>
+
+                    <tr role="row">
+                        <th>Holiday Date</th>
+                           <th>Holiday Name</th>
+                    </tr>
+                </thead>
+
+                <tbody role="alert" aria-live="polite" aria-relevant="all">
+                    
+
+                    @foreach (var item in Model.Where(a => a.Holiday != null))
+                    {
+                        
+                        <tr>
+                            <td>
+                                @if (item.Holiday.HolidayDate != null)
+                                {
+  
+                                    @item.Holiday.HolidayDate.ToString("dd-MMM-yyyy");
+                                }
+                            </td>
+                            <td>
+                                @item.Holiday.HolidayName
+                            </td>
+                            
+
+                        </tr>
+                        
+                    }
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

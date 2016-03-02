@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="2901bbdb8bcd418499e69c934d315326" Name="Diagram1" ZoomLevel="81">
+        <EntityTypeShape EntityType="dbHRSystemModel.aspnet_Applications" Width="1.5" PointX="1" PointY="9.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="dbHRSystemModel.aspnet_Membership" Width="1.5" PointX="6" PointY="9.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="dbHRSystemModel.aspnet_Paths" Width="1.5" PointX="3.625" PointY="3.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="dbHRSystemModel.aspnet_PersonalizationAllUsers" Width="1.5" PointX="5.25" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="dbHRSystemModel.aspnet_PersonalizationPerUser" Width="1.5" PointX="5.25" PointY="3.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="dbHRSystemModel.aspnet_Profile" Width="1.5" PointX="10.5" PointY="11.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="dbHRSystemModel.aspnet_Roles" Width="1.5" PointX="3" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="dbHRSystemModel.aspnet_SchemaVersions" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="dbHRSystemModel.aspnet_Users" Width="1.5" PointX="8.25" PointY="11.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="dbHRSystemModel.aspnet_WebEvent_Events" Width="1.5" PointX="7.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="dbHRSystemModel.City" Width="1.5" PointX="10" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="dbHRSystemModel.CountryOffice" Width="1.5" PointX="7.75" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="dbHRSystemModel.EmployeeLocation" Width="2.25" PointX="3.875" PointY="10" IsExpanded="true" />
+        <EntityTypeShape EntityType="dbHRSystemModel.JobType" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="dbHRSystemModel.vw_aspnet_Applications" Width="1.5" PointX="9.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="dbHRSystemModel.vw_aspnet_MembershipUsers" Width="1.5" PointX="11.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="dbHRSystemModel.vw_aspnet_Profiles" Width="1.5" PointX="12.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="dbHRSystemModel.vw_aspnet_Roles" Width="1.5" PointX="0.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="dbHRSystemModel.vw_aspnet_Users" Width="1.5" PointX="12.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="dbHRSystemModel.vw_aspnet_UsersInRoles" Width="1.5" PointX="2.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="dbHRSystemModel.vw_aspnet_WebPartState_Paths" Width="1.5" PointX="13.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="dbHRSystemModel.vw_aspnet_WebPartState_Shared" Width="1.5" PointX="13.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="dbHRSystemModel.vw_aspnet_WebPartState_User" Width="1.5" PointX="14.75" PointY="0.75" IsExpanded="true" />
+        <AssociationConnector Association="dbHRSystemModel.FK__aspnet_Me__Appli__21B6055D" ManuallyRouted="false" />
+        <AssociationConnector Association="dbHRSystemModel.FK__aspnet_Pa__Appli__5AEE82B9" ManuallyRouted="false" />
+        <AssociationConnector Association="dbHRSystemModel.FK__aspnet_Ro__Appli__440B1D61" ManuallyRouted="false" />
+        <AssociationConnector Association="dbHRSystemModel.FK__aspnet_Us__Appli__0DAF0CB0" ManuallyRouted="false" />
+        <AssociationConnector Association="dbHRSystemModel.FK__aspnet_Me__UserI__22AA2996" ManuallyRouted="false" />
+        <AssociationConnector Association="dbHRSystemModel.FK__aspnet_Pe__PathI__628FA481" ManuallyRouted="false" />
+        <AssociationConnector Association="dbHRSystemModel.FK__aspnet_Pe__PathI__68487DD7" ManuallyRouted="false" />
+        <AssociationConnector Association="dbHRSystemModel.FK__aspnet_Pe__UserI__693CA210" ManuallyRouted="false" />
+        <AssociationConnector Association="dbHRSystemModel.FK__aspnet_Pr__UserI__38996AB5" ManuallyRouted="false" />
+        <AssociationConnector Association="dbHRSystemModel.FK_City_CountryOffice" ManuallyRouted="false" />
+        <AssociationConnector Association="dbHRSystemModel.aspnet_UsersInRoles" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="dbHRSystemModel.EmployeeHoilday" Width="1.5" PointX="2.125" PointY="31.125" />
+        <EntityTypeShape EntityType="dbHRSystemModel.EmployeeProject" Width="1.5" PointX="0.098294002981062056" PointY="19.552797475621475" />
+        <EntityTypeShape EntityType="dbHRSystemModel.Project" Width="1.5" PointX="8.67749369548517" PointY="14.515209413373475" />
+        <AssociationConnector Association="dbHRSystemModel.FK_EmployeeProjects_EmployeeProjects1" />
+        <AssociationConnector Association="dbHRSystemModel.FK_EmployeeProjects_Project" />
+        <EntityTypeShape EntityType="dbHRSystemModel.Department" Width="1.5" PointX="10.625" PointY="8.875" />
+        <AssociationConnector Association="dbHRSystemModel.FK_EmployeeLocation_City" />
+        <AssociationConnector Association="dbHRSystemModel.FK_EmployeeLocation_CountryOffice" />
+        <EntityTypeShape EntityType="dbHRSystemModel.Weekend" Width="1.5" PointX="8.63402829721292" PointY="16.22129055122905" />
+        <AssociationConnector Association="dbHRSystemModel.FK_Project_CountryOffice" />
+        <EntityTypeShape EntityType="dbHRSystemModel.Notification" Width="1.5" PointX="6.25" PointY="9.875" />
+        <EntityTypeShape EntityType="dbHRSystemModel.LogTable" Width="1.5" PointX="9.75" PointY="6.5" />
+        <EntityTypeShape EntityType="dbHRSystemModel.TimeSheet" Width="1.5" PointX="1.6489787407447483" PointY="9.6076117947733088" />
+        <EntityTypeShape EntityType="dbHRSystemModel.EmployeeLeaf" Width="1.5" PointX="8" PointY="23.5" />
+        <EntityTypeShape EntityType="dbHRSystemModel.TimeSheetMaster" Width="1.5" PointX="10.590702529340378" PointY="29.137558905937503" />
+        <AssociationConnector Association="dbHRSystemModel.FK_TimeSheet_TimeSheetMaster" />
+        <EntityTypeShape EntityType="dbHRSystemModel.LeaveType" Width="1.5" PointX="0.5" PointY="6.875" />
+        <AssociationConnector Association="dbHRSystemModel.FK_EmployeeLeaves_LeaveType" />
+        <EntityTypeShape EntityType="dbHRSystemModel.Holiday" Width="1.5" PointX="0.88647178415510419" PointY="30.208979188561894" />
+        <AssociationConnector Association="dbHRSystemModel.FK_Holiday_CountryOffice" />
+        <AssociationConnector Association="dbHRSystemModel.FK_Holiday_EmployeeLocation" />
+        <AssociationConnector Association="dbHRSystemModel.FK_EmployeeHoildays_Holiday" />
+        <EntityTypeShape EntityType="dbHRSystemModel.ServiceBonu" Width="1.5" PointX="0.46256195961617025" PointY="11.62064572219767" />
+        <EntityTypeShape EntityType="dbHRSystemModel.Employee" Width="1.5" PointX="0.32207178525723135" PointY="24.803446051107461" />
+        <AssociationConnector Association="dbHRSystemModel.FK_Employee_aspnet_Users" />
+        <AssociationConnector Association="dbHRSystemModel.FK_Employee_CountryOffice" />
+        <AssociationConnector Association="dbHRSystemModel.FK_Employee_Department" />
+        <AssociationConnector Association="dbHRSystemModel.FK_Employee_EmployeeLocation" />
+        <AssociationConnector Association="dbHRSystemModel.FK_Employee_JobType" />
+        <AssociationConnector Association="dbHRSystemModel.FK_EmployeeHoildays_Employee" />
+        <AssociationConnector Association="dbHRSystemModel.FK_EmployeeLeaves_Employee" />
+        <AssociationConnector Association="dbHRSystemModel.FK_EmployeeProjects_EmployeeProjects11" />
+        <AssociationConnector Association="dbHRSystemModel.FK_LogTable_Employee" />
+        <AssociationConnector Association="dbHRSystemModel.FK_TimeSheetMaster_Employee" />
+        <AssociationConnector Association="dbHRSystemModel.FK_Weekend_Employee" />
+        <EntityTypeShape EntityType="dbHRSystemModel.WeekendWorkingDay" Width="1.5" PointX="4.5068217313414545" PointY="30.177028372034908" />
+        <EntityTypeShape EntityType="dbHRSystemModel.EmployeeLeaveRequest" Width="1.5" PointX="11.890401195683703" PointY="29.794816939996004" />
+        <AssociationConnector Association="dbHRSystemModel.FK_EmployeeLeaveRequest_EmployeeLeaveRequest" />
+        <AssociationConnector Association="dbHRSystemModel.FK_EmployeeLeaveRequest_LeaveType" />
+        </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

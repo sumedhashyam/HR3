@@ -1,0 +1,79 @@
+﻿@{
+    ViewBag.Title = "ChangeEmployeeRoles";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+}
+
+
+
+
+@{
+        
+       
+    MembershipUser user = Membership.GetUser();
+    if (user == null)
+    {
+        Response.Redirect("/Account/Logon");
+    }
+    string[] role = Roles.GetRolesForUser(user.UserName);
+
+
+    bool _superadmin = false;
+    bool _admin = false;
+
+    foreach (var r in role)
+    {
+        if (r.ToLower() == HR_System.Models.SiteRoles.SuperAdmin)
+        {
+            _superadmin = true;
+        }
+        if (r.ToLower() == HR_System.Models.SiteRoles.Admin)
+        {
+            _admin = true;
+        }
+    }
+
+
+    if (_superadmin || _admin)
+    {
+                       
+    <script type="text/javascript">
+
+        function loadChangeRoleForm(ddl) {
+            var employeeID = $(ddl).val();
+            if (!isNullOrEmpty(employeeID)) {
+                doAjax(homeController + "ChangeEmployeeRoles", { employeeID: employeeID }, function (data) {
+                    $('#main-content').html(data);
+                });
+            } else {
+                hideRoleView();
+            }
+        }
+
+
+        function hideRoleView() {
+            $('#main-content').html('');
+            $('#EmployeeList').val('');
+        }
+    </script>
+
+
+    <div class="mws-form-row">
+        <h2>Change Employee Roles</h2>
+        <div class="grid_8" style="text-align: center; margin-bottom: 10px;">
+            <div class="mws-form-item">
+                <label class="mws-form-label">Select Employee</label>
+                @Html.DropDownList("EmployeeList", (List<SelectListItem>)ViewBag.employeeList, new { @class = "required", style = "width:352px;", onchange = "loadChangeRoleForm(this)" })
+            </div>
+        </div>
+
+    </div>
+    }
+    else
+    {
+        TempData["error"] = "Not Authorized";
+    }
+}
+
+@{Html.RenderPartial("Notification");}
+<div id="main-content" class="row-fluid">
+</div>

@@ -1,0 +1,9 @@
+﻿@model DAO.Employee
+
+<div class="row">
+    <div class="span12" style="text-align:center">
+        <h3> @string.Format("{0} {1} {2} {3}", Model.FirstNameEn, Model.SecondNameEn, Model.ThirdNameEn, Model.LastNameEn)</h3>
+        <h4>Location: @Model.EmployeeLocation.CountryOffice.CountryName , @Model.EmployeeLocation.City1.City1</h4>
+        <h4>Department : @Model.Department.DepartmentNameEn</h4>
+    </div>
+</div>

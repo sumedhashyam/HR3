@@ -1,0 +1,47 @@
+﻿@model DAO.Holiday
+<div class="mws-panel grid_8">
+    @using (Html.BeginForm("editHolidayPV", "Settings", FormMethod.Post, new { @class = "mws-form", @id = "formEditHolidayPV" }))
+    {
+        <div class="mws-panel-header">
+            <span>
+                <i class="icon-ok"></i>Edit Holiday
+ <a href="" onclick="return hr.DeleteHoliday('@Model.HolidayID')" class="btn">Delete</a>
+
+            </span>
+        </div>
+ 
+        <div class="mws-panel-body no-padding">
+            <input type="hidden" value="@ViewBag._date" name="eventdate"/>
+
+            @Html.ValidationSummary(true)
+            <input type="hidden" value="@Model.HolidayID" name="id"/>
+            @Html.HiddenFor(model => model.HolidayID)
+            <div id="mws-validate-error" class="mws-form-message error" style="display: none;"></div>
+            <div class="mws-form-inline">
+                <div class="mws-form-row">
+                    <label class="mws-form-label">Holiday Name</label>
+                    <div class="mws-form-item">
+                        @Html.TextBoxFor(model => Model.HolidayName, new { @class = "required large" })
+                        @Html.HiddenFor(model => Model.HolidayName)
+                        @Html.ValidationMessageFor(model => Model.HolidayName)
+                    </div>
+                </div>
+                <div class="mws-form-row">
+                    <label class="mws-form-label">Holiday Date</label>
+                    <div class="mws-form-item">
+
+                        <input type="text" value="@Model.HolidayDate.ToShortDateString()" class = "mws-datepicker required large" disabled="disabled" name="hdate" />
+                        @Html.HiddenFor(model => model.HolidayDate)
+                        @Html.ValidationMessageFor(model => model.HolidayDate)
+                    </div>
+                </div>
+
+            </div>
+            <div class="mws-button-row modal-footer">
+                <input type="submit" class="btn btn-info" onclick="return hr.UpdateEditHolidayPV()" value="Save Changes">
+            </div>
+
+
+        </div>
+    }
+</div>

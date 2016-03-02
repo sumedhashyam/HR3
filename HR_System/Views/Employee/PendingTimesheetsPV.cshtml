@@ -1,0 +1,119 @@
+﻿@model IEnumerable<DAO.TimeSheetMaster>
+@using DAL;
+@using DAO;
+<script src="@Url.Content("~")js/dataTables.dateFormat.js"></script>
+<script src="@Url.Content("~")js/jquery.dataTables.columnFilter.js"></script>
+<script>
+    $(".mws-datatable-fn").dataTable();
+</script>
+@{
+
+    int i = 1;
+    int sum = 0;
+    string space = "  ";
+}
+
+<div class="mws-panel grid_8" id="data-grid">
+    <div class="mws-panel-header">
+        <span style="width: 400px; display: inline-block;"><i class="icon-table"></i>Pending TimeSheet               
+        </span>
+        <div class="toolbar"> 
+            <a href="javascript:"><i class="icon-refresh" onclick="hr.loadPendingTimesheetswithddl(null);"></i></a>
+        </div>
+    </div>
+    <div class="mws-panel-body no-padding">
+        <table class="mws-datatable-fn hide-c mws-table">
+            <thead>
+
+                <tr role="row">
+                    <th>SNo.</th>
+                    <th>Name</th>
+                    <th>Month</th>
+                    @*<th class="sorting_desc" role="columnheader" tabindex="0" aria-controls="demo-dtable-01" rowspan="1" colspan="1" style="width: 148px;" aria-sort="descending" aria-label="Death rate per 1,000 people: activate to sort column ascending">License key</th>*@
+                    <th>Year</th>
+                    <th>Total Hour</th>
+                    <th>Status</th>
+
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody role="alert" aria-live="polite" aria-relevant="all">
+
+
+                @foreach (var item in Model)
+                {
+                  
+                    <tr>
+
+                        <td>
+
+                            @i
+
+                        </td>
+
+                        <td>
+                            @if (item.Employee.FirstNameAr != null)
+                            {
+                                @Html.DisplayFor(modelItem => item.Employee.FirstNameAr) @space @Html.DisplayFor(modelItem => item.Employee.LastNameAr) 
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(modelItem => item.Employee.FirstNameEn) @space  @Html.DisplayFor(modelItem => item.Employee.LastNameEn)
+                            }
+
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Month)
+                        </td>
+                        <td>
+                            @if (item.Year != null)
+                            {
+                                @Html.DisplayFor(modelItem => item.Year)
+                            }
+
+                        </td>
+                        <td>
+
+                            @item.TimeSheets.Where(a => a.TimeSheetMasterID == item.TimeSheetMasterID).ToList().Where(a => a.Date.Value.ToString("yyyy") == item.Year && a.Date.Value.ToString("MMM") == item.Month).Sum(a => a.Hours)
+
+
+                        </td>
+
+                        <td>
+
+
+                            @if (item.IsSubmit == false && item.Status == null)
+                            {
+                                @:NOT SUBMITTED  
+                            }
+
+                            else if (item.IsSubmit == true && item.Status == null)
+                            {
+                                @:PENDING
+                            }
+                            else if (item.Status.ToLower().Trim() == "disapproved")
+                            {
+                                @:DISAPPROVED
+                            }
+                            else if (item.Status.ToLower().Trim() == "approved")
+                            {
+                                @:APPROVED
+                             }
+
+
+
+                        </td>
+                        <td>
+                           @Html.ActionLink("Show", "TimesheetSummary", new { EmployeeID = item.EmpID, TimesheetMasterId = item.TimeSheetMasterID }, new { @class = "btn btn-info" })
+                  
+                        </td>
+                    </tr>
+                            i++;
+                }
+
+
+            </tbody>
+        </table>
+    </div>
+</div>

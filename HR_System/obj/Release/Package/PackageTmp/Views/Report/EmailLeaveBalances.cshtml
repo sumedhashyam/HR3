@@ -1,0 +1,27 @@
+﻿@{
+    ViewBag.Title = "EmailLeaveBalances";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+}
+
+@{Html.RenderPartial("Notification");}
+<script type="text/javascript">
+    function sendEmail() {
+        if (confirm('Are you sure you want to send email ?')) {
+            doAjax(ReportController + "sendEmailForLeaveBalance", null, function (data) {
+                if (data.success) {
+                    showSuccess("Mail sent successfully");
+                } else {
+                    showError(data.msg);
+                }
+            });
+        }
+    }
+</script>
+<div id="main-content" class="row-fluid">
+    <div>
+        <h5>Note : Sending Email of Leave Balance may take some time.</h5>
+        <br />
+        <a class="btn btn-primary" onclick="sendEmail();">Send Leave Balance Email</a>
+    </div>
+</div>
+

@@ -1,0 +1,768 @@
+﻿@model IEnumerable<DAO.TimeSheetMaster>
+@using DAL;
+@using DAO;
+@{
+    ViewBag.Title = "printTimesheet";
+    //Layout = "~/Views/Shared/Main_Layout.cshtml";
+    Layout = null;
+}
+
+<script src="@Url.Content("~/Scripts/jquery-1.7.1.js")"></script>
+<link href="@Url.Content("~/Content/print-timesheet.css")" rel="stylesheet" />
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        var days = $("#hdnDays").val();
+
+        var result = 0;
+        for (var i = 1; i <= 16; i++) {
+            $(".count_td-1 .td-" + i).each(function () {
+                //$(".tdTotal-" + i).val() = result + this.value;
+                result += $(this).html();
+                // console.log(result);
+
+
+            });
+
+        }
+        for (var i = 17; i <= days; i++) {
+            $(".count_td-1 .td-" + i).each(function () {
+
+
+            });
+
+        }
+
+    });
+
+  
+    function printFunction() {
+        window.print();
+            }
+</script>
+    
+
+@{
+     dbHRSystemEntities db = new dbHRSystemEntities();
+    List<TimeSheet> lstTimeSheet = (List<TimeSheet>)ViewData["ListTimesheet"];
+    TimeSheetMaster timesheetmaster = (TimeSheetMaster)ViewData["timesheetMaster"];
+    List<Holiday> listHoliday = (List<Holiday>)ViewData["HolidayList"];
+    string Elias = System.Configuration.ConfigurationManager.AppSettings["Elias"].ToString();
+
+    List<EmployeeLeaveRequest> listEmployeeleaveReq = (List<EmployeeLeaveRequest>)ViewData["listLeave"];
+    int WorkingHours = Convert.ToInt32(System.Web.Configuration.WebConfigurationManager.AppSettings["WorkingHours"].ToString());
+    string month = ViewData["Month"].ToString();
+    int year = Convert.ToInt32(ViewData["Year"]);
+    string date = "";
+    int hk = DateTime.ParseExact(month, "MMM", System.Globalization.CultureInfo.CurrentCulture).Month;
+    string printdate=System.DateTime.Now.Date.ToShortDateString();
+    int days = DateTime.DaysInMonth(year, hk);
+    int HalfDay = 4;
+    int FullDay = 8;
+    decimal totalhdayHrs = 0;
+    string name = "";
+    Employee supervisorDetail = db.Employees.Where(em => em.EmployeeID == timesheetmaster.Employee.SupervisorID).FirstOrDefault();
+    string supervisorName = supervisorDetail!=null?supervisorDetail.FirstNameEn + " " + supervisorDetail.LastNameEn:"";
+    try
+    {
+        name = string.Format("{0} {1}", timesheetmaster.Employee.FirstNameEn, timesheetmaster.Employee.LastNameEn);
+    }
+    catch (Exception ee) { }
+}
+
+<div class="mws-panel grid_8" id="printdiv">
+    <h2 style="text-align: center">Time Sheet Detail</h2>
+    <a onclick="printFunction()" class="btn btn-info printbtn" style="position: absolute; top: 6px; right: 10px; color: blue; cursor: pointer">Print</a>
+
+    <div class="mws-panel-body no-padding">
+        <table class="mws-datatable-fn hide-c mws-table" style="width: 100%;" cellspacing="0" cellpadding="0">
+            <thead>
+
+                <tr role="row">
+
+                    <th colspan="4" scope="col">Name : @name</th>
+                    <th colspan="4" scope="col">Location : @if (timesheetmaster.Employee.EmployeeLocation.City != null)
+                                                           { @timesheetmaster.Employee.EmployeeLocation.City}
+                                                           else
+                                                           {@timesheetmaster.Employee.EmployeeLocation.LocationName}
+                    </th>
+                    <th colspan="5" scope="col">Department : @if (timesheetmaster.Employee.Department.DepartmentNameEn != null)
+                                                            {@timesheetmaster.Employee.Department.DepartmentNameEn}</th>
+                    <th colspan="5" scope="col">Month : @timesheetmaster.Month</th>
+                    <th colspan="2" scope="col">Year : @timesheetmaster.Year</th>
+
+                </tr>
+
+            </thead>
+        </table>
+        <table class="mws-datatable-fn hide-c mws-table" style="width: 100%;" cellspacing="0" cellpadding="0">
+            <tbody role="alert" aria-live="polite" aria-relevant="all">
+
+
+                @Html.Hidden("hdnDays", days, new { @id = "hdnDays" })
+                <tr>
+
+                    <th>Activity/Project/Description</th>
+                    <th>Donor Source/Project Number</th>
+                    @for (int i = 1; i <= 16; i++)
+                    { 
+                        <th>@i</th>
+                    }
+
+                </tr>
+                @{
+                   
+
+                    bool isexist = false;
+                    clsEmployeeTimeSheet timesheet = new clsEmployeeTimeSheet();
+                    List<EmployeeProject> lstProjectsExp = timesheet.listProjects(timesheetmaster.EmpID);
+                    List<Project> lstEmpProject = new List<Project>();
+                    DateTime currentDateIS = new DateTime(year, hk, 1);
+                    var listOfProjects = lstTimeSheet.Where(c => c.ProjectID.HasValue).Select(d => d.ProjectID).Distinct().ToList();
+                    List<EmployeeProject> lstProjects = timesheet.listProjects(timesheetmaster.EmpID).Where(lp => lp.FromDate.Value.Month <= currentDateIS.Month || lp.ToDate.Value.Month >= currentDateIS.Month && lp.FromDate.Value.Year <= currentDateIS.Year && lp.ToDate.Value.Year >= currentDateIS.Year).ToList();
+
+                    foreach (EmployeeProject emp_project in lstProjects)
+                    {
+                        Project project = timesheet.GetEmployeeProject(emp_project.ProjectID);
+
+                        lstEmpProject.Add(project);
+                    }
+                    TimeSheet timeSheetP = new TimeSheet();
+                    TimeSheet weekHoliTS = new TimeSheet();
+
+
+@*========STARTS=======PRINT DATEWISE TIME DEVOTED TO PROJECTS================= *@
+                    var rowj = 0;
+                    List<TimeSheet> timesheetList = db.TimeSheets.Where(a => a.TimeSheetMasterID == timesheetmaster.TimeSheetMasterID).ToList();
+                    // 1 FOR WEEKEND 2 FOR HOLIDAY
+                    if (lstEmpProject.ToList().Count() > 0)
+                    {
+
+                        foreach (Project p in lstEmpProject.OrderBy(a => a.ProjectName))
+                        {
+                            if (p != null)
+                            {
+                    <tr class="@string.Format("count_td-1 in_{0}", ViewBag.Page)">
+                        <td>@{
+                                bool result = false;
+                                //  List<TimeSheet> listTimes = timesheetList.Where(a => a.ProjectID == p.ProjectId).ToList();
+ 
+                            
+                        }
+                            @p.ProjectName
+                        </td>
+                        <td>@p.ProjectNumber</td>
+
+                        @for (int j = 1; j <= 16; j++)
+                        {
+                            DateTime currentDate = new DateTime(year, hk, j);////
+                            var TodayeIsHoliday = listHoliday.Where(h => h.HolidayDate.Date == currentDate.Date).FirstOrDefault();
+                            weekHoliTS = timesheetList.Where(a => a.Date == currentDate && (a.isOff == 1 || a.isOff == 2)).FirstOrDefault();
+                            if (weekHoliTS != null)
+                            {
+
+                                if (weekHoliTS.isOff == 1)
+                                {
+                            <td>W</td>
+                                }
+                                else if (weekHoliTS.isOff == 2)
+                                {
+                            <td>H</td>  
+                                }
+                            }
+                            else
+                            {
+                                timeSheetP = timesheetList.Where(a => a.Date == currentDate && a.ProjectID == p.ProjectId).FirstOrDefault();
+                                var empLvReq = listEmployeeleaveReq.Where(a => a.FromDate <= currentDate && a.ToDate >= currentDate && a.Status.ToUpper() == "approved".ToUpper() && a.Cancel != true).FirstOrDefault();
+
+                                Boolean isHalfDay1 = empLvReq != null && empLvReq.HalfDay != null && empLvReq.HalfDay.ToString() != "" ? Convert.ToBoolean(empLvReq.HalfDay) : false;
+
+                                if (timeSheetP != null && empLvReq != null && isHalfDay1 != true)
+                                {
+                            <td style="width:25px;">@WorkingHours</td>
+                                }
+                                else if (timeSheetP != null)
+                                {
+                            <td class="td-@j r-@rowj p-@ViewBag.Page" style="width:25px;">@timeSheetP.Hours</td>
+                                }
+                                else if (TodayeIsHoliday != null)
+                                {
+                                     <td >H</td>@*
+                                    <td class="td-@j r-@rowj p-@ViewBag.Page" style="display:none" >@WorkingHours</td>*@
+                           
+                                }
+                                else
+                                {<td>&nbsp;</td>}
+                            }
+
+                        }
+
+                    </tr>}
+                            rowj++;
+                        }
+
+                    }
+                }
+
+
+                @*========ENDS=======PRINT DATEWISE TIME DEVOTED TO PROJECTS================= *@
+
+
+
+                @*========Starts=======PRINT Leave Type================= *@
+
+
+                <tr class="blank">
+                    <th colspan="2"></th>
+                    @for (int i = 1; i <= 16; i++)
+                    {
+                      
+                        <td>&nbsp; </td>
+                       
+                    }
+                </tr>
+
+
+
+
+                @{
+                    
+                    foreach (LeaveType lv in db.LeaveTypes.ToList())
+                    {
+                        int totalLeaveOfThisLeaveType = listEmployeeleaveReq.Where(a => a.LeaveTypeID == lv.LeaveTypeID && a.Status == "approved" && a.Cancel != true).Count();
+                        if (totalLeaveOfThisLeaveType > 0)
+                        {  
+                    <tr class="in"class="@string.Format("in_{0}", ViewBag.Page)">
+                        <td>@lv.LeaveTypeName</td>
+                        <td>&nbsp;</td>
+                        @for (int i = 1; i <= 16; i++)
+                        {
+
+                            DateTime currentDate = new DateTime(year, hk, i);
+                            weekHoliTS = timesheetList.Where(a => a.Date == currentDate && (a.isOff == 1 || a.isOff == 2)).FirstOrDefault();
+
+                            var empLvReq = listEmployeeleaveReq.Where(a => a.LeaveTypeID == lv.LeaveTypeID && a.FromDate <= currentDate && a.ToDate >= currentDate && a.Status == "approved" && a.Cancel != true).ToList();
+                            if (empLvReq.Count() > 0 && weekHoliTS == null)
+                            {
+                                foreach (EmployeeLeaveRequest lReq in empLvReq)
+                                {
+
+
+                                    if (lReq.FromDate.Value.Day == lReq.ToDate.Value.Day)
+                                    {
+                                        if (lReq.HalfDay.HasValue == true)
+                                        {
+
+                                            if (lReq.HalfDay.Value)
+                                            {
+                            <td class="td-@i r-@rowj leave-@rowj p-@ViewBag.Page" style="width:25px">@HalfDay<img style="vertical-align: top; width: 15px; padding-top: 2px;" src="../../Images/12.png" /></td>
+                                            }
+                                            else
+                                            {
+                            <td class="td-@i r-@rowj leave-@rowj p-@ViewBag.Page" style="width:25px;">@FullDay </td>
+                                            }
+
+
+                                        }
+                                    }
+                                    else
+                                    {
+                            <td class="td-@i r-@rowj  leave-@rowj p-@ViewBag.Page" style="width:25px;">@FullDay</td>
+                                           
+                                    }
+
+
+                                }
+                            }
+
+                            else
+                            {
+                            <td class="td-@i" >&nbsp;</td>
+                            }
+                        }
+                    </tr>
+                       
+                        rowj++;
+                        }
+                    }
+                    
+                 
+                  
+                }
+
+                 @{
+                    
+                   
+                     //var TodayeIsHoliday1 = listHoliday.Where(h => h.HolidayDate.Date == currentDate.Date).FirstOrDefault();
+                     if (listHoliday.Count() > 0)
+                     {  
+                    <tr class="in"class="@string.Format("in_{0}", ViewBag.Page)">
+                        <td>Holiday</td>
+                        <td>&nbsp;</td>
+                        @for (int i = 1; i <= 16; i++)
+                        {
+
+                            DateTime currentDate = new DateTime(year, hk, i);
+                            var TodayeIsHoliday = listHoliday.Where(h => h.HolidayDate.Date == currentDate.Date).FirstOrDefault();
+                            if (TodayeIsHoliday != null)
+                            {
+                                 <td class="td-@i r-@rowj leave-@rowj p-@ViewBag.Page" style="width:25px;">8.0</td>
+                            }
+
+                            else
+                            {
+                            <td class="td-@i" >&nbsp;</td>
+                            }
+                        }
+                    </tr>
+                   
+                     }
+                    
+                 
+                  
+                }
+
+
+                @*    
+                 @*========Ends=======PRINT Leave Type================= *@
+
+                @{
+                    clsEmployeeLeaves objEmployeeleaev = new clsEmployeeLeaves();
+                    List<LeaveType> listLeaveTypeEmp = new List<LeaveType>();
+                    List<EmployeeLeaf> listEmpLeave = objEmployeeleaev.getEmployeesbyId(timesheetmaster.EmpID);
+                    List<LeaveType> LstLeaveTypeCompany = (from lt in db.LeaveTypes select lt).ToList();
+                    foreach (EmployeeLeaf emp_Leave in listEmpLeave)
+                    {
+                        LeaveType leaveType = objEmployeeleaev.getLeveTypeByID(emp_Leave.LeaveTypeID);
+
+                        listLeaveTypeEmp.Add(leaveType);
+                    }
+                     
+                }
+
+
+                <tr>
+
+                    <th><strong>Total Hours</strong></th>
+                    <td>&nbsp;</td>
+
+                    @for (int i = 1; i <= 16; i++)
+                    { 
+                        <th class="tt-@i p-@ViewBag.Page" style="width:25px;"></th>
+                    }
+
+                </tr>
+
+
+            </tbody>
+        </table>
+        @* Ends - holidays-1 *@
+
+
+        <table>
+            <tbody>
+                <tr>
+                    <td colspan="10">&nbsp;</td>
+                </tr>
+            </tbody>
+        </table>
+
+        @* SECOND BLOCK STARTS*@
+        <table class="mws-datatable-fn hide-c mws-table" style="width: 100%;" cellspacing="0" cellpadding="0">
+            <tbody role="alert" aria-live="polite" aria-relevant="all">
+
+
+
+                <tr>
+
+                    <th>Activity/Project/Description</th>
+                    <th>Donor Source/Project Number</th>
+
+                    @for (int i = 17; i <= days; i++)
+                    { 
+                        <th>@i</th>
+                    }
+                    <th>Hours</th>
+                </tr>
+
+                @{
+                    rowj = 0;
+                    foreach (Project p in lstEmpProject.OrderBy(a => a.ProjectName))
+                    {
+                    
+                    <tr class="count_td-2">
+                        <td>@{
+                        bool result = false;
+                        List<TimeSheet> listTimes = timesheetList.Where(a => a.ProjectID == p.ProjectId).ToList();
+
+                        foreach (TimeSheet t in listTimes)
+                        {
+                            if (t.ProjectID == p.ProjectId)
+                            {
+                                result = true;
+                                break;
+                            }
+                            else
+                            {
+
+                                result = false;
+                            }
+                        }
+                        }
+                            @p.ProjectName
+                        </td>
+                        <td class="">@p.ProjectNumber</td>
+
+                        @for (int j = 17; j <= days; j++)
+                        {
+                            DateTime currentDate = new DateTime(year, hk, j);////
+
+                            weekHoliTS = timesheetList.Where(a => a.Date == currentDate && (a.isOff == 1 || a.isOff == 2)).FirstOrDefault();
+                            if (weekHoliTS != null)
+                            {
+
+                                if (weekHoliTS.isOff == 1)
+                                {
+                            <td>W</td>
+                                }
+                                else if (weekHoliTS.isOff == 2)
+                                {
+                            <td>H</td>  
+                                }
+                            }
+                            else
+                            {
+                                var TodayeIsHoliday = listHoliday.Where(h => h.HolidayDate.Date == currentDate.Date).FirstOrDefault();
+                                timeSheetP = listTimes.Where(a => a.Date == currentDate).FirstOrDefault();
+                                var empLvReq = listEmployeeleaveReq.Where(a => a.FromDate <= currentDate && a.ToDate >= currentDate && a.Status.ToUpper() == "approved".ToUpper() && a.Cancel != true).FirstOrDefault();
+
+                                // 1 FOR WEEKEND 2 FOR HOLIDAY
+                                Boolean isHalfDay = empLvReq != null && empLvReq.HalfDay != null && empLvReq.HalfDay.ToString() != "" ? Convert.ToBoolean(empLvReq.HalfDay) : false;
+                                if (timeSheetP != null && empLvReq != null && isHalfDay != true)
+                                {
+                            <td style="width:25px;">@WorkingHours</td>
+                                }
+                                else if (timeSheetP != null)
+                                {
+                            <td class="td-@j r-@rowj p-@ViewBag.Page" style="width:25px;">@timeSheetP.Hours</td>
+                                }
+                                else if (TodayeIsHoliday != null)
+                                {
+                                    <td>H</td>@*
+                             <td class="td-@j r-@rowj p-@ViewBag.Page" style="display:none" >@WorkingHours</td>*@
+                           
+                                }
+                                else
+                                {<td>&nbsp;</td>}
+                            }
+
+
+                        }
+                        <td style="font-weight:bold" class="hrs h-@rowj p-@ViewBag.Page" style="width:25px;"></td>
+                    </tr>
+                        rowj++;
+                    }
+                }
+
+
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+
+                    @for (int i = 17; i <= days; i++)
+                    {
+                        <td>&nbsp;</td>
+                        
+                    }
+                    <td>&nbsp;</td>
+                </tr>
+
+
+                @{
+                    HR_System.Models.LeaveSummary _objLeaveSummary = new HR_System.Models.LeaveSummary();
+                    List<HR_System.Models.LeaveSummaryVM> li = _objLeaveSummary.getLeaveSummary(timesheetmaster.Employee, timesheetmaster.TimeSheetMasterID, timesheetmaster);
+                   
+                }
+                @*========Starts=======PRINT Leave Type================= *@
+
+                @{
+                    foreach (LeaveType lv in db.LeaveTypes.ToList())
+                    {
+                        int totalLeaveOfThisLeaveType = listEmployeeleaveReq.Where(a => a.LeaveTypeID == lv.LeaveTypeID && a.Status == "approved" && a.Cancel != true).Count();
+                        if (totalLeaveOfThisLeaveType > 0)
+                        {
+                    <tr>
+                        <td>@lv.LeaveTypeName</td>
+                        <td>&nbsp;</td>
+
+                        @for (int i = 17; i <= days + 1; i++)
+                        {
+
+                            if (i == (days + 1))
+                            {
+                            <td style="font-weight: bold;width:25px;">@li.Where(a => a.projectName.ToLower() == lv.LeaveTypeName.ToLower()).Sum(aa => aa.hour) </td>
+                            }
+                            else
+                            {
+                                DateTime currentDate = new DateTime(year, hk, i);
+                                weekHoliTS = timesheetList.Where(a => a.Date == currentDate && (a.isOff == 1 || a.isOff == 2)).FirstOrDefault();
+                                var empLvReq = listEmployeeleaveReq.Where(a => a.LeaveTypeID == lv.LeaveTypeID && a.FromDate <= currentDate && a.ToDate >= currentDate && a.Status == "approved" && a.Cancel != true).ToList();
+
+
+                                if (empLvReq.Count() > 0 && weekHoliTS == null)
+                                {
+                                    foreach (EmployeeLeaveRequest lReq in empLvReq)
+                                    {
+
+
+                                        if (lReq.FromDate.Value.Day == lReq.ToDate.Value.Day)
+                                        {
+                                            if (lReq.HalfDay.HasValue == true)
+                                            {
+
+                                                if (lReq.HalfDay.Value)
+                                                {
+                            <td class="td-@i r-@rowj leave-@rowj p-@ViewBag.Page" style="width:25px;">@HalfDay<img src="../../Images/12.png" style="vertical-align: top; width: 15px; padding-top: 2px;" /></td>
+                                                }
+                                                else
+                                                {
+                            <td class="td-@i r-@rowj leave-@rowj" style="width:25px;">@FullDay </td>
+                                                }
+
+
+                                            }
+                                        }
+                                        else
+                                        {
+                            <td class="td-@i r-@rowj leave-@rowj p-@ViewBag.Page" style="width:25px;">@FullDay</td>
+                                           
+                                        }
+
+
+                                    }
+                                }
+
+                                else
+                                {
+                            <td class="">&nbsp;</td>
+                                }
+                            }
+                        }
+
+                    </tr>
+                        rowj++;
+                        }
+                    }
+
+
+                }
+                  @{
+                    
+                   
+                      //var TodayeIsHoliday1 = listHoliday.Where(h => h.HolidayDate.Date == currentDate.Date).FirstOrDefault();
+                      if (listHoliday.Count() > 0)
+                      {  
+                    <tr class="in" class="@string.Format("in_{0}", ViewBag.Page)">
+                        <td>Holiday</td>
+                        <td>&nbsp;</td>
+                        @for (int i = 17; i <= days + 1; i++)
+                        {
+                            if (i == (days + 1))
+                            {
+                            <td style="font-weight: bold;width:25px;">@{int holidayhrs = (listHoliday.Count()) * 8;}@holidayhrs</td>
+                            }
+                            else
+                            {
+
+                                DateTime currentDate = new DateTime(year, hk, i);
+                                var TodayeIsHoliday = listHoliday.Where(h => h.HolidayDate.Date == currentDate.Date).FirstOrDefault();
+                                if (TodayeIsHoliday != null)
+                                {
+                                 <td class="td-@i r-@rowj leave-@rowj p-@ViewBag.Page" style="width:25px;">8.0</td>
+                                }
+
+                                else
+                                {
+                            <td class="td-@i" >&nbsp;</td>
+                                }
+                            }
+                        }
+                    </tr>
+                   
+                      }
+                    
+                 
+                  
+                }
+
+                <tr>
+
+                    <th ><strong>Total Hours</strong></th>
+                   <td>&nbsp;</td>
+
+                    @for (int i = 17; i <= days + 1; i++)
+                    {
+                        if (i == (days + 1))
+                        {
+                            //made changes on 23-12-2013
+                            //I hv added a.isLeave==true condition
+                        <th style="width:25px">@{
+                            int noOfHDay = listHoliday.Count();
+                            totalhdayHrs = noOfHDay * 8;
+                            var sonofHr = li.Where(a => a.isLeave == false || a.isLeave == true).Sum(a => a.hour);
+                            totalhdayHrs = sonofHr + totalhdayHrs;
+                            
+                            }
+                            @totalhdayHrs
+                            
+                        </th>
+                        }
+                        else
+                        {
+                        <th class="tt-@i p-@ViewBag.Page" style="width:25px"></th>
+                        }
+                    }
+
+                </tr>
+            </tbody>
+        </table>
+
+        <br />
+        <div>
+
+
+            <table class="mws-datatable-fn hide-c mws-table" style="width: 62%; display: inline-block;" cellpadding="0">
+                <tr>
+                    <th style="padding: 10px">Activity/Project/Description</th>
+                    <th style="padding: 10px">Donor Source/Project Number</th>
+                    <th style="padding: 10px">T6</th>
+                    <th style="padding: 10px">%</th>
+                    <th style="padding: 10px">h</th>
+                    <th style="padding: 10px">Signature</th>
+                </tr>
+                @{
+                    decimal totalHours = li.Where(a => a.isLeave == false).Sum(a => a.hour);
+                }
+                @foreach (var item in li.Where(a => a.isLeave == false).OrderBy(a => a.projectName))
+                {
+                    decimal percentage = 0;
+                    try
+                    {
+                        percentage = Math.Round((item.hour * 100) / totalHours, 2);
+                    }
+                    catch (Exception ee) { }
+                    <tr>
+                        <td>@item.projectName</td>
+                        <td>@item.projectNumber</td>
+                        <td>&nbsp;</td>
+                        <td>@if (item.isLeave == false)
+                            {  
+                            @percentage @:%
+                           }
+                        </td>
+                        <td>@item.hour</td>
+                        
+                        <td>&nbsp;</td>
+                    </tr>
+
+                }
+                <tr>
+                    <td>Vacation, Sick,Holidays, Other types of leave</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                   @* <td>@li.Where(a => a.isLeave == true).Sum(a => a.hour)</td>*@
+                    <td>
+                            @{
+                                int noOfHDay2 = listHoliday.Count();
+                                decimal totalLVHdayHrs = noOfHDay2 * 8;
+                                totalLVHdayHrs = li.Where(a => a.isLeave == true).Sum(a => a.hour) + totalLVHdayHrs;
+                            
+                            }
+                           @totalLVHdayHrs
+                            </td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td colspan="3">&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <!--<td> style="font-weight: bold">@li.Sum(a => a.hour)</td>-->
+                     <td style="font-weight: bold">@totalhdayHrs</td>
+                    <td>&nbsp;</td>
+
+                </tr>
+            </table>
+
+
+            <table class="mws-datatable-fn hide-c mws-table signature" style="width: 37%; display: inline-block; margin-top: 0px; vertical-align: top;"
+                cellspacing="0" cellpadding="0">
+                <tbody role="alert" aria-live="polite" aria-relevant="all">
+                    <tr>
+                        <td style="height: 35px;">@name</td>
+                        <td>@HR_System.Models.MVCUtility.getTimesheetSubmittedDate(timesheetmaster.TimeSheetMasterID)</td>
+                    </tr>
+                    <tr>
+                        <td>Employer's signature</td>
+                        <td style="width: 40%;">Date</td>
+                    </tr>
+                    <tr>
+                        <td style="height: 35px;">@if (supervisorName == null || supervisorName=="")
+                                                  {
+                        supervisorDetail= db.Employees.Where(em => em.EmployeeID == timesheetmaster.Employee.AlternativeSupervisorID).FirstOrDefault();
+                                                      supervisorName =supervisorDetail!=null?supervisorDetail.FirstNameEn.ToUpperInvariant() + " " + supervisorDetail.LastNameEn:"";
+                        }
+                            @supervisorName
+                        </td>
+                        <td>@HR_System.Models.MVCUtility.getTimesheetApproveDate(timesheetmaster.TimeSheetMasterID)</td>
+                    </tr>
+                    <tr>
+                        <td>Supervisor's signature</td>
+                        <td>Date</td>
+                    </tr>
+                    <tr>
+                        <td style="height: 35px;" colspan="2">@Elias</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">Head of Operations </td>
+
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<style type="text/css">
+    th {
+        width: 25px;
+    }
+</style>
+<script type="text/javascript">
+
+    var totalproject = $('@string.Format(".in_{0}", ViewBag.Page)').size();
+    var totaldays = Number(@days);
+    var page = '@ViewBag.Page';
+    for (i = 0; i < totalproject; i++) {
+        var sum = 0;
+        for (j = 1; j <= totaldays; j++) {
+            if ($('.r-' + i + '.td-' + j + '.p-' + page).text() != '') {
+                sum += parseFloat($('.r-' + i + '.td-' + j + '.p-' + page).text());
+            }
+
+        }
+
+        $('.h-' + i + ".p-" + page).text(sum);
+    }
+
+    for (j = 1; j <= totaldays; j++) {
+        var sum = 0;
+        for (i = 0; i < totalproject; i++) {
+            if ($('.r-' + i + '.td-' + j + '.p-' + page).text() != '') {
+                sum += parseInt($('.r-' + i + '.td-' + j + '.p-' + page).text());
+            }
+
+        }
+
+        $('.tt-' + j + ".p-" + page).text(sum);
+    }
+</script>

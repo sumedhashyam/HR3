@@ -1,0 +1,279 @@
+﻿@model DAO.EmployeeLeaveRequest
+@{
+    ViewBag.Title = "requestForLeave";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+}
+@{
+    bool canApproveDisapprove = ViewBag.canApproveDisapprove != null ? Convert.ToBoolean(ViewBag.canApproveDisapprove.ToString()) : false;
+    bool isApprover = ViewBag.isApprover != null ? Convert.ToBoolean(ViewBag.isApprover.ToString()) : false;
+    bool isOwner = ViewBag.isOwner != null ? Convert.ToBoolean(ViewBag.isOwner.ToString()) : false;
+}
+<script src="@Url.Content("~/Scripts/Custom/leaveRequest.js")"></script>
+
+@{
+    string SelectedYear =Convert.ToString( Request.QueryString["YearFilter"]);
+}
+
+
+<script>
+    $(document).ready(function () {
+        //$("#news_date").datepicker({ minDate: 0 });
+        //$("#endDate").datepicker({ minDate: 0 });
+        //$("#endDateDiv").hide();
+        //$("#divDay").show();
+
+        //var chBox = $('#isEndDate');
+        //showToDate(chBox);
+    });
+    
+
+
+    function showToDate(chkEnd) {
+        if ($(chkEnd).is(':checked')) {
+            $("#divDay").hide();
+            $("#endDateDiv").show();
+        }
+        else {
+            $("#divDay").show();
+            $("#endDateDiv").hide();
+            $("#endDate").val('');
+        }
+    }
+
+
+    function setDisapprove() {
+        if (confirm('Are you sure you want to disapprove this leave request ?')) {
+            $('#hfapprove').val('false');
+            return true;
+        } else {
+            return false;
+        }
+    }
+    function setApprove() {
+        if (confirm('Are you sure you want to approve this leave request ?')) {
+            $('#hfapprove').val('true');
+            return true;
+        } else {
+            return false;
+        }
+    }
+</script>
+<style type="text/css">
+    .validation .field-validation-error {
+        display: inline-block;
+    }
+
+    .field-validation-error {
+        display: block;
+    }
+
+    #messageDiv {
+        position: absolute;
+        right: 0px;
+        top: 20px;
+    }
+
+    .mws-form .mws-form-row {
+        padding: 10px 24px;
+    }
+</style>
+<div class="mws-panel grid_8" style="text-align: right; box-shadow: none;">
+</div>
+@{Html.RenderPartial("Notification");}
+@{
+    string employeeID = ViewBag.employeeID != null ? ViewBag.employeeID.ToString() : "";
+    bool halfDay = Model.HalfDay.HasValue ? Model.HalfDay.Value : false;
+
+
+    bool isCancelled = false;
+    if (Model.Status.Trim().ToLower() == "approved" && Model.Cancel.HasValue && Model.Cancel.Value == true)
+    {
+        Model.Status = "Cancelled";
+        isCancelled = true;
+    }
+                            
+}
+<input type="hidden" id="hfApprovalPage" value="true" />
+<input type="hidden" value="@halfDay" id="hfIshalfday" />
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        <span style="width: 200px; display: inline-block;">Leave Request Detail</span>
+        <div class="toolbar">
+
+             @if (isOwner)
+                    {
+                        if (Request.QueryString["Return_Url"] != null && Request.QueryString["Return_Url"].ToString() == "PendingLeaves")
+                        {
+                          @*   @Html.ActionLink("Back", "PendingLeaves", "Employee", null, new { @class = "btn btn-primary" }) *@
+                           @Html.ActionLink("Back", "PendingLeaves", "Employee",new {status="",SelectedYear=SelectedYear }, new { })                                              
+                        }
+                        else
+                        {
+                            
+                        @Html.ActionLink("Back", "leaveData", "Employee", null, new { }) 
+                       
+                        
+                        }
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Back", "detailedLeaveForSupervisor", "Employee", null, new {})
+                    }
+
+          
+
+        @*    <a href="@Request.UrlReferrer">Back</a>  *@
+        </div>
+    </div>
+    <div class="mws-panel-body no-padding" style="position: relative;">
+        @using (Html.BeginForm("DetailForLeave", "Leave", FormMethod.Post, new { @class = "mws-form" }))
+        {
+            @Html.ValidationSummary(true)
+            <input type="hidden" name="requestID" value="@ViewData["req_ID"].ToString()" />
+            <input type="hidden" id="hfEmployeeID" value="@employeeID" />
+            <div id="mws-validate-error" class="mws-form-message error" style="display: none;"></div>
+            <div class="mws-form-inline">
+                <div class="mws-form-row">
+                    <div class="grid_4" style="margin-left: 0px;">
+                        <label class="mws-form-label">Status</label>
+                        <div class="mws-form-item">
+
+
+                            @if (Model.Status != null)
+                            {
+                                @Model.Status.ToUpper()
+                            }
+                            @Html.HiddenFor(a => a.Status)
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="mws-form-row">
+                    <div class="grid_4" style="margin-left: 0px;">
+                        <label class="mws-form-label">Select Leave Type</label>
+                        <div class="mws-form-item">
+                            @{ List<SelectListItem> locationList = (List<SelectListItem>)ViewData["listLeave"];
+                            }
+                            @Html.DropDownListFor(a => a.LeaveTypeID, locationList, new { @class = "required", style = "width:352px;" })
+                            @Html.ValidationMessageFor(model => model.LeaveTypeID)
+
+                        </div>
+                    </div>
+                    <div class="grid_4" id="messageDiv">
+                    </div>
+                </div>
+                <div class="mws-form-row">
+                    <label class="mws-form-label">From:</label>
+                    <div class="mws-form-item">
+                        @Html.TextBoxFor(a => a.FromDate, new { id = "news_date", @class = "startdate datepicker" })
+
+                        &nbsp;To
+                         @Html.TextBoxFor(a => a.ToDate, new { id = "endDate", @class = "enddate datepicker" })
+                        <div class="validation">
+                            @Html.ValidationMessageFor(a => a.FromDate)
+                            <label style="display: inline-block; width: 50px;">&nbsp;</label>
+                            @Html.ValidationMessageFor(a => a.ToDate)
+                        </div>
+                        <span id="erreor"></span>
+                    </div>
+                </div>
+                <div class="mws-form-row" id="divFullHalfDay" style="display: none">
+                    <label class="mws-form-label">Length :</label>
+                    <div class="mws-form-item">
+                        <select name="divFullHalfDay" style="width: 347px;">
+                            <option value="FullDay">Full Day
+                            </option>
+                            <option value="HalfDay">Half Day
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                                <div class="mws-form-row">
+                    <label class="mws-form-label">Reason For Leave</label>
+                    <div class="mws-form-item">
+                        @Html.TextAreaFor(a => a.LeaveReason, new { @class = "required", cols = 45, style = "height:60px;" })
+                        @Html.ValidationMessageFor(a => a.LeaveReason)
+                    </div>
+                </div>
+
+                @if (canApproveDisapprove)
+                {
+                    if (Model.Status != null && Model.Status.ToLower().Trim() == "pending")
+                    {
+                    <div class="mws-form-row">
+                        <label class="mws-form-label">Notes :</label>
+                        <div class="mws-form-item">
+                            @Html.TextArea("Notes", new { @class = "required", cols = 45, style = "height:60px;" })
+                        </div>
+                    </div>    
+                    }
+                }
+                <input type="hidden" id="hfFormValid" name="hfFormValid" value="false" />
+                <input type="hidden" id="hfapprove" name="hfapprove" value="false" />
+
+                <div class="mws-button-row">
+                    @if (canApproveDisapprove)
+                    {
+                        if (Model.Status != null && Model.Status.ToLower().Trim() == "pending")
+                        {
+@*<input type="submit" class="btn btn-info" value="Submit" onclick="return validateForm();" />*@
+                         
+                        <input type="submit" class="btn btn-success" value="Approve" id="btnApprove" onclick="return setApprove()" />
+                        <input type="submit" class="btn btn-danger" value="Disapprove" id="btnDisapprove" onclick="return setDisapprove()" />                  
+                        }
+
+                    }
+                    @if (isOwner)
+                    {
+                        if (Request.QueryString["Return_Url"] != null && Request.QueryString["Return_Url"].ToString() == "PendingLeaves")
+                        {
+                          @*   @Html.ActionLink("Back", "PendingLeaves", "Employee", null, new { @class = "btn btn-primary" }) *@
+                           @Html.ActionLink("Back", "PendingLeaves", "Employee",new {status="",SelectedYear=SelectedYear }, new { @class = "btn btn-primary" })                                              
+                        }
+                        else
+                        {
+                            
+                        @Html.ActionLink("Back", "leaveData", "Employee", null, new { @class = "btn btn-primary" }) 
+                       
+                        
+                        }
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Back", "detailedLeaveForSupervisor", "Employee", null, new { @class = "btn btn-primary" })
+                    }
+
+
+
+                </div>
+
+            </div>
+        }
+
+
+    </div>
+</div>
+
+
+@{
+    bool disable = false;
+    if (isOwner)
+    {
+        disable = true;
+    }
+    else if (canApproveDisapprove && (Model.Status != "pending"))
+    {
+        disable = true;
+    }
+    if (disable)
+    {
+    <script type="text/javascript">
+        $('input[type=text]').attr('disabled', 'disabled');
+        $('textarea').attr('disabled', 'disabled');
+        $('select').attr('disabled', 'disabled');
+    </script>
+    }
+}
+
+@{Html.RenderAction("LeaveLog", "Employee", new { LeaveID = Model.EmployeeLeaveRequestID });}

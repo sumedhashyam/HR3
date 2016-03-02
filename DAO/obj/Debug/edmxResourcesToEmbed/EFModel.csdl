@@ -1,0 +1,1553 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="dbHRSystemModel" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
+  <EntityContainer Name="dbHRSystemEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="aspnet_Applications" EntityType="dbHRSystemModel.aspnet_Applications" />
+    <EntitySet Name="aspnet_Membership" EntityType="dbHRSystemModel.aspnet_Membership" />
+    <EntitySet Name="aspnet_Paths" EntityType="dbHRSystemModel.aspnet_Paths" />
+    <EntitySet Name="aspnet_PersonalizationAllUsers" EntityType="dbHRSystemModel.aspnet_PersonalizationAllUsers" />
+    <EntitySet Name="aspnet_PersonalizationPerUser" EntityType="dbHRSystemModel.aspnet_PersonalizationPerUser" />
+    <EntitySet Name="aspnet_Profile" EntityType="dbHRSystemModel.aspnet_Profile" />
+    <EntitySet Name="aspnet_Roles" EntityType="dbHRSystemModel.aspnet_Roles" />
+    <EntitySet Name="aspnet_SchemaVersions" EntityType="dbHRSystemModel.aspnet_SchemaVersions" />
+    <EntitySet Name="aspnet_Users" EntityType="dbHRSystemModel.aspnet_Users" />
+    <EntitySet Name="aspnet_WebEvent_Events" EntityType="dbHRSystemModel.aspnet_WebEvent_Events" />
+    <EntitySet Name="Cities" EntityType="dbHRSystemModel.City" />
+    <EntitySet Name="CountryOffices" EntityType="dbHRSystemModel.CountryOffice" />
+    <EntitySet Name="EmployeeLocations" EntityType="dbHRSystemModel.EmployeeLocation" />
+    <EntitySet Name="JobTypes" EntityType="dbHRSystemModel.JobType" />
+    <EntitySet Name="vw_aspnet_Applications" EntityType="dbHRSystemModel.vw_aspnet_Applications" />
+    <EntitySet Name="vw_aspnet_MembershipUsers" EntityType="dbHRSystemModel.vw_aspnet_MembershipUsers" />
+    <EntitySet Name="vw_aspnet_Profiles" EntityType="dbHRSystemModel.vw_aspnet_Profiles" />
+    <EntitySet Name="vw_aspnet_Roles" EntityType="dbHRSystemModel.vw_aspnet_Roles" />
+    <EntitySet Name="vw_aspnet_Users" EntityType="dbHRSystemModel.vw_aspnet_Users" />
+    <EntitySet Name="vw_aspnet_UsersInRoles" EntityType="dbHRSystemModel.vw_aspnet_UsersInRoles" />
+    <EntitySet Name="vw_aspnet_WebPartState_Paths" EntityType="dbHRSystemModel.vw_aspnet_WebPartState_Paths" />
+    <EntitySet Name="vw_aspnet_WebPartState_Shared" EntityType="dbHRSystemModel.vw_aspnet_WebPartState_Shared" />
+    <EntitySet Name="vw_aspnet_WebPartState_User" EntityType="dbHRSystemModel.vw_aspnet_WebPartState_User" />
+    <AssociationSet Name="FK__aspnet_Me__Appli__21B6055D" Association="dbHRSystemModel.FK__aspnet_Me__Appli__21B6055D">
+      <End Role="aspnet_Applications" EntitySet="aspnet_Applications" />
+      <End Role="aspnet_Membership" EntitySet="aspnet_Membership" />
+    </AssociationSet>
+    <AssociationSet Name="FK__aspnet_Pa__Appli__5AEE82B9" Association="dbHRSystemModel.FK__aspnet_Pa__Appli__5AEE82B9">
+      <End Role="aspnet_Applications" EntitySet="aspnet_Applications" />
+      <End Role="aspnet_Paths" EntitySet="aspnet_Paths" />
+    </AssociationSet>
+    <AssociationSet Name="FK__aspnet_Ro__Appli__440B1D61" Association="dbHRSystemModel.FK__aspnet_Ro__Appli__440B1D61">
+      <End Role="aspnet_Applications" EntitySet="aspnet_Applications" />
+      <End Role="aspnet_Roles" EntitySet="aspnet_Roles" />
+    </AssociationSet>
+    <AssociationSet Name="FK__aspnet_Us__Appli__0DAF0CB0" Association="dbHRSystemModel.FK__aspnet_Us__Appli__0DAF0CB0">
+      <End Role="aspnet_Applications" EntitySet="aspnet_Applications" />
+      <End Role="aspnet_Users" EntitySet="aspnet_Users" />
+    </AssociationSet>
+    <AssociationSet Name="FK__aspnet_Me__UserI__22AA2996" Association="dbHRSystemModel.FK__aspnet_Me__UserI__22AA2996">
+      <End Role="aspnet_Users" EntitySet="aspnet_Users" />
+      <End Role="aspnet_Membership" EntitySet="aspnet_Membership" />
+    </AssociationSet>
+    <AssociationSet Name="FK__aspnet_Pe__PathI__628FA481" Association="dbHRSystemModel.FK__aspnet_Pe__PathI__628FA481">
+      <End Role="aspnet_Paths" EntitySet="aspnet_Paths" />
+      <End Role="aspnet_PersonalizationAllUsers" EntitySet="aspnet_PersonalizationAllUsers" />
+    </AssociationSet>
+    <AssociationSet Name="FK__aspnet_Pe__PathI__68487DD7" Association="dbHRSystemModel.FK__aspnet_Pe__PathI__68487DD7">
+      <End Role="aspnet_Paths" EntitySet="aspnet_Paths" />
+      <End Role="aspnet_PersonalizationPerUser" EntitySet="aspnet_PersonalizationPerUser" />
+    </AssociationSet>
+    <AssociationSet Name="FK__aspnet_Pe__UserI__693CA210" Association="dbHRSystemModel.FK__aspnet_Pe__UserI__693CA210">
+      <End Role="aspnet_Users" EntitySet="aspnet_Users" />
+      <End Role="aspnet_PersonalizationPerUser" EntitySet="aspnet_PersonalizationPerUser" />
+    </AssociationSet>
+    <AssociationSet Name="FK__aspnet_Pr__UserI__38996AB5" Association="dbHRSystemModel.FK__aspnet_Pr__UserI__38996AB5">
+      <End Role="aspnet_Users" EntitySet="aspnet_Users" />
+      <End Role="aspnet_Profile" EntitySet="aspnet_Profile" />
+    </AssociationSet>
+    <AssociationSet Name="FK_City_CountryOffice" Association="dbHRSystemModel.FK_City_CountryOffice">
+      <End Role="CountryOffice" EntitySet="CountryOffices" />
+      <End Role="City" EntitySet="Cities" />
+    </AssociationSet>
+    <AssociationSet Name="aspnet_UsersInRoles" Association="dbHRSystemModel.aspnet_UsersInRoles">
+      <End Role="aspnet_Roles" EntitySet="aspnet_Roles" />
+      <End Role="aspnet_Users" EntitySet="aspnet_Users" />
+    </AssociationSet>
+    <FunctionImport Name="aspnet_AnyDataInTables" ReturnType="Collection(String)">
+      <Parameter Name="TablesToCheck" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_Applications_CreateApplication">
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="ApplicationId" Mode="InOut" Type="Guid" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_CheckSchemaVersion">
+      <Parameter Name="Feature" Mode="In" Type="String" />
+      <Parameter Name="CompatibleSchemaVersion" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_Membership_ChangePasswordQuestionAndAnswer">
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="UserName" Mode="In" Type="String" />
+      <Parameter Name="NewPasswordQuestion" Mode="In" Type="String" />
+      <Parameter Name="NewPasswordAnswer" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_Membership_CreateUser">
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="UserName" Mode="In" Type="String" />
+      <Parameter Name="Password" Mode="In" Type="String" />
+      <Parameter Name="PasswordSalt" Mode="In" Type="String" />
+      <Parameter Name="Email" Mode="In" Type="String" />
+      <Parameter Name="PasswordQuestion" Mode="In" Type="String" />
+      <Parameter Name="PasswordAnswer" Mode="In" Type="String" />
+      <Parameter Name="IsApproved" Mode="In" Type="Boolean" />
+      <Parameter Name="CurrentTimeUtc" Mode="In" Type="DateTime" />
+      <Parameter Name="CreateDate" Mode="In" Type="DateTime" />
+      <Parameter Name="UniqueEmail" Mode="In" Type="Int32" />
+      <Parameter Name="PasswordFormat" Mode="In" Type="Int32" />
+      <Parameter Name="UserId" Mode="InOut" Type="Guid" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_Membership_FindUsersByEmail">
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="EmailToMatch" Mode="In" Type="String" />
+      <Parameter Name="PageIndex" Mode="In" Type="Int32" />
+      <Parameter Name="PageSize" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_Membership_FindUsersByName">
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="UserNameToMatch" Mode="In" Type="String" />
+      <Parameter Name="PageIndex" Mode="In" Type="Int32" />
+      <Parameter Name="PageSize" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_Membership_GetAllUsers">
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="PageIndex" Mode="In" Type="Int32" />
+      <Parameter Name="PageSize" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_Membership_GetNumberOfUsersOnline">
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="MinutesSinceLastInActive" Mode="In" Type="Int32" />
+      <Parameter Name="CurrentTimeUtc" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_Membership_GetPassword" ReturnType="Collection(dbHRSystemModel.aspnet_Membership_GetPassword_Result)">
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="UserName" Mode="In" Type="String" />
+      <Parameter Name="MaxInvalidPasswordAttempts" Mode="In" Type="Int32" />
+      <Parameter Name="PasswordAttemptWindow" Mode="In" Type="Int32" />
+      <Parameter Name="CurrentTimeUtc" Mode="In" Type="DateTime" />
+      <Parameter Name="PasswordAnswer" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_Membership_GetPasswordWithFormat" ReturnType="Collection(dbHRSystemModel.aspnet_Membership_GetPasswordWithFormat_Result)">
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="UserName" Mode="In" Type="String" />
+      <Parameter Name="UpdateLastLoginActivityDate" Mode="In" Type="Boolean" />
+      <Parameter Name="CurrentTimeUtc" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_Membership_GetUserByEmail" ReturnType="Collection(String)">
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="Email" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_Membership_GetUserByName" ReturnType="Collection(dbHRSystemModel.aspnet_Membership_GetUserByName_Result)">
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="UserName" Mode="In" Type="String" />
+      <Parameter Name="CurrentTimeUtc" Mode="In" Type="DateTime" />
+      <Parameter Name="UpdateLastActivity" Mode="In" Type="Boolean" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_Membership_GetUserByUserId" ReturnType="Collection(dbHRSystemModel.aspnet_Membership_GetUserByUserId_Result)">
+      <Parameter Name="UserId" Mode="In" Type="Guid" />
+      <Parameter Name="CurrentTimeUtc" Mode="In" Type="DateTime" />
+      <Parameter Name="UpdateLastActivity" Mode="In" Type="Boolean" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_Membership_ResetPassword">
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="UserName" Mode="In" Type="String" />
+      <Parameter Name="NewPassword" Mode="In" Type="String" />
+      <Parameter Name="MaxInvalidPasswordAttempts" Mode="In" Type="Int32" />
+      <Parameter Name="PasswordAttemptWindow" Mode="In" Type="Int32" />
+      <Parameter Name="PasswordSalt" Mode="In" Type="String" />
+      <Parameter Name="CurrentTimeUtc" Mode="In" Type="DateTime" />
+      <Parameter Name="PasswordFormat" Mode="In" Type="Int32" />
+      <Parameter Name="PasswordAnswer" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_Membership_SetPassword">
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="UserName" Mode="In" Type="String" />
+      <Parameter Name="NewPassword" Mode="In" Type="String" />
+      <Parameter Name="PasswordSalt" Mode="In" Type="String" />
+      <Parameter Name="CurrentTimeUtc" Mode="In" Type="DateTime" />
+      <Parameter Name="PasswordFormat" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_Membership_UnlockUser">
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="UserName" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_Membership_UpdateUser">
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="UserName" Mode="In" Type="String" />
+      <Parameter Name="Email" Mode="In" Type="String" />
+      <Parameter Name="Comment" Mode="In" Type="String" />
+      <Parameter Name="IsApproved" Mode="In" Type="Boolean" />
+      <Parameter Name="LastLoginDate" Mode="In" Type="DateTime" />
+      <Parameter Name="LastActivityDate" Mode="In" Type="DateTime" />
+      <Parameter Name="UniqueEmail" Mode="In" Type="Int32" />
+      <Parameter Name="CurrentTimeUtc" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_Membership_UpdateUserInfo">
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="UserName" Mode="In" Type="String" />
+      <Parameter Name="IsPasswordCorrect" Mode="In" Type="Boolean" />
+      <Parameter Name="UpdateLastLoginActivityDate" Mode="In" Type="Boolean" />
+      <Parameter Name="MaxInvalidPasswordAttempts" Mode="In" Type="Int32" />
+      <Parameter Name="PasswordAttemptWindow" Mode="In" Type="Int32" />
+      <Parameter Name="CurrentTimeUtc" Mode="In" Type="DateTime" />
+      <Parameter Name="LastLoginDate" Mode="In" Type="DateTime" />
+      <Parameter Name="LastActivityDate" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_Paths_CreatePath">
+      <Parameter Name="ApplicationId" Mode="In" Type="Guid" />
+      <Parameter Name="Path" Mode="In" Type="String" />
+      <Parameter Name="PathId" Mode="InOut" Type="Guid" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_Personalization_GetApplicationId">
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="ApplicationId" Mode="InOut" Type="Guid" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_PersonalizationAdministration_DeleteAllState">
+      <Parameter Name="AllUsersScope" Mode="In" Type="Boolean" />
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="Count" Mode="InOut" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_PersonalizationAdministration_FindState">
+      <Parameter Name="AllUsersScope" Mode="In" Type="Boolean" />
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="PageIndex" Mode="In" Type="Int32" />
+      <Parameter Name="PageSize" Mode="In" Type="Int32" />
+      <Parameter Name="Path" Mode="In" Type="String" />
+      <Parameter Name="UserName" Mode="In" Type="String" />
+      <Parameter Name="InactiveSinceDate" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_PersonalizationAdministration_GetCountOfState">
+      <Parameter Name="Count" Mode="InOut" Type="Int32" />
+      <Parameter Name="AllUsersScope" Mode="In" Type="Boolean" />
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="Path" Mode="In" Type="String" />
+      <Parameter Name="UserName" Mode="In" Type="String" />
+      <Parameter Name="InactiveSinceDate" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_PersonalizationAdministration_ResetSharedState">
+      <Parameter Name="Count" Mode="InOut" Type="Int32" />
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="Path" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_PersonalizationAdministration_ResetUserState">
+      <Parameter Name="Count" Mode="InOut" Type="Int32" />
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="InactiveSinceDate" Mode="In" Type="DateTime" />
+      <Parameter Name="UserName" Mode="In" Type="String" />
+      <Parameter Name="Path" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_PersonalizationAllUsers_GetPageSettings" ReturnType="Collection(Binary)">
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="Path" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_PersonalizationAllUsers_ResetPageSettings">
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="Path" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_PersonalizationAllUsers_SetPageSettings">
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="Path" Mode="In" Type="String" />
+      <Parameter Name="PageSettings" Mode="In" Type="Binary" />
+      <Parameter Name="CurrentTimeUtc" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_PersonalizationPerUser_GetPageSettings" ReturnType="Collection(Binary)">
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="UserName" Mode="In" Type="String" />
+      <Parameter Name="Path" Mode="In" Type="String" />
+      <Parameter Name="CurrentTimeUtc" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_PersonalizationPerUser_ResetPageSettings">
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="UserName" Mode="In" Type="String" />
+      <Parameter Name="Path" Mode="In" Type="String" />
+      <Parameter Name="CurrentTimeUtc" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_PersonalizationPerUser_SetPageSettings">
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="UserName" Mode="In" Type="String" />
+      <Parameter Name="Path" Mode="In" Type="String" />
+      <Parameter Name="PageSettings" Mode="In" Type="Binary" />
+      <Parameter Name="CurrentTimeUtc" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_Profile_DeleteInactiveProfiles" ReturnType="Collection(Int32)">
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="ProfileAuthOptions" Mode="In" Type="Int32" />
+      <Parameter Name="InactiveSinceDate" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_Profile_DeleteProfiles" ReturnType="Collection(Int32)">
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="UserNames" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_Profile_GetNumberOfInactiveProfiles" ReturnType="Collection(Int32)">
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="ProfileAuthOptions" Mode="In" Type="Int32" />
+      <Parameter Name="InactiveSinceDate" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_Profile_GetProfiles">
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="ProfileAuthOptions" Mode="In" Type="Int32" />
+      <Parameter Name="PageIndex" Mode="In" Type="Int32" />
+      <Parameter Name="PageSize" Mode="In" Type="Int32" />
+      <Parameter Name="UserNameToMatch" Mode="In" Type="String" />
+      <Parameter Name="InactiveSinceDate" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_Profile_GetProperties" ReturnType="Collection(dbHRSystemModel.aspnet_Profile_GetProperties_Result)">
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="UserName" Mode="In" Type="String" />
+      <Parameter Name="CurrentTimeUtc" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_Profile_SetProperties">
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="PropertyNames" Mode="In" Type="String" />
+      <Parameter Name="PropertyValuesString" Mode="In" Type="String" />
+      <Parameter Name="PropertyValuesBinary" Mode="In" Type="Binary" />
+      <Parameter Name="UserName" Mode="In" Type="String" />
+      <Parameter Name="IsUserAnonymous" Mode="In" Type="Boolean" />
+      <Parameter Name="CurrentTimeUtc" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_RegisterSchemaVersion">
+      <Parameter Name="Feature" Mode="In" Type="String" />
+      <Parameter Name="CompatibleSchemaVersion" Mode="In" Type="String" />
+      <Parameter Name="IsCurrentVersion" Mode="In" Type="Boolean" />
+      <Parameter Name="RemoveIncompatibleSchema" Mode="In" Type="Boolean" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_Roles_CreateRole">
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="RoleName" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_Roles_DeleteRole">
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="RoleName" Mode="In" Type="String" />
+      <Parameter Name="DeleteOnlyIfRoleIsEmpty" Mode="In" Type="Boolean" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_Roles_GetAllRoles" ReturnType="Collection(String)">
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_Roles_RoleExists">
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="RoleName" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_Setup_RemoveAllRoleMembers">
+      <Parameter Name="name" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_Setup_RestorePermissions">
+      <Parameter Name="name" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_UnRegisterSchemaVersion">
+      <Parameter Name="Feature" Mode="In" Type="String" />
+      <Parameter Name="CompatibleSchemaVersion" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_Users_CreateUser">
+      <Parameter Name="ApplicationId" Mode="In" Type="Guid" />
+      <Parameter Name="UserName" Mode="In" Type="String" />
+      <Parameter Name="IsUserAnonymous" Mode="In" Type="Boolean" />
+      <Parameter Name="LastActivityDate" Mode="In" Type="DateTime" />
+      <Parameter Name="UserId" Mode="InOut" Type="Guid" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_Users_DeleteUser">
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="UserName" Mode="In" Type="String" />
+      <Parameter Name="TablesToDeleteFrom" Mode="In" Type="Int32" />
+      <Parameter Name="NumTablesDeletedFrom" Mode="InOut" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_UsersInRoles_AddUsersToRoles" ReturnType="Collection(String)">
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="UserNames" Mode="In" Type="String" />
+      <Parameter Name="RoleNames" Mode="In" Type="String" />
+      <Parameter Name="CurrentTimeUtc" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_UsersInRoles_FindUsersInRole" ReturnType="Collection(String)">
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="RoleName" Mode="In" Type="String" />
+      <Parameter Name="UserNameToMatch" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_UsersInRoles_GetRolesForUser" ReturnType="Collection(String)">
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="UserName" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_UsersInRoles_GetUsersInRoles" ReturnType="Collection(String)">
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="RoleName" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_UsersInRoles_IsUserInRole">
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="UserName" Mode="In" Type="String" />
+      <Parameter Name="RoleName" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_UsersInRoles_RemoveUsersFromRoles" ReturnType="Collection(dbHRSystemModel.aspnet_UsersInRoles_RemoveUsersFromRoles_Result)">
+      <Parameter Name="ApplicationName" Mode="In" Type="String" />
+      <Parameter Name="UserNames" Mode="In" Type="String" />
+      <Parameter Name="RoleNames" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="aspnet_WebEvent_LogEvent">
+      <Parameter Name="EventId" Mode="In" Type="String" />
+      <Parameter Name="EventTimeUtc" Mode="In" Type="DateTime" />
+      <Parameter Name="EventTime" Mode="In" Type="DateTime" />
+      <Parameter Name="EventType" Mode="In" Type="String" />
+      <Parameter Name="EventSequence" Mode="In" Type="Decimal" />
+      <Parameter Name="EventOccurrence" Mode="In" Type="Decimal" />
+      <Parameter Name="EventCode" Mode="In" Type="Int32" />
+      <Parameter Name="EventDetailCode" Mode="In" Type="Int32" />
+      <Parameter Name="Message" Mode="In" Type="String" />
+      <Parameter Name="ApplicationPath" Mode="In" Type="String" />
+      <Parameter Name="ApplicationVirtualPath" Mode="In" Type="String" />
+      <Parameter Name="MachineName" Mode="In" Type="String" />
+      <Parameter Name="RequestUrl" Mode="In" Type="String" />
+      <Parameter Name="ExceptionType" Mode="In" Type="String" />
+      <Parameter Name="Details" Mode="In" Type="String" />
+    </FunctionImport>
+    <EntitySet Name="EmployeeHoildays" EntityType="dbHRSystemModel.EmployeeHoilday" />
+    <EntitySet Name="EmployeeProjects" EntityType="dbHRSystemModel.EmployeeProject" />
+    <EntitySet Name="Projects" EntityType="dbHRSystemModel.Project" />
+    <AssociationSet Name="FK_EmployeeProjects_EmployeeProjects1" Association="dbHRSystemModel.FK_EmployeeProjects_EmployeeProjects1">
+      <End Role="EmployeeProject" EntitySet="EmployeeProjects" />
+      <End Role="EmployeeProject1" EntitySet="EmployeeProjects" />
+    </AssociationSet>
+    <AssociationSet Name="FK_EmployeeProjects_Project" Association="dbHRSystemModel.FK_EmployeeProjects_Project">
+      <End Role="Project" EntitySet="Projects" />
+      <End Role="EmployeeProject" EntitySet="EmployeeProjects" />
+    </AssociationSet>
+    <EntitySet Name="Departments" EntityType="dbHRSystemModel.Department" />
+    <AssociationSet Name="FK_EmployeeLocation_City" Association="dbHRSystemModel.FK_EmployeeLocation_City">
+      <End Role="City" EntitySet="Cities" />
+      <End Role="EmployeeLocation" EntitySet="EmployeeLocations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_EmployeeLocation_CountryOffice" Association="dbHRSystemModel.FK_EmployeeLocation_CountryOffice">
+      <End Role="CountryOffice" EntitySet="CountryOffices" />
+      <End Role="EmployeeLocation" EntitySet="EmployeeLocations" />
+    </AssociationSet>
+    <EntitySet Name="Weekends" EntityType="dbHRSystemModel.Weekend" />
+    <AssociationSet Name="FK_Project_CountryOffice" Association="dbHRSystemModel.FK_Project_CountryOffice">
+      <End Role="CountryOffice" EntitySet="CountryOffices" />
+      <End Role="Project" EntitySet="Projects" />
+    </AssociationSet>
+    <EntitySet Name="Notifications" EntityType="dbHRSystemModel.Notification" />
+    <EntitySet Name="LogTables" EntityType="dbHRSystemModel.LogTable" />
+    <EntitySet Name="TimeSheets" EntityType="dbHRSystemModel.TimeSheet" />
+    <FunctionImport Name="DeleteWeekendAndHolidays" ReturnType="Collection(dbHRSystemModel.DeleteWeekendAndHolidays_Result)">
+      <Parameter Name="TimeSheetMasterID" Mode="In" Type="Guid" />
+      <Parameter Name="employeeID" Mode="In" Type="Guid" />
+    </FunctionImport>
+    <FunctionImport Name="SP_Report" ReturnType="Collection(dbHRSystemModel.SP_Report_Result)">
+      <Parameter Name="action" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <EntitySet Name="EmployeeLeaves" EntityType="dbHRSystemModel.EmployeeLeaf" />
+    <EntitySet Name="TimeSheetMasters" EntityType="dbHRSystemModel.TimeSheetMaster" />
+    <AssociationSet Name="FK_TimeSheet_TimeSheetMaster" Association="dbHRSystemModel.FK_TimeSheet_TimeSheetMaster">
+      <End Role="TimeSheetMaster" EntitySet="TimeSheetMasters" />
+      <End Role="TimeSheet" EntitySet="TimeSheets" />
+    </AssociationSet>
+    <EntitySet Name="LeaveTypes" EntityType="dbHRSystemModel.LeaveType" />
+    <AssociationSet Name="FK_EmployeeLeaves_LeaveType" Association="dbHRSystemModel.FK_EmployeeLeaves_LeaveType">
+      <End Role="LeaveType" EntitySet="LeaveTypes" />
+      <End Role="EmployeeLeaf" EntitySet="EmployeeLeaves" />
+    </AssociationSet>
+    <EntitySet Name="Holidays" EntityType="dbHRSystemModel.Holiday" />
+    <AssociationSet Name="FK_Holiday_CountryOffice" Association="dbHRSystemModel.FK_Holiday_CountryOffice">
+      <End Role="CountryOffice" EntitySet="CountryOffices" />
+      <End Role="Holiday" EntitySet="Holidays" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Holiday_EmployeeLocation" Association="dbHRSystemModel.FK_Holiday_EmployeeLocation">
+      <End Role="EmployeeLocation" EntitySet="EmployeeLocations" />
+      <End Role="Holiday" EntitySet="Holidays" />
+    </AssociationSet>
+    <AssociationSet Name="FK_EmployeeHoildays_Holiday" Association="dbHRSystemModel.FK_EmployeeHoildays_Holiday">
+      <End Role="Holiday" EntitySet="Holidays" />
+      <End Role="EmployeeHoilday" EntitySet="EmployeeHoildays" />
+    </AssociationSet>
+    <EntitySet Name="ServiceBonus" EntityType="dbHRSystemModel.ServiceBonu" />
+    <EntitySet Name="Employees" EntityType="dbHRSystemModel.Employee" />
+    <AssociationSet Name="FK_Employee_aspnet_Users" Association="dbHRSystemModel.FK_Employee_aspnet_Users">
+      <End Role="aspnet_Users" EntitySet="aspnet_Users" />
+      <End Role="Employee" EntitySet="Employees" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Employee_CountryOffice" Association="dbHRSystemModel.FK_Employee_CountryOffice">
+      <End Role="CountryOffice" EntitySet="CountryOffices" />
+      <End Role="Employee" EntitySet="Employees" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Employee_Department" Association="dbHRSystemModel.FK_Employee_Department">
+      <End Role="Department" EntitySet="Departments" />
+      <End Role="Employee" EntitySet="Employees" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Employee_EmployeeLocation" Association="dbHRSystemModel.FK_Employee_EmployeeLocation">
+      <End Role="EmployeeLocation" EntitySet="EmployeeLocations" />
+      <End Role="Employee" EntitySet="Employees" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Employee_JobType" Association="dbHRSystemModel.FK_Employee_JobType">
+      <End Role="JobType" EntitySet="JobTypes" />
+      <End Role="Employee" EntitySet="Employees" />
+    </AssociationSet>
+    <AssociationSet Name="FK_EmployeeHoildays_Employee" Association="dbHRSystemModel.FK_EmployeeHoildays_Employee">
+      <End Role="Employee" EntitySet="Employees" />
+      <End Role="EmployeeHoilday" EntitySet="EmployeeHoildays" />
+    </AssociationSet>
+    <AssociationSet Name="FK_EmployeeLeaves_Employee" Association="dbHRSystemModel.FK_EmployeeLeaves_Employee">
+      <End Role="Employee" EntitySet="Employees" />
+      <End Role="EmployeeLeaf" EntitySet="EmployeeLeaves" />
+    </AssociationSet>
+    <AssociationSet Name="FK_EmployeeProjects_EmployeeProjects11" Association="dbHRSystemModel.FK_EmployeeProjects_EmployeeProjects11">
+      <End Role="Employee" EntitySet="Employees" />
+      <End Role="EmployeeProject" EntitySet="EmployeeProjects" />
+    </AssociationSet>
+    <AssociationSet Name="FK_LogTable_Employee" Association="dbHRSystemModel.FK_LogTable_Employee">
+      <End Role="Employee" EntitySet="Employees" />
+      <End Role="LogTable" EntitySet="LogTables" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TimeSheetMaster_Employee" Association="dbHRSystemModel.FK_TimeSheetMaster_Employee">
+      <End Role="Employee" EntitySet="Employees" />
+      <End Role="TimeSheetMaster" EntitySet="TimeSheetMasters" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Weekend_Employee" Association="dbHRSystemModel.FK_Weekend_Employee">
+      <End Role="Employee" EntitySet="Employees" />
+      <End Role="Weekend" EntitySet="Weekends" />
+    </AssociationSet>
+    <EntitySet Name="WeekendWorkingDays" EntityType="dbHRSystemModel.WeekendWorkingDay" />
+    <EntitySet Name="EmployeeLeaveRequests" EntityType="dbHRSystemModel.EmployeeLeaveRequest" />
+    <AssociationSet Name="FK_EmployeeLeaveRequest_EmployeeLeaveRequest" Association="dbHRSystemModel.FK_EmployeeLeaveRequest_EmployeeLeaveRequest">
+      <End Role="Employee" EntitySet="Employees" />
+      <End Role="EmployeeLeaveRequest" EntitySet="EmployeeLeaveRequests" />
+    </AssociationSet>
+    <AssociationSet Name="FK_EmployeeLeaveRequest_LeaveType" Association="dbHRSystemModel.FK_EmployeeLeaveRequest_LeaveType">
+      <End Role="LeaveType" EntitySet="LeaveTypes" />
+      <End Role="EmployeeLeaveRequest" EntitySet="EmployeeLeaveRequests" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="aspnet_Applications">
+    <Key>
+      <PropertyRef Name="ApplicationId" />
+    </Key>
+    <Property Name="ApplicationName" Type="String" Nullable="false" MaxLength="256" Unicode="true" FixedLength="false" />
+    <Property Name="LoweredApplicationName" Type="String" Nullable="false" MaxLength="256" Unicode="true" FixedLength="false" />
+    <Property Name="ApplicationId" Type="Guid" Nullable="false" />
+    <Property Name="Description" Type="String" MaxLength="256" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="aspnet_Membership" Relationship="dbHRSystemModel.FK__aspnet_Me__Appli__21B6055D" FromRole="aspnet_Applications" ToRole="aspnet_Membership" />
+    <NavigationProperty Name="aspnet_Paths" Relationship="dbHRSystemModel.FK__aspnet_Pa__Appli__5AEE82B9" FromRole="aspnet_Applications" ToRole="aspnet_Paths" />
+    <NavigationProperty Name="aspnet_Roles" Relationship="dbHRSystemModel.FK__aspnet_Ro__Appli__440B1D61" FromRole="aspnet_Applications" ToRole="aspnet_Roles" />
+    <NavigationProperty Name="aspnet_Users" Relationship="dbHRSystemModel.FK__aspnet_Us__Appli__0DAF0CB0" FromRole="aspnet_Applications" ToRole="aspnet_Users" />
+  </EntityType>
+  <EntityType Name="aspnet_Membership">
+    <Key>
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="ApplicationId" Type="Guid" Nullable="false" />
+    <Property Name="UserId" Type="Guid" Nullable="false" />
+    <Property Name="Password" Type="String" Nullable="false" MaxLength="128" Unicode="true" FixedLength="false" />
+    <Property Name="PasswordFormat" Type="Int32" Nullable="false" />
+    <Property Name="PasswordSalt" Type="String" Nullable="false" MaxLength="128" Unicode="true" FixedLength="false" />
+    <Property Name="MobilePIN" Type="String" MaxLength="16" Unicode="true" FixedLength="false" />
+    <Property Name="Email" Type="String" MaxLength="256" Unicode="true" FixedLength="false" />
+    <Property Name="LoweredEmail" Type="String" MaxLength="256" Unicode="true" FixedLength="false" />
+    <Property Name="PasswordQuestion" Type="String" MaxLength="256" Unicode="true" FixedLength="false" />
+    <Property Name="PasswordAnswer" Type="String" MaxLength="128" Unicode="true" FixedLength="false" />
+    <Property Name="IsApproved" Type="Boolean" Nullable="false" />
+    <Property Name="IsLockedOut" Type="Boolean" Nullable="false" />
+    <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastLoginDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastPasswordChangedDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastLockoutDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="FailedPasswordAttemptCount" Type="Int32" Nullable="false" />
+    <Property Name="FailedPasswordAttemptWindowStart" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="FailedPasswordAnswerAttemptCount" Type="Int32" Nullable="false" />
+    <Property Name="FailedPasswordAnswerAttemptWindowStart" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Comment" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="aspnet_Applications" Relationship="dbHRSystemModel.FK__aspnet_Me__Appli__21B6055D" FromRole="aspnet_Membership" ToRole="aspnet_Applications" />
+    <NavigationProperty Name="aspnet_Users" Relationship="dbHRSystemModel.FK__aspnet_Me__UserI__22AA2996" FromRole="aspnet_Membership" ToRole="aspnet_Users" />
+  </EntityType>
+  <EntityType Name="aspnet_Paths">
+    <Key>
+      <PropertyRef Name="PathId" />
+    </Key>
+    <Property Name="ApplicationId" Type="Guid" Nullable="false" />
+    <Property Name="PathId" Type="Guid" Nullable="false" />
+    <Property Name="Path" Type="String" Nullable="false" MaxLength="256" Unicode="true" FixedLength="false" />
+    <Property Name="LoweredPath" Type="String" Nullable="false" MaxLength="256" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="aspnet_Applications" Relationship="dbHRSystemModel.FK__aspnet_Pa__Appli__5AEE82B9" FromRole="aspnet_Paths" ToRole="aspnet_Applications" />
+    <NavigationProperty Name="aspnet_PersonalizationAllUsers" Relationship="dbHRSystemModel.FK__aspnet_Pe__PathI__628FA481" FromRole="aspnet_Paths" ToRole="aspnet_PersonalizationAllUsers" />
+    <NavigationProperty Name="aspnet_PersonalizationPerUser" Relationship="dbHRSystemModel.FK__aspnet_Pe__PathI__68487DD7" FromRole="aspnet_Paths" ToRole="aspnet_PersonalizationPerUser" />
+  </EntityType>
+  <EntityType Name="aspnet_PersonalizationAllUsers">
+    <Key>
+      <PropertyRef Name="PathId" />
+    </Key>
+    <Property Name="PathId" Type="Guid" Nullable="false" />
+    <Property Name="PageSettings" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
+    <Property Name="LastUpdatedDate" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="aspnet_Paths" Relationship="dbHRSystemModel.FK__aspnet_Pe__PathI__628FA481" FromRole="aspnet_PersonalizationAllUsers" ToRole="aspnet_Paths" />
+  </EntityType>
+  <EntityType Name="aspnet_PersonalizationPerUser">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Guid" Nullable="false" />
+    <Property Name="PathId" Type="Guid" />
+    <Property Name="UserId" Type="Guid" />
+    <Property Name="PageSettings" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
+    <Property Name="LastUpdatedDate" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="aspnet_Paths" Relationship="dbHRSystemModel.FK__aspnet_Pe__PathI__68487DD7" FromRole="aspnet_PersonalizationPerUser" ToRole="aspnet_Paths" />
+    <NavigationProperty Name="aspnet_Users" Relationship="dbHRSystemModel.FK__aspnet_Pe__UserI__693CA210" FromRole="aspnet_PersonalizationPerUser" ToRole="aspnet_Users" />
+  </EntityType>
+  <EntityType Name="aspnet_Profile">
+    <Key>
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="UserId" Type="Guid" Nullable="false" />
+    <Property Name="PropertyNames" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="PropertyValuesString" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="PropertyValuesBinary" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
+    <Property Name="LastUpdatedDate" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="aspnet_Users" Relationship="dbHRSystemModel.FK__aspnet_Pr__UserI__38996AB5" FromRole="aspnet_Profile" ToRole="aspnet_Users" />
+  </EntityType>
+  <EntityType Name="aspnet_Roles">
+    <Key>
+      <PropertyRef Name="RoleId" />
+    </Key>
+    <Property Name="ApplicationId" Type="Guid" Nullable="false" />
+    <Property Name="RoleId" Type="Guid" Nullable="false" />
+    <Property Name="RoleName" Type="String" Nullable="false" MaxLength="256" Unicode="true" FixedLength="false" />
+    <Property Name="LoweredRoleName" Type="String" Nullable="false" MaxLength="256" Unicode="true" FixedLength="false" />
+    <Property Name="Description" Type="String" MaxLength="256" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="aspnet_Applications" Relationship="dbHRSystemModel.FK__aspnet_Ro__Appli__440B1D61" FromRole="aspnet_Roles" ToRole="aspnet_Applications" />
+    <NavigationProperty Name="aspnet_Users" Relationship="dbHRSystemModel.aspnet_UsersInRoles" FromRole="aspnet_Roles" ToRole="aspnet_Users" />
+  </EntityType>
+  <EntityType Name="aspnet_SchemaVersions">
+    <Key>
+      <PropertyRef Name="Feature" />
+      <PropertyRef Name="CompatibleSchemaVersion" />
+    </Key>
+    <Property Name="Feature" Type="String" Nullable="false" MaxLength="128" Unicode="true" FixedLength="false" />
+    <Property Name="CompatibleSchemaVersion" Type="String" Nullable="false" MaxLength="128" Unicode="true" FixedLength="false" />
+    <Property Name="IsCurrentVersion" Type="Boolean" Nullable="false" />
+  </EntityType>
+  <EntityType Name="aspnet_Users">
+    <Key>
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="ApplicationId" Type="Guid" Nullable="false" />
+    <Property Name="UserId" Type="Guid" Nullable="false" />
+    <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" Unicode="true" FixedLength="false" />
+    <Property Name="LoweredUserName" Type="String" Nullable="false" MaxLength="256" Unicode="true" FixedLength="false" />
+    <Property Name="MobileAlias" Type="String" MaxLength="16" Unicode="true" FixedLength="false" />
+    <Property Name="IsAnonymous" Type="Boolean" Nullable="false" />
+    <Property Name="LastActivityDate" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="aspnet_Applications" Relationship="dbHRSystemModel.FK__aspnet_Us__Appli__0DAF0CB0" FromRole="aspnet_Users" ToRole="aspnet_Applications" />
+    <NavigationProperty Name="aspnet_Membership" Relationship="dbHRSystemModel.FK__aspnet_Me__UserI__22AA2996" FromRole="aspnet_Users" ToRole="aspnet_Membership" />
+    <NavigationProperty Name="aspnet_PersonalizationPerUser" Relationship="dbHRSystemModel.FK__aspnet_Pe__UserI__693CA210" FromRole="aspnet_Users" ToRole="aspnet_PersonalizationPerUser" />
+    <NavigationProperty Name="aspnet_Profile" Relationship="dbHRSystemModel.FK__aspnet_Pr__UserI__38996AB5" FromRole="aspnet_Users" ToRole="aspnet_Profile" />
+    <NavigationProperty Name="aspnet_Roles" Relationship="dbHRSystemModel.aspnet_UsersInRoles" FromRole="aspnet_Users" ToRole="aspnet_Roles" />
+    <NavigationProperty Name="Employees" Relationship="dbHRSystemModel.FK_Employee_aspnet_Users" FromRole="aspnet_Users" ToRole="Employee" />
+  </EntityType>
+  <EntityType Name="aspnet_WebEvent_Events">
+    <Key>
+      <PropertyRef Name="EventId" />
+    </Key>
+    <Property Name="EventId" Type="String" Nullable="false" MaxLength="32" Unicode="false" FixedLength="true" />
+    <Property Name="EventTimeUtc" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="EventTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="EventType" Type="String" Nullable="false" MaxLength="256" Unicode="true" FixedLength="false" />
+    <Property Name="EventSequence" Type="Decimal" Nullable="false" Precision="19" Scale="0" />
+    <Property Name="EventOccurrence" Type="Decimal" Nullable="false" Precision="19" Scale="0" />
+    <Property Name="EventCode" Type="Int32" Nullable="false" />
+    <Property Name="EventDetailCode" Type="Int32" Nullable="false" />
+    <Property Name="Message" Type="String" MaxLength="1024" Unicode="true" FixedLength="false" />
+    <Property Name="ApplicationPath" Type="String" MaxLength="256" Unicode="true" FixedLength="false" />
+    <Property Name="ApplicationVirtualPath" Type="String" MaxLength="256" Unicode="true" FixedLength="false" />
+    <Property Name="MachineName" Type="String" Nullable="false" MaxLength="256" Unicode="true" FixedLength="false" />
+    <Property Name="RequestUrl" Type="String" MaxLength="1024" Unicode="true" FixedLength="false" />
+    <Property Name="ExceptionType" Type="String" MaxLength="256" Unicode="true" FixedLength="false" />
+    <Property Name="Details" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="City">
+    <Key>
+      <PropertyRef Name="CityID" />
+    </Key>
+    <Property Name="CityID" Type="Guid" Nullable="false" />
+    <Property Name="City1" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="CountryOfficeID" Type="Guid" />
+    <NavigationProperty Name="CountryOffice" Relationship="dbHRSystemModel.FK_City_CountryOffice" FromRole="City" ToRole="CountryOffice" />
+    <NavigationProperty Name="EmployeeLocations" Relationship="dbHRSystemModel.FK_EmployeeLocation_City" FromRole="City" ToRole="EmployeeLocation" />
+  </EntityType>
+  <EntityType Name="CountryOffice">
+    <Key>
+      <PropertyRef Name="CountryOfficeID" />
+    </Key>
+    <Property Name="CountryOfficeID" Type="Guid" Nullable="false" />
+    <Property Name="CountryName" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="LicenseKey" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="Cities" Relationship="dbHRSystemModel.FK_City_CountryOffice" FromRole="CountryOffice" ToRole="City" />
+    <NavigationProperty Name="EmployeeLocations" Relationship="dbHRSystemModel.FK_EmployeeLocation_CountryOffice" FromRole="CountryOffice" ToRole="EmployeeLocation" />
+    <NavigationProperty Name="Projects" Relationship="dbHRSystemModel.FK_Project_CountryOffice" FromRole="CountryOffice" ToRole="Project" />
+    <NavigationProperty Name="Holidays" Relationship="dbHRSystemModel.FK_Holiday_CountryOffice" FromRole="CountryOffice" ToRole="Holiday" />
+    <NavigationProperty Name="Employees" Relationship="dbHRSystemModel.FK_Employee_CountryOffice" FromRole="CountryOffice" ToRole="Employee" />
+  </EntityType>
+  <EntityType Name="EmployeeLocation">
+    <Key>
+      <PropertyRef Name="LocationID" />
+    </Key>
+    <Property Name="LocationID" Type="Guid" Nullable="false" />
+    <Property Name="City" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="Country" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="LocationName" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="CityID" Type="Guid" />
+    <Property Name="CountryID" Type="Guid" />
+    <NavigationProperty Name="City1" Relationship="dbHRSystemModel.FK_EmployeeLocation_City" FromRole="EmployeeLocation" ToRole="City" />
+    <NavigationProperty Name="CountryOffice" Relationship="dbHRSystemModel.FK_EmployeeLocation_CountryOffice" FromRole="EmployeeLocation" ToRole="CountryOffice" />
+    <NavigationProperty Name="Holidays" Relationship="dbHRSystemModel.FK_Holiday_EmployeeLocation" FromRole="EmployeeLocation" ToRole="Holiday" />
+    <NavigationProperty Name="Employees" Relationship="dbHRSystemModel.FK_Employee_EmployeeLocation" FromRole="EmployeeLocation" ToRole="Employee" />
+  </EntityType>
+  <EntityType Name="JobType">
+    <Key>
+      <PropertyRef Name="JobTypeID" />
+    </Key>
+    <Property Name="JobTypeID" Type="Guid" Nullable="false" />
+    <Property Name="JobTypeName" Type="String" MaxLength="1000" Unicode="true" FixedLength="false" />
+    <Property Type="String" Name="JobTypeNameAr" MaxLength="1000" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="JobCode" MaxLength="1000" FixedLength="false" Unicode="true" />
+    <Property Type="Boolean" Name="IsActive" />
+    <NavigationProperty Name="Employees" Relationship="dbHRSystemModel.FK_Employee_JobType" FromRole="JobType" ToRole="Employee" />
+  </EntityType>
+  <EntityType Name="vw_aspnet_Applications">
+    <Key>
+      <PropertyRef Name="ApplicationName" />
+      <PropertyRef Name="LoweredApplicationName" />
+      <PropertyRef Name="ApplicationId" />
+    </Key>
+    <Property Name="ApplicationName" Type="String" Nullable="false" MaxLength="256" Unicode="true" FixedLength="false" />
+    <Property Name="LoweredApplicationName" Type="String" Nullable="false" MaxLength="256" Unicode="true" FixedLength="false" />
+    <Property Name="ApplicationId" Type="Guid" Nullable="false" />
+    <Property Name="Description" Type="String" MaxLength="256" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="vw_aspnet_MembershipUsers">
+    <Key>
+      <PropertyRef Name="UserId" />
+      <PropertyRef Name="PasswordFormat" />
+      <PropertyRef Name="IsApproved" />
+      <PropertyRef Name="IsLockedOut" />
+      <PropertyRef Name="CreateDate" />
+      <PropertyRef Name="LastLoginDate" />
+      <PropertyRef Name="LastPasswordChangedDate" />
+      <PropertyRef Name="LastLockoutDate" />
+      <PropertyRef Name="FailedPasswordAttemptCount" />
+      <PropertyRef Name="FailedPasswordAttemptWindowStart" />
+      <PropertyRef Name="FailedPasswordAnswerAttemptCount" />
+      <PropertyRef Name="FailedPasswordAnswerAttemptWindowStart" />
+      <PropertyRef Name="ApplicationId" />
+      <PropertyRef Name="UserName" />
+      <PropertyRef Name="IsAnonymous" />
+      <PropertyRef Name="LastActivityDate" />
+    </Key>
+    <Property Name="UserId" Type="Guid" Nullable="false" />
+    <Property Name="PasswordFormat" Type="Int32" Nullable="false" />
+    <Property Name="MobilePIN" Type="String" MaxLength="16" Unicode="true" FixedLength="false" />
+    <Property Name="Email" Type="String" MaxLength="256" Unicode="true" FixedLength="false" />
+    <Property Name="LoweredEmail" Type="String" MaxLength="256" Unicode="true" FixedLength="false" />
+    <Property Name="PasswordQuestion" Type="String" MaxLength="256" Unicode="true" FixedLength="false" />
+    <Property Name="PasswordAnswer" Type="String" MaxLength="128" Unicode="true" FixedLength="false" />
+    <Property Name="IsApproved" Type="Boolean" Nullable="false" />
+    <Property Name="IsLockedOut" Type="Boolean" Nullable="false" />
+    <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastLoginDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastPasswordChangedDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastLockoutDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="FailedPasswordAttemptCount" Type="Int32" Nullable="false" />
+    <Property Name="FailedPasswordAttemptWindowStart" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="FailedPasswordAnswerAttemptCount" Type="Int32" Nullable="false" />
+    <Property Name="FailedPasswordAnswerAttemptWindowStart" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Comment" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="ApplicationId" Type="Guid" Nullable="false" />
+    <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" Unicode="true" FixedLength="false" />
+    <Property Name="MobileAlias" Type="String" MaxLength="16" Unicode="true" FixedLength="false" />
+    <Property Name="IsAnonymous" Type="Boolean" Nullable="false" />
+    <Property Name="LastActivityDate" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="vw_aspnet_Profiles">
+    <Key>
+      <PropertyRef Name="UserId" />
+      <PropertyRef Name="LastUpdatedDate" />
+    </Key>
+    <Property Name="UserId" Type="Guid" Nullable="false" />
+    <Property Name="LastUpdatedDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="DataSize" Type="Int32" />
+  </EntityType>
+  <EntityType Name="vw_aspnet_Roles">
+    <Key>
+      <PropertyRef Name="ApplicationId" />
+      <PropertyRef Name="RoleId" />
+      <PropertyRef Name="RoleName" />
+      <PropertyRef Name="LoweredRoleName" />
+    </Key>
+    <Property Name="ApplicationId" Type="Guid" Nullable="false" />
+    <Property Name="RoleId" Type="Guid" Nullable="false" />
+    <Property Name="RoleName" Type="String" Nullable="false" MaxLength="256" Unicode="true" FixedLength="false" />
+    <Property Name="LoweredRoleName" Type="String" Nullable="false" MaxLength="256" Unicode="true" FixedLength="false" />
+    <Property Name="Description" Type="String" MaxLength="256" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="vw_aspnet_Users">
+    <Key>
+      <PropertyRef Name="ApplicationId" />
+      <PropertyRef Name="UserId" />
+      <PropertyRef Name="UserName" />
+      <PropertyRef Name="LoweredUserName" />
+      <PropertyRef Name="IsAnonymous" />
+      <PropertyRef Name="LastActivityDate" />
+    </Key>
+    <Property Name="ApplicationId" Type="Guid" Nullable="false" />
+    <Property Name="UserId" Type="Guid" Nullable="false" />
+    <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" Unicode="true" FixedLength="false" />
+    <Property Name="LoweredUserName" Type="String" Nullable="false" MaxLength="256" Unicode="true" FixedLength="false" />
+    <Property Name="MobileAlias" Type="String" MaxLength="16" Unicode="true" FixedLength="false" />
+    <Property Name="IsAnonymous" Type="Boolean" Nullable="false" />
+    <Property Name="LastActivityDate" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="vw_aspnet_UsersInRoles">
+    <Key>
+      <PropertyRef Name="UserId" />
+      <PropertyRef Name="RoleId" />
+    </Key>
+    <Property Name="UserId" Type="Guid" Nullable="false" />
+    <Property Name="RoleId" Type="Guid" Nullable="false" />
+  </EntityType>
+  <EntityType Name="vw_aspnet_WebPartState_Paths">
+    <Key>
+      <PropertyRef Name="ApplicationId" />
+      <PropertyRef Name="PathId" />
+      <PropertyRef Name="Path" />
+      <PropertyRef Name="LoweredPath" />
+    </Key>
+    <Property Name="ApplicationId" Type="Guid" Nullable="false" />
+    <Property Name="PathId" Type="Guid" Nullable="false" />
+    <Property Name="Path" Type="String" Nullable="false" MaxLength="256" Unicode="true" FixedLength="false" />
+    <Property Name="LoweredPath" Type="String" Nullable="false" MaxLength="256" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="vw_aspnet_WebPartState_Shared">
+    <Key>
+      <PropertyRef Name="PathId" />
+      <PropertyRef Name="LastUpdatedDate" />
+    </Key>
+    <Property Name="PathId" Type="Guid" Nullable="false" />
+    <Property Name="DataSize" Type="Int32" />
+    <Property Name="LastUpdatedDate" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="vw_aspnet_WebPartState_User">
+    <Key>
+      <PropertyRef Name="LastUpdatedDate" />
+    </Key>
+    <Property Name="PathId" Type="Guid" />
+    <Property Name="UserId" Type="Guid" />
+    <Property Name="DataSize" Type="Int32" />
+    <Property Name="LastUpdatedDate" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <Association Name="FK__aspnet_Me__Appli__21B6055D">
+    <End Role="aspnet_Applications" Type="dbHRSystemModel.aspnet_Applications" Multiplicity="1" />
+    <End Role="aspnet_Membership" Type="dbHRSystemModel.aspnet_Membership" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="aspnet_Applications">
+        <PropertyRef Name="ApplicationId" />
+      </Principal>
+      <Dependent Role="aspnet_Membership">
+        <PropertyRef Name="ApplicationId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__aspnet_Pa__Appli__5AEE82B9">
+    <End Role="aspnet_Applications" Type="dbHRSystemModel.aspnet_Applications" Multiplicity="1" />
+    <End Role="aspnet_Paths" Type="dbHRSystemModel.aspnet_Paths" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="aspnet_Applications">
+        <PropertyRef Name="ApplicationId" />
+      </Principal>
+      <Dependent Role="aspnet_Paths">
+        <PropertyRef Name="ApplicationId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__aspnet_Ro__Appli__440B1D61">
+    <End Role="aspnet_Applications" Type="dbHRSystemModel.aspnet_Applications" Multiplicity="1" />
+    <End Role="aspnet_Roles" Type="dbHRSystemModel.aspnet_Roles" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="aspnet_Applications">
+        <PropertyRef Name="ApplicationId" />
+      </Principal>
+      <Dependent Role="aspnet_Roles">
+        <PropertyRef Name="ApplicationId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__aspnet_Us__Appli__0DAF0CB0">
+    <End Role="aspnet_Applications" Type="dbHRSystemModel.aspnet_Applications" Multiplicity="1" />
+    <End Role="aspnet_Users" Type="dbHRSystemModel.aspnet_Users" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="aspnet_Applications">
+        <PropertyRef Name="ApplicationId" />
+      </Principal>
+      <Dependent Role="aspnet_Users">
+        <PropertyRef Name="ApplicationId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__aspnet_Me__UserI__22AA2996">
+    <End Role="aspnet_Users" Type="dbHRSystemModel.aspnet_Users" Multiplicity="1" />
+    <End Role="aspnet_Membership" Type="dbHRSystemModel.aspnet_Membership" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="aspnet_Users">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="aspnet_Membership">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__aspnet_Pe__PathI__628FA481">
+    <End Role="aspnet_Paths" Type="dbHRSystemModel.aspnet_Paths" Multiplicity="1" />
+    <End Role="aspnet_PersonalizationAllUsers" Type="dbHRSystemModel.aspnet_PersonalizationAllUsers" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="aspnet_Paths">
+        <PropertyRef Name="PathId" />
+      </Principal>
+      <Dependent Role="aspnet_PersonalizationAllUsers">
+        <PropertyRef Name="PathId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__aspnet_Pe__PathI__68487DD7">
+    <End Role="aspnet_Paths" Type="dbHRSystemModel.aspnet_Paths" Multiplicity="0..1" />
+    <End Role="aspnet_PersonalizationPerUser" Type="dbHRSystemModel.aspnet_PersonalizationPerUser" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="aspnet_Paths">
+        <PropertyRef Name="PathId" />
+      </Principal>
+      <Dependent Role="aspnet_PersonalizationPerUser">
+        <PropertyRef Name="PathId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__aspnet_Pe__UserI__693CA210">
+    <End Role="aspnet_Users" Type="dbHRSystemModel.aspnet_Users" Multiplicity="0..1" />
+    <End Role="aspnet_PersonalizationPerUser" Type="dbHRSystemModel.aspnet_PersonalizationPerUser" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="aspnet_Users">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="aspnet_PersonalizationPerUser">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__aspnet_Pr__UserI__38996AB5">
+    <End Role="aspnet_Users" Type="dbHRSystemModel.aspnet_Users" Multiplicity="1" />
+    <End Role="aspnet_Profile" Type="dbHRSystemModel.aspnet_Profile" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="aspnet_Users">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="aspnet_Profile">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_City_CountryOffice">
+    <End Role="CountryOffice" Type="dbHRSystemModel.CountryOffice" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="City" Type="dbHRSystemModel.City" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CountryOffice">
+        <PropertyRef Name="CountryOfficeID" />
+      </Principal>
+      <Dependent Role="City">
+        <PropertyRef Name="CountryOfficeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="aspnet_UsersInRoles">
+    <End Role="aspnet_Roles" Type="dbHRSystemModel.aspnet_Roles" Multiplicity="*" />
+    <End Role="aspnet_Users" Type="dbHRSystemModel.aspnet_Users" Multiplicity="*" />
+  </Association>
+  <ComplexType Name="aspnet_Membership_GetPassword_Result">
+    <Property Type="String" Name="Column1" Nullable="true" MaxLength="128" />
+    <Property Type="Int32" Name="Column2" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="aspnet_Membership_GetPasswordWithFormat_Result">
+    <Property Type="String" Name="Column1" Nullable="true" MaxLength="128" />
+    <Property Type="Int32" Name="Column2" Nullable="true" />
+    <Property Type="String" Name="Column3" Nullable="true" MaxLength="128" />
+    <Property Type="Int32" Name="Column4" Nullable="true" />
+    <Property Type="Int32" Name="Column5" Nullable="true" />
+    <Property Type="Boolean" Name="Column6" Nullable="true" />
+    <Property Type="DateTime" Name="Column7" Nullable="true" Precision="23" />
+    <Property Type="DateTime" Name="Column8" Nullable="true" Precision="23" />
+  </ComplexType>
+  <ComplexType Name="aspnet_Membership_GetUserByName_Result">
+    <Property Type="String" Name="Email" Nullable="true" MaxLength="256" />
+    <Property Type="String" Name="PasswordQuestion" Nullable="true" MaxLength="256" />
+    <Property Type="String" Name="Comment" Nullable="true" MaxLength="Max" />
+    <Property Type="Boolean" Name="IsApproved" Nullable="false" />
+    <Property Type="DateTime" Name="CreateDate" Nullable="false" Precision="23" />
+    <Property Type="DateTime" Name="LastLoginDate" Nullable="false" Precision="23" />
+    <Property Type="DateTime" Name="LastActivityDate" Nullable="false" Precision="23" />
+    <Property Type="DateTime" Name="LastPasswordChangedDate" Nullable="false" Precision="23" />
+    <Property Type="Guid" Name="UserId" Nullable="false" />
+    <Property Type="Boolean" Name="IsLockedOut" Nullable="false" />
+    <Property Type="DateTime" Name="LastLockoutDate" Nullable="false" Precision="23" />
+  </ComplexType>
+  <ComplexType Name="aspnet_Membership_GetUserByUserId_Result">
+    <Property Type="String" Name="Email" Nullable="true" MaxLength="256" />
+    <Property Type="String" Name="PasswordQuestion" Nullable="true" MaxLength="256" />
+    <Property Type="String" Name="Comment" Nullable="true" MaxLength="Max" />
+    <Property Type="Boolean" Name="IsApproved" Nullable="false" />
+    <Property Type="DateTime" Name="CreateDate" Nullable="false" Precision="23" />
+    <Property Type="DateTime" Name="LastLoginDate" Nullable="false" Precision="23" />
+    <Property Type="DateTime" Name="LastActivityDate" Nullable="false" Precision="23" />
+    <Property Type="DateTime" Name="LastPasswordChangedDate" Nullable="false" Precision="23" />
+    <Property Type="String" Name="UserName" Nullable="false" MaxLength="256" />
+    <Property Type="Boolean" Name="IsLockedOut" Nullable="false" />
+    <Property Type="DateTime" Name="LastLockoutDate" Nullable="false" Precision="23" />
+  </ComplexType>
+  <ComplexType Name="aspnet_Profile_GetProperties_Result">
+    <Property Type="String" Name="PropertyNames" Nullable="false" MaxLength="Max" />
+    <Property Type="String" Name="PropertyValuesString" Nullable="false" MaxLength="Max" />
+    <Property Type="Binary" Name="PropertyValuesBinary" Nullable="false" MaxLength="Max" />
+  </ComplexType>
+  <ComplexType Name="aspnet_UsersInRoles_RemoveUsersFromRoles_Result">
+    <Property Type="String" Name="Column1" Nullable="false" MaxLength="1" />
+    <Property Type="String" Name="Name" Nullable="false" MaxLength="256" />
+  </ComplexType>
+  <EntityType Name="EmployeeHoilday">
+    <Key>
+      <PropertyRef Name="EmployeeHoildayID" />
+    </Key>
+    <Property Type="Guid" Name="EmployeeHoildayID" Nullable="false" />
+    <Property Type="Guid" Name="EmpID" />
+    <Property Type="Guid" Name="HolidayID" />
+    <NavigationProperty Name="Holiday" Relationship="dbHRSystemModel.FK_EmployeeHoildays_Holiday" FromRole="EmployeeHoilday" ToRole="Holiday" />
+    <NavigationProperty Name="Employee" Relationship="dbHRSystemModel.FK_EmployeeHoildays_Employee" FromRole="EmployeeHoilday" ToRole="Employee" />
+  </EntityType>
+  <EntityType Name="EmployeeProject">
+    <Key>
+      <PropertyRef Name="EmpProjectsID" />
+    </Key>
+    <Property Type="Guid" Name="EmpProjectsID" Nullable="false" />
+    <Property Type="Guid" Name="EmployeeID" />
+    <Property Type="Guid" Name="ProjectID" />
+    <NavigationProperty Name="EmployeeProjects1" Relationship="dbHRSystemModel.FK_EmployeeProjects_EmployeeProjects1" FromRole="EmployeeProject" ToRole="EmployeeProject1" />
+    <NavigationProperty Name="EmployeeProject1" Relationship="dbHRSystemModel.FK_EmployeeProjects_EmployeeProjects1" FromRole="EmployeeProject1" ToRole="EmployeeProject" />
+    <NavigationProperty Name="Project" Relationship="dbHRSystemModel.FK_EmployeeProjects_Project" FromRole="EmployeeProject" ToRole="Project" />
+    <Property Type="Guid" Name="JobID" />
+    <Property Type="DateTime" Name="FromDate" Precision="3" />
+    <Property Type="DateTime" Name="ToDate" Precision="3" />
+    <Property Type="Boolean" Name="IsActive" />
+    <Property Type="Boolean" Name="Working" />
+    <NavigationProperty Name="Employee" Relationship="dbHRSystemModel.FK_EmployeeProjects_EmployeeProjects11" FromRole="EmployeeProject" ToRole="Employee" />
+  </EntityType>
+  <EntityType Name="Project">
+    <Key>
+      <PropertyRef Name="ProjectId" />
+    </Key>
+    <Property Type="Guid" Name="ProjectId" Nullable="false" />
+    <Property Type="String" Name="ProjectName" MaxLength="100" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="EmployeeProjects" Relationship="dbHRSystemModel.FK_EmployeeProjects_Project" FromRole="Project" ToRole="EmployeeProject" />
+    <Property Type="Guid" Name="CountryID" />
+    <NavigationProperty Name="CountryOffice" Relationship="dbHRSystemModel.FK_Project_CountryOffice" FromRole="Project" ToRole="CountryOffice" />
+    <Property Type="String" Name="ProjectNumber" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="ProjectNameAr" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="FromDate" Precision="3" />
+    <Property Type="DateTime" Name="EndDate" Precision="3" />
+  </EntityType>
+  <Association Name="FK_EmployeeProjects_EmployeeProjects1">
+    <End Type="dbHRSystemModel.EmployeeProject" Role="EmployeeProject" Multiplicity="1" />
+    <End Type="dbHRSystemModel.EmployeeProject" Role="EmployeeProject1" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="EmployeeProject">
+        <PropertyRef Name="EmpProjectsID" />
+      </Principal>
+      <Dependent Role="EmployeeProject1">
+        <PropertyRef Name="EmpProjectsID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_EmployeeProjects_Project">
+    <End Type="dbHRSystemModel.Project" Role="Project" Multiplicity="0..1" />
+    <End Type="dbHRSystemModel.EmployeeProject" Role="EmployeeProject" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Project">
+        <PropertyRef Name="ProjectId" />
+      </Principal>
+      <Dependent Role="EmployeeProject">
+        <PropertyRef Name="ProjectID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="Department">
+    <Key>
+      <PropertyRef Name="DepartmentID" />
+    </Key>
+    <Property Type="Guid" Name="DepartmentID" Nullable="false" />
+    <Property Type="String" Name="DepartmentNameAr" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="DepartmentCode" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="DepartmentNameEn" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="ActiveFromDate" Precision="3" />
+    <Property Type="Boolean" Name="ISActive" />
+    <NavigationProperty Name="Employees" Relationship="dbHRSystemModel.FK_Employee_Department" FromRole="Department" ToRole="Employee" />
+  </EntityType>
+  <Association Name="FK_EmployeeLocation_City">
+    <End Type="dbHRSystemModel.City" Role="City" Multiplicity="0..1" />
+    <End Type="dbHRSystemModel.EmployeeLocation" Role="EmployeeLocation" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="City">
+        <PropertyRef Name="CityID" />
+      </Principal>
+      <Dependent Role="EmployeeLocation">
+        <PropertyRef Name="CityID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_EmployeeLocation_CountryOffice">
+    <End Type="dbHRSystemModel.CountryOffice" Role="CountryOffice" Multiplicity="0..1" />
+    <End Type="dbHRSystemModel.EmployeeLocation" Role="EmployeeLocation" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CountryOffice">
+        <PropertyRef Name="CountryOfficeID" />
+      </Principal>
+      <Dependent Role="EmployeeLocation">
+        <PropertyRef Name="CountryID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="Weekend">
+    <Key>
+      <PropertyRef Name="WeekendID" />
+    </Key>
+    <Property Type="Guid" Name="WeekendID" Nullable="false" />
+    <Property Type="Guid" Name="EmployeeID" Nullable="false" />
+    <Property Type="String" Name="WeekEndName" MaxLength="500" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Employee" Relationship="dbHRSystemModel.FK_Weekend_Employee" FromRole="Weekend" ToRole="Employee" />
+  </EntityType>
+  <Association Name="FK_Project_CountryOffice">
+    <End Type="dbHRSystemModel.CountryOffice" Role="CountryOffice" Multiplicity="0..1" />
+    <End Type="dbHRSystemModel.Project" Role="Project" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CountryOffice">
+        <PropertyRef Name="CountryOfficeID" />
+      </Principal>
+      <Dependent Role="Project">
+        <PropertyRef Name="CountryID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="Notification">
+    <Key>
+      <PropertyRef Name="NotificationID" />
+    </Key>
+    <Property Type="Guid" Name="NotificationID" Nullable="false" />
+    <Property Type="Guid" Name="EmployeeID" />
+    <Property Type="String" Name="Message" MaxLength="1000" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="NotinficationTime" Precision="3" />
+    <Property Type="Boolean" Name="IsRead" />
+    <Property Type="String" Name="Url" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="LogTable">
+    <Key>
+      <PropertyRef Name="LogID" />
+    </Key>
+    <Property Type="Guid" Name="LogID" Nullable="false" />
+    <Property Type="Guid" Name="ItemID" />
+    <Property Type="String" Name="Operation" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="Guid" Name="EmployeeID" />
+    <Property Type="DateTime" Name="RecordDate" Precision="3" />
+    <Property Type="String" Name="Notes" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Employee" Relationship="dbHRSystemModel.FK_LogTable_Employee" FromRole="LogTable" ToRole="Employee" />
+  </EntityType>
+  <EntityType Name="TimeSheet">
+    <Key>
+      <PropertyRef Name="TimeSheetID" />
+    </Key>
+    <Property Type="Guid" Name="TimeSheetID" Nullable="false" />
+    <Property Type="Guid" Name="TimeSheetMasterID" />
+    <Property Type="Guid" Name="ProjectID" />
+    <Property Type="DateTime" Name="Date" Precision="3" />
+    <Property Type="Decimal" Name="Hours" Precision="18" Scale="0" />
+    <Property Type="DateTime" Name="CreatedDate" Precision="3" />
+    <Property Type="Boolean" Name="IsWeekend" />
+    <Property Type="Int32" Name="isOff" />
+    <NavigationProperty Name="TimeSheetMaster" Relationship="dbHRSystemModel.FK_TimeSheet_TimeSheetMaster" FromRole="TimeSheet" ToRole="TimeSheetMaster" />
+  </EntityType>
+  <ComplexType Name="DeleteWeekendAndHolidays_Result">
+    <Property Type="Guid" Name="TimeSheetID" Nullable="false" />
+    <Property Type="DateTime" Name="Date" Nullable="true" Precision="23" />
+    <Property Type="String" Name="dayOfTimesheet" Nullable="true" MaxLength="30" />
+    <Property Type="String" Name="WeekEndName" Nullable="true" MaxLength="500" />
+  </ComplexType>
+  <ComplexType Name="SP_Report_Result">
+    <Property Type="Guid" Name="TimeSheetMasterID" Nullable="true" />
+    <Property Type="String" Name="Month" Nullable="true" />
+    <Property Type="String" Name="Year" Nullable="true" />
+    <Property Type="String" Name="ProjectName" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="Column1" Nullable="true" MaxLength="201" />
+    <Property Type="Decimal" Name="TotalHours" Nullable="true" Precision="38" Scale="0" />
+    <Property Type="String" Name="Status" Nullable="true" MaxLength="50" />
+    <Property Type="Boolean" Name="IsSubmit" Nullable="true" />
+  </ComplexType>
+  <EntityType Name="EmployeeLeaf">
+    <Key>
+      <PropertyRef Name="EmployeeLeaveID" />
+    </Key>
+    <Property Type="Guid" Name="EmployeeLeaveID" Nullable="false" />
+    <Property Type="Guid" Name="EmpId" Nullable="false" />
+    <Property Type="Guid" Name="LeaveTypeID" Nullable="false" />
+    <Property Type="Decimal" Name="BalanceLeaves" Precision="18" Scale="2" />
+    <Property Type="Decimal" Name="IssuedLeaves" Precision="18" Scale="2" />
+    <Property Type="Decimal" Name="TotalLeaves" Precision="18" Scale="2" />
+    <Property Type="Int32" Name="Year" />
+    <Property Type="DateTime" Name="CreatedDate" Precision="3" />
+    <NavigationProperty Name="LeaveType" Relationship="dbHRSystemModel.FK_EmployeeLeaves_LeaveType" FromRole="EmployeeLeaf" ToRole="LeaveType" />
+    <Property Type="Decimal" Name="PostponedLeave" Precision="18" Scale="2" />
+    <NavigationProperty Name="Employee" Relationship="dbHRSystemModel.FK_EmployeeLeaves_Employee" FromRole="EmployeeLeaf" ToRole="Employee" />
+  </EntityType>
+  <EntityType Name="TimeSheetMaster">
+    <Key>
+      <PropertyRef Name="TimeSheetMasterID" />
+    </Key>
+    <Property Type="Guid" Name="TimeSheetMasterID" Nullable="false" />
+    <Property Type="Guid" Name="EmpID" />
+    <Property Type="String" Name="Month" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="Year" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="CreatedDate" Precision="3" />
+    <Property Type="Boolean" Name="IsSubmit" />
+    <Property Type="String" Name="Status" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="Int32" Name="MonthNumber" />
+    <NavigationProperty Name="TimeSheets" Relationship="dbHRSystemModel.FK_TimeSheet_TimeSheetMaster" FromRole="TimeSheetMaster" ToRole="TimeSheet" />
+    <NavigationProperty Name="Employee" Relationship="dbHRSystemModel.FK_TimeSheetMaster_Employee" FromRole="TimeSheetMaster" ToRole="Employee" />
+  </EntityType>
+  <Association Name="FK_TimeSheet_TimeSheetMaster">
+    <End Type="dbHRSystemModel.TimeSheetMaster" Role="TimeSheetMaster" Multiplicity="0..1" />
+    <End Type="dbHRSystemModel.TimeSheet" Role="TimeSheet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TimeSheetMaster">
+        <PropertyRef Name="TimeSheetMasterID" />
+      </Principal>
+      <Dependent Role="TimeSheet">
+        <PropertyRef Name="TimeSheetMasterID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="LeaveType">
+    <Key>
+      <PropertyRef Name="LeaveTypeID" />
+    </Key>
+    <Property Type="Guid" Name="LeaveTypeID" Nullable="false" />
+    <Property Type="String" Name="LeaveTypeName" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="LeaveTypeColor" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="LeaveTypeCode" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Type="Decimal" Name="DefaultLeaves" Precision="18" Scale="1" />
+    <NavigationProperty Name="EmployeeLeaves" Relationship="dbHRSystemModel.FK_EmployeeLeaves_LeaveType" FromRole="LeaveType" ToRole="EmployeeLeaf" />
+    <Property Type="Boolean" Name="WillHolidaysCount" />
+    <NavigationProperty Name="EmployeeLeaveRequests" Relationship="dbHRSystemModel.FK_EmployeeLeaveRequest_LeaveType" FromRole="LeaveType" ToRole="EmployeeLeaveRequest" />
+  </EntityType>
+  <Association Name="FK_EmployeeLeaves_LeaveType">
+    <End Type="dbHRSystemModel.LeaveType" Role="LeaveType" Multiplicity="1" />
+    <End Type="dbHRSystemModel.EmployeeLeaf" Role="EmployeeLeaf" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="LeaveType">
+        <PropertyRef Name="LeaveTypeID" />
+      </Principal>
+      <Dependent Role="EmployeeLeaf">
+        <PropertyRef Name="LeaveTypeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="Holiday">
+    <Key>
+      <PropertyRef Name="HolidayID" />
+    </Key>
+    <Property Type="Guid" Name="HolidayID" Nullable="false" />
+    <Property Type="String" Name="HolidayName" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="HolidayDate" Nullable="false" Precision="3" />
+    <Property Type="Guid" Name="CountryID" />
+    <Property Type="Guid" Name="LocationID" />
+    <Property Type="Boolean" Name="ApplyToStaff" />
+    <Property Type="Boolean" Name="IsCountInLeave" />
+    <NavigationProperty Name="CountryOffice" Relationship="dbHRSystemModel.FK_Holiday_CountryOffice" FromRole="Holiday" ToRole="CountryOffice" />
+    <NavigationProperty Name="EmployeeLocation" Relationship="dbHRSystemModel.FK_Holiday_EmployeeLocation" FromRole="Holiday" ToRole="EmployeeLocation" />
+    <NavigationProperty Name="EmployeeHoildays" Relationship="dbHRSystemModel.FK_EmployeeHoildays_Holiday" FromRole="Holiday" ToRole="EmployeeHoilday" />
+  </EntityType>
+  <Association Name="FK_Holiday_CountryOffice">
+    <End Type="dbHRSystemModel.CountryOffice" Role="CountryOffice" Multiplicity="0..1" />
+    <End Type="dbHRSystemModel.Holiday" Role="Holiday" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CountryOffice">
+        <PropertyRef Name="CountryOfficeID" />
+      </Principal>
+      <Dependent Role="Holiday">
+        <PropertyRef Name="CountryID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Holiday_EmployeeLocation">
+    <End Type="dbHRSystemModel.EmployeeLocation" Role="EmployeeLocation" Multiplicity="0..1" />
+    <End Type="dbHRSystemModel.Holiday" Role="Holiday" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="EmployeeLocation">
+        <PropertyRef Name="LocationID" />
+      </Principal>
+      <Dependent Role="Holiday">
+        <PropertyRef Name="LocationID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_EmployeeHoildays_Holiday">
+    <End Type="dbHRSystemModel.Holiday" Role="Holiday" Multiplicity="0..1" />
+    <End Type="dbHRSystemModel.EmployeeHoilday" Role="EmployeeHoilday" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Holiday">
+        <PropertyRef Name="HolidayID" />
+      </Principal>
+      <Dependent Role="EmployeeHoilday">
+        <PropertyRef Name="HolidayID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="ServiceBonu">
+    <Key>
+      <PropertyRef Name="ServiceBonusID" />
+    </Key>
+    <Property Type="Guid" Name="ServiceBonusID" Nullable="false" />
+    <Property Type="Guid" Name="EmployeeID" />
+    <Property Type="Boolean" Name="IsIncremented" Nullable="false" />
+    <Property Type="String" Name="IncrementedYear" MaxLength="50" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="Employee">
+    <Key>
+      <PropertyRef Name="EmployeeID" />
+    </Key>
+    <Property Type="Guid" Name="EmployeeID" Nullable="false" />
+    <Property Type="Guid" Name="UserID" />
+    <Property Type="String" Name="FirstNameAr" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="SecondNameAr" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="ThirdNameAr" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="LastNameAr" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="FirstNameEn" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="SecondNameEn" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="ThirdNameEn" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="LastNameEn" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="DateOfBirth" Precision="3" />
+    <Property Type="Boolean" Name="MaritalStatus" />
+    <Property Type="DateTime" Name="HireDate" Precision="3" />
+    <Property Type="Guid" Name="OfficeLocationID" />
+    <Property Type="Guid" Name="DepartmentID" />
+    <Property Type="Guid" Name="JobID" />
+    <Property Type="Boolean" Name="EmployeeStatus" />
+    <Property Type="Guid" Name="SupervisorID" />
+    <Property Type="String" Name="Email" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Type="Guid" Name="AlternativeSupervisorID" />
+    <Property Type="DateTime" Name="AltFromDate" Precision="3" />
+    <Property Type="DateTime" Name="AltEndDate" Precision="3" />
+    <Property Type="Guid" Name="CountryID" />
+    <Property Type="DateTime" Name="Termination_Date" Precision="3" />
+    <Property Type="String" Name="Termination_Reason" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="Comments" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Type="Decimal" Name="LeaveBalacneAtTermination" Precision="18" Scale="1" />
+    <Property Type="Boolean" Name="IsTerminated" />
+    <NavigationProperty Name="aspnet_Users" Relationship="dbHRSystemModel.FK_Employee_aspnet_Users" FromRole="Employee" ToRole="aspnet_Users" />
+    <NavigationProperty Name="CountryOffice" Relationship="dbHRSystemModel.FK_Employee_CountryOffice" FromRole="Employee" ToRole="CountryOffice" />
+    <NavigationProperty Name="Department" Relationship="dbHRSystemModel.FK_Employee_Department" FromRole="Employee" ToRole="Department" />
+    <NavigationProperty Name="EmployeeLocation" Relationship="dbHRSystemModel.FK_Employee_EmployeeLocation" FromRole="Employee" ToRole="EmployeeLocation" />
+    <NavigationProperty Name="JobType" Relationship="dbHRSystemModel.FK_Employee_JobType" FromRole="Employee" ToRole="JobType" />
+    <NavigationProperty Name="EmployeeHoildays" Relationship="dbHRSystemModel.FK_EmployeeHoildays_Employee" FromRole="Employee" ToRole="EmployeeHoilday" />
+    <NavigationProperty Name="EmployeeLeaves" Relationship="dbHRSystemModel.FK_EmployeeLeaves_Employee" FromRole="Employee" ToRole="EmployeeLeaf" />
+    <NavigationProperty Name="EmployeeProjects" Relationship="dbHRSystemModel.FK_EmployeeProjects_EmployeeProjects11" FromRole="Employee" ToRole="EmployeeProject" />
+    <NavigationProperty Name="LogTables" Relationship="dbHRSystemModel.FK_LogTable_Employee" FromRole="Employee" ToRole="LogTable" />
+    <NavigationProperty Name="TimeSheetMasters" Relationship="dbHRSystemModel.FK_TimeSheetMaster_Employee" FromRole="Employee" ToRole="TimeSheetMaster" />
+    <NavigationProperty Name="Weekends" Relationship="dbHRSystemModel.FK_Weekend_Employee" FromRole="Employee" ToRole="Weekend" />
+    <NavigationProperty Name="EmployeeLeaveRequests" Relationship="dbHRSystemModel.FK_EmployeeLeaveRequest_EmployeeLeaveRequest" FromRole="Employee" ToRole="EmployeeLeaveRequest" />
+    <Property Name="Gender" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <Association Name="FK_Employee_aspnet_Users">
+    <End Type="dbHRSystemModel.aspnet_Users" Role="aspnet_Users" Multiplicity="0..1" />
+    <End Type="dbHRSystemModel.Employee" Role="Employee" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="aspnet_Users">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="Employee">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Employee_CountryOffice">
+    <End Type="dbHRSystemModel.CountryOffice" Role="CountryOffice" Multiplicity="0..1" />
+    <End Type="dbHRSystemModel.Employee" Role="Employee" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CountryOffice">
+        <PropertyRef Name="CountryOfficeID" />
+      </Principal>
+      <Dependent Role="Employee">
+        <PropertyRef Name="CountryID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Employee_Department">
+    <End Type="dbHRSystemModel.Department" Role="Department" Multiplicity="0..1" />
+    <End Type="dbHRSystemModel.Employee" Role="Employee" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Department">
+        <PropertyRef Name="DepartmentID" />
+      </Principal>
+      <Dependent Role="Employee">
+        <PropertyRef Name="DepartmentID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Employee_EmployeeLocation">
+    <End Type="dbHRSystemModel.EmployeeLocation" Role="EmployeeLocation" Multiplicity="0..1" />
+    <End Type="dbHRSystemModel.Employee" Role="Employee" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="EmployeeLocation">
+        <PropertyRef Name="LocationID" />
+      </Principal>
+      <Dependent Role="Employee">
+        <PropertyRef Name="OfficeLocationID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Employee_JobType">
+    <End Type="dbHRSystemModel.JobType" Role="JobType" Multiplicity="0..1" />
+    <End Type="dbHRSystemModel.Employee" Role="Employee" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="JobType">
+        <PropertyRef Name="JobTypeID" />
+      </Principal>
+      <Dependent Role="Employee">
+        <PropertyRef Name="JobID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_EmployeeHoildays_Employee">
+    <End Type="dbHRSystemModel.Employee" Role="Employee" Multiplicity="0..1" />
+    <End Type="dbHRSystemModel.EmployeeHoilday" Role="EmployeeHoilday" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employee">
+        <PropertyRef Name="EmployeeID" />
+      </Principal>
+      <Dependent Role="EmployeeHoilday">
+        <PropertyRef Name="EmpID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_EmployeeLeaves_Employee">
+    <End Type="dbHRSystemModel.Employee" Role="Employee" Multiplicity="1" />
+    <End Type="dbHRSystemModel.EmployeeLeaf" Role="EmployeeLeaf" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employee">
+        <PropertyRef Name="EmployeeID" />
+      </Principal>
+      <Dependent Role="EmployeeLeaf">
+        <PropertyRef Name="EmpId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_EmployeeProjects_EmployeeProjects11">
+    <End Type="dbHRSystemModel.Employee" Role="Employee" Multiplicity="0..1" />
+    <End Type="dbHRSystemModel.EmployeeProject" Role="EmployeeProject" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employee">
+        <PropertyRef Name="EmployeeID" />
+      </Principal>
+      <Dependent Role="EmployeeProject">
+        <PropertyRef Name="EmployeeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_LogTable_Employee">
+    <End Type="dbHRSystemModel.Employee" Role="Employee" Multiplicity="0..1" />
+    <End Type="dbHRSystemModel.LogTable" Role="LogTable" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employee">
+        <PropertyRef Name="EmployeeID" />
+      </Principal>
+      <Dependent Role="LogTable">
+        <PropertyRef Name="EmployeeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TimeSheetMaster_Employee">
+    <End Type="dbHRSystemModel.Employee" Role="Employee" Multiplicity="0..1" />
+    <End Type="dbHRSystemModel.TimeSheetMaster" Role="TimeSheetMaster" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employee">
+        <PropertyRef Name="EmployeeID" />
+      </Principal>
+      <Dependent Role="TimeSheetMaster">
+        <PropertyRef Name="EmpID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Weekend_Employee">
+    <End Type="dbHRSystemModel.Employee" Role="Employee" Multiplicity="1" />
+    <End Type="dbHRSystemModel.Weekend" Role="Weekend" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employee">
+        <PropertyRef Name="EmployeeID" />
+      </Principal>
+      <Dependent Role="Weekend">
+        <PropertyRef Name="EmployeeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="WeekendWorkingDay">
+    <Key>
+      <PropertyRef Name="WeekendWorkingDayID" />
+    </Key>
+    <Property Type="Guid" Name="WeekendWorkingDayID" Nullable="false" />
+    <Property Type="Guid" Name="EmployeeID" />
+    <Property Type="DateTime" Name="WeekendDate" Precision="0" />
+    <Property Type="Boolean" Name="IsWorkingDay" Nullable="false" />
+    <Property Type="Guid" Name="SupervisorID" />
+  </EntityType>
+  <EntityType Name="EmployeeLeaveRequest">
+    <Key>
+      <PropertyRef Name="EmployeeLeaveRequestID" />
+    </Key>
+    <Property Type="Guid" Name="EmployeeLeaveRequestID" Nullable="false" />
+    <Property Type="Guid" Name="EmployeeID" />
+    <Property Type="Guid" Name="LeaveTypeID" />
+    <Property Type="String" Name="LeaveReason" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="FromDate" Precision="3" />
+    <Property Type="String" Name="Status" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="ToDate" Precision="3" />
+    <Property Type="Int32" Name="ActualDate" />
+    <Property Type="Int32" Name="AssignedDate" />
+    <Property Type="String" Name="LeaveDetectionReason" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="CreateDate" Precision="3" />
+    <Property Type="Boolean" Name="HalfDay" />
+    <Property Type="Boolean" Name="Cancel" />
+    <Property Type="Guid" Name="LeaveBetweenThisAndNextYearID" />
+    <NavigationProperty Name="Employee" Relationship="dbHRSystemModel.FK_EmployeeLeaveRequest_EmployeeLeaveRequest" FromRole="EmployeeLeaveRequest" ToRole="Employee" />
+    <NavigationProperty Name="LeaveType" Relationship="dbHRSystemModel.FK_EmployeeLeaveRequest_LeaveType" FromRole="EmployeeLeaveRequest" ToRole="LeaveType" />
+  </EntityType>
+  <Association Name="FK_EmployeeLeaveRequest_EmployeeLeaveRequest">
+    <End Type="dbHRSystemModel.Employee" Role="Employee" Multiplicity="0..1" />
+    <End Type="dbHRSystemModel.EmployeeLeaveRequest" Role="EmployeeLeaveRequest" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employee">
+        <PropertyRef Name="EmployeeID" />
+      </Principal>
+      <Dependent Role="EmployeeLeaveRequest">
+        <PropertyRef Name="EmployeeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_EmployeeLeaveRequest_LeaveType">
+    <End Type="dbHRSystemModel.LeaveType" Role="LeaveType" Multiplicity="0..1" />
+    <End Type="dbHRSystemModel.EmployeeLeaveRequest" Role="EmployeeLeaveRequest" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="LeaveType">
+        <PropertyRef Name="LeaveTypeID" />
+      </Principal>
+      <Dependent Role="EmployeeLeaveRequest">
+        <PropertyRef Name="LeaveTypeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

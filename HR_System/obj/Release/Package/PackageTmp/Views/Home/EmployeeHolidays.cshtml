@@ -1,0 +1,132 @@
+﻿@model IEnumerable<DAO.EmployeeHoilday>
+@using DAO
+@{
+    ViewBag.Title = "EmployeeHolidays";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+}
+
+@{
+    
+    Guid? currentEmployeeID = HR_System.Models.MVCUtility.getCurrentEmployeeID();
+
+    string returnUrl = ViewBag.returnUrl != null ? ViewBag.returnUrl.ToString() : "";
+    List<Holiday> holidaysList = ViewBag.holidaysList as List<Holiday>;
+    Guid employeeID = new Guid(ViewBag.EmployeeID.ToString());
+}
+
+<div class="mws-panel grid_8">
+    <h1>Holidays Detail</h1>
+</div>
+<div class="mws-panel grid_8">
+
+
+    <div class="mws-panel-header">
+        <span style="width: 200px; display: inline-block;"><i class="icon-ok"></i>Holidays For @ViewBag.name </span>
+        <div class="toolbar">
+            @if (!string.IsNullOrEmpty(returnUrl))
+            {
+                <a href="@returnUrl">Back</a>
+            }
+            else
+            {
+                @Html.ActionLink("Back", "Employee", "Home", null, null)
+            }
+
+        </div>
+
+    </div>
+    <div class="mws-panel-body no-padding">
+
+        <table class="mws-datatable-fn mws-table">
+            <thead>
+                <tr role="row">
+
+                    <th>Holiday Name</th>
+                    <th>Office Name</th>
+                    <th>Holiday Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody role="alert" aria-live="polite" aria-relevant="all">
+
+
+                @foreach (var item in holidaysList)
+                {
+                    EmployeeHoilday employeeHD = Model.Where(a => a.HolidayID == item.HolidayID).FirstOrDefault();
+                    
+                   
+                    <tr>
+
+                        <td>
+                            @item.HolidayName
+                        </td>
+                        <td>
+                             @if (item.EmployeeLocation != null)
+                            {
+                                @item.EmployeeLocation.LocationName
+                             }
+                        </td>
+                        <td>
+
+                            @item.HolidayDate.ToString("dd-MMM-yyyy")
+                        </td>
+                        <td>
+                            @if (employeeHD != null)
+                            {
+                                <input type="checkbox" checked="checked" class="ibutton" employeeid="@employeeID" holidayId="@item.HolidayID"
+                                     onchange="updateHoliday(this)" />
+                            }
+                            else
+                            {
+                                <input type="checkbox" class="ibutton"  employeeid="@employeeID" holidayId="@item.HolidayID"
+                                     onchange="updateHoliday(this)" />
+                            }
+                        </td>
+                    </tr>
+                    
+                }
+            </tbody>
+        </table>
+
+    </div>
+
+
+</div>
+@if (currentEmployeeID == employeeID)
+{
+    <script>
+        $('.ibutton').iButton();
+        $(".ibutton").iButton("disable")     
+    </script>
+}
+else
+{
+    <script>
+        $('.ibutton').iButton();
+    </script>
+}
+
+<script>
+    $(".mws-datatable-fn").dataTable({
+        sPaginationType: "full_numbers"
+    });
+
+
+
+    function updateHoliday(cb) {
+        var checked = $(cb).is(':checked');
+        var employeeid = $(cb).attr('employeeid');
+        var holidayId = $(cb).attr('holidayId');
+        var add = checked == true ? true : false;
+        doAjax("/Employee/UpdateHolidays", { employeeid: employeeid, holidayId: holidayId, add: add }, function (data) {
+            if (data.success) {
+                showSuccess(data.msg);
+            } else {
+                showError(data.msg);
+            }
+        });
+
+    }
+</script>
+

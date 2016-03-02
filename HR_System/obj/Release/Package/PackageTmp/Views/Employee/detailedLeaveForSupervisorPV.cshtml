@@ -1,0 +1,187 @@
+﻿@model IEnumerable<DAO.EmployeeLeaveRequest>
+
+<script>
+
+    applyDatatable();
+    function loadAllLeaveReqForSupervisor(ddl) {
+        var val = $(ddl).val();
+        if (isNullOrEmpty(val)) {
+            hr.loadAllLeaveReqForSupervisor(null);
+        } else {
+            hr.loadAllLeaveReqForSupervisor(val);
+        }
+    }
+</script>
+@{
+    int i = 1;
+    string status = ViewBag.status != null ? ViewBag.status.ToString() : "";
+    Guid? EmployeeId = ViewBag.EmployeeId as Guid?;
+
+    string returnUrl = ViewBag.returnUrl != null ? ViewBag.returnUrl.ToString() : "";
+    if (string.IsNullOrEmpty(returnUrl))
+    {
+        returnUrl = Url.Content("~/Employee/ManageStaff");
+    }
+}
+
+<script>
+    $('#ddlStatus').val('@status');
+</script>
+<div class="mws-panel grid_8" style="text-align: right; box-shadow: none;">
+</div>
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        <span style="width: 400px; display: inline-block;"><i class="icon-table"></i>Employee Leaves
+            @if (EmployeeId.HasValue)
+            {
+                @:for @HR_System.Models.MVCUtility.getEmployeeName(EmployeeId)
+            }
+        </span>
+
+        <div class="mainDiv">
+
+            <label class="MainLAb">Select Status</label>
+            <div class="mws-form-item innerDiv">
+
+                <select id="ddlStatus" onchange="loadAllLeaveReqForSupervisor(this)">
+                    <option value="">All</option>
+                    <option value="pending">Pending</option>
+                    <option value="approved">Approve</option>
+                    <option value="disapproved">DisApprove</option>
+                </select>
+
+            </div>
+
+        </div>
+        <div class="toolbar">
+            @if (EmployeeId.HasValue)
+            {
+                <a style="margin-right:10px;" href="@returnUrl" >Back</a> 
+            }
+            <a href="javascript:"><i class="icon-refresh" onclick=" hr.loadAllLeaveReqForSupervisor(null);"></i></a>
+
+
+        </div>
+    </div>
+    <div class="mws-panel-body no-padding">
+        <table class="mws-datatable-fn hide-c mws-table">
+            <thead>
+
+                <tr role="row">
+                    <th>SNo.</th>
+                    @if (!EmployeeId.HasValue)
+                    {
+                        <th>Name</th>
+                    }
+                    <th>Leave Type</th>
+                    <th>From Date</th>
+                    <th>To Date</th>
+                    <th>No. of Leave Days
+                    </th>
+                    <th>Status</th>
+                    <th></th>
+                    <th>Recall</th>
+                </tr>
+            </thead>
+
+            <tbody role="alert" aria-live="polite" aria-relevant="all">
+
+
+                @foreach (var item in Model)
+                {
+                    bool isCancelled = false;
+                    if (item.Status.Trim().ToLower() == "approved" && item.Cancel.HasValue && item.Cancel.Value == true)
+                    {
+                        isCancelled = true;
+                    }
+                    <tr>
+
+                        <td>
+
+                            @i
+
+                        </td>
+                        @if (!EmployeeId.HasValue)
+                        {
+                            <td>
+                                @if (item.Employee.FirstNameAr != null)
+                                {
+                                    @Html.DisplayFor(modelItem => item.Employee.FirstNameAr)
+                                }
+                                else
+                                {
+                                    @Html.DisplayFor(modelItem => item.Employee.FirstNameEn)
+                                }
+                            </td>
+                        }
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LeaveType.LeaveTypeName)
+                        </td>
+                        <td>
+                            @if (item.FromDate != null)
+                            {
+                                DateTime dt = Convert.ToDateTime(item.FromDate);
+                                string srt = dt.ToString("dd-MM-yyyy");
+                                @srt
+                            }
+
+                        </td>
+                        <td>
+                            @if (item.ToDate != null)
+                            {
+                                DateTime dt = Convert.ToDateTime(item.ToDate);
+                                string srt = dt.ToString("dd-MM-yyyy");
+                                @srt
+                            }
+
+                        </td>
+                        <td>
+                            @if (item.HalfDay == true && item.AssignedDate == 1)
+                            {
+                                @:1/2
+                            }
+                            else
+                            {
+                                @item.AssignedDate
+                            }
+
+                        </td>
+                        <td>
+
+
+                            @if (isCancelled)
+                            {
+                                @:CANCELLED
+                            }
+                            else
+                            {
+                                @item.Status.ToUpper()
+                            }
+
+                        </td>
+                        <td>
+                            @Html.ActionLink("View", "DetailForLeave", "Leave", new { req_ID = item.EmployeeLeaveRequestID }, new { @class = " btn btn-success" })
+                        </td>
+                        <td>
+                            @if (item.Status.ToLower() == "approved" && isCancelled == false)
+                            {
+                           
+                               
+                                <textarea name="recall" style="margin-bottom: 10px"></textarea>
+                              
+                                <a class="btn btn-danger" data-toggle="modal" requestId="@item.EmployeeLeaveRequestID " url="@Url.Content("~/Leave/cancelLeave")" onclick="cancelRequest(this);">Recall</a>
+                                 
+                              
+                            
+                            }
+
+                        </td>
+                    </tr>
+                            i++;
+                }
+
+
+            </tbody>
+        </table>
+    </div>
+</div>

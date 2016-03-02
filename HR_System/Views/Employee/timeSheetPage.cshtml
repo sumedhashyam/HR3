@@ -1,0 +1,155 @@
+﻿@model DAO.TimeSheet
+@using DAO;
+@using DAL;
+@{
+    ViewBag.Title = "timeSheetPage";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+}
+
+<h2>Time Sheet</h2>
+@{
+    List<Project> list = (List<Project>)ViewData["lstProjects"];
+
+
+    List<Holiday> listHoliday = (List<Holiday>)ViewData["HolidayList"];
+
+    List<EmployeeLeaveRequest> listEmployeeleaveReq = (List<EmployeeLeaveRequest>)ViewData["listLeave"];
+
+    string month = ViewData["Month"].ToString();
+
+    TimeSheetMaster timeSheetM = (TimeSheetMaster)ViewData["Data"];
+
+    int year = Convert.ToInt32(ViewData["Year"]);
+    string date = "";
+}
+@{Html.RenderPartial("Notification");}
+<div class="mws-panel grid_8" style="text-align: right; box-shadow: none;">
+    <span style="margin-right: 527px; font-size: 16px; font-weight: bold;">@month -  @year</span>
+
+    @Html.ActionLink("Back", "timesheetMaster", "Employee", null, new { @class = "btn btn-primary" })
+</div>
+
+<div class="mws-panel grid_8">
+    @*  <div class="mws-panel-header">
+        <span>Time Sheet</span>
+    </div>*@
+    <div class="mws-panel-body no-padding">
+
+        <table class="mws-datatable-fn hide-c mws-table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Projects
+                    </th>
+                    @for (int i = 1; i <= 31; i++)
+                    {
+                        <th>@i</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @if (list.Count() > 0)
+                {
+                    foreach (Project P in list)
+                    {
+                    <tr>
+                        <td></td>
+                        <td>@P.ProjectName</td>
+                        @for (int i = 1; i < 31; i++)
+                        {
+
+                            date = i + month + "," + year;
+                            DateTime dt = Convert.ToDateTime(date);
+
+                            int s = listEmployeeleaveReq.Where(a => a.FromDate.Value.Day == i).Select(a => a.FromDate.Value.Day).FirstOrDefault();
+                            EmployeeLeaveRequest Obemp = listEmployeeleaveReq.Where(a => a.FromDate.Value.Day <= i && a.ToDate.Value.Day >= i).FirstOrDefault();
+                            if (Obemp != null)
+                            { 
+                            <td>L</td>
+                            }
+                            else
+                            {
+                                Holiday objHoliday = listHoliday.Where(a => a.HolidayDate.Day == i).FirstOrDefault();
+                                if (objHoliday != null)
+                                { 
+                            <td>H</td>
+                                }
+                                else
+
+                                    if (dt.DayOfWeek == DayOfWeek.Saturday)
+                                    {
+                            <td>sat</td>
+                                    }
+                                    else
+                                        if (dt.DayOfWeek == DayOfWeek.Sunday)
+                                        {
+                            <td>sun</td>
+                                        }
+                                        else
+                                        {
+                            <td>
+                                <input type="text" style="width: 44px;" id="txtHR" onblur="hr.saveTimeSheet('@month','@year','@i','@timeSheetM.TimeSheetMasterID','@P.ProjectId',this);" /></td>
+                                        }
+                            }
+
+                        }
+                    </tr> 
+                    }
+                }
+
+                else
+                {
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        @for (int i = 1; i < 31; i++)
+                        {
+
+                            date = i + month + "," + year;
+                            DateTime dt = Convert.ToDateTime(date);
+
+                            int s = listEmployeeleaveReq.Where(a => a.FromDate.Value.Day == i).Select(a => a.FromDate.Value.Day).FirstOrDefault();
+                            EmployeeLeaveRequest Obemp = listEmployeeleaveReq.Where(a => a.FromDate.Value.Day <= i && a.ToDate.Value.Day >= i).FirstOrDefault();
+                            if (Obemp != null)
+                            { 
+                            <td>L</td>
+                            }
+                            else
+                            {
+                                Holiday objHoliday = listHoliday.Where(a => a.HolidayDate.Day == i).FirstOrDefault();
+                                if (objHoliday != null)
+                                { 
+                            <td>H</td>
+                                }
+                                else
+
+                                    if (dt.DayOfWeek == DayOfWeek.Saturday)
+                                    {
+                            <td>sat</td>
+                                    }
+                                    else
+                                        if (dt.DayOfWeek == DayOfWeek.Sunday)
+                                        {
+                            <td>sun</td>
+                                        }
+                                        else
+                                        {
+                            <td>
+                                <input type="text" style="width: 44px;" /></td>
+                                        }
+                            }
+
+                        }
+                    </tr> 
+                
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+<div class="mws-button-row">
+    @* <input type="submit" class="btn btn-success" value="Submit" id="btnApprove" /*@
+    @Html.ActionLink("Submit", "IsSubmitTimeSheet", "Employee", new { month = month, year = year }, new { @class = "btn btn-success" })
+    @Html.ActionLink("cancel", "timeSheet", "Employee", null, new { @class = "btn btn-danger" })
+</div>

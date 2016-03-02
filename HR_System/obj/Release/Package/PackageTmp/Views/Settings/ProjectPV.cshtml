@@ -1,0 +1,61 @@
+﻿@model IEnumerable<DAO.Project>
+<script>
+    $(".mws-datatable-fn").dataTable({
+        sPaginationType: "full_numbers"
+    });
+</script>
+
+
+<div class="mws-panel grid_8" style="text-align: right; box-shadow: none;">
+    @*@Html.ActionLink("Add New Project", "addProject", "Settings", null, new { @class = "btn btn-primary" })*@
+</div>
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        <span style="width: 200px; display: inline-block;"><i class="icon-table"></i>Projects</span>
+        <div class="toolbar">
+            <a><i class="icon-plus"></i>@Html.ActionLink("Add New Project", "addProject", "Settings", null, new { @style = "margin-right:19px;" })</a>
+            <a href="javascript:"><i class="icon-refresh" onclick=" hr.loadProjectList();"></i></a>
+
+
+        </div>
+    </div>
+    <div class="mws-panel-body no-padding">
+        <table class="mws-datatable-fn mws-table">
+            <thead>
+                <tr role="row">
+                    <th>Project Name</th>
+                    <th>Project Number</th>
+                    <th>Edit
+
+                    </th>
+                    <th>Delete
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody role="alert" aria-live="polite" aria-relevant="all">
+
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @item.ProjectName
+                        </td>
+                        <td>@item.ProjectNumber</td>
+                        <td class=" sorting_1" align="center">
+                            @Html.ActionLink(" ", "editProject", new { id = item.ProjectId }, new { @class = "btn btn-primary btn-small icon-edit" })
+                        </td>
+
+                        <td class=" sorting_1" align="center">
+                            @Html.ActionLink(" ", "delProject", new { id = item.ProjectId }, new { @class = "btn btn-danger btn-small icon-trash", onclick = "return confirm('Are you sure want to delete this record ?')" })
+                        </td>
+                    </tr>
+                }
+
+
+            </tbody>
+        </table>
+    </div>
+
+</div>

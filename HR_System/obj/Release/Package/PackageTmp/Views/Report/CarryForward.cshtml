@@ -1,0 +1,26 @@
+﻿@{
+    ViewBag.Title = "CarryFormward";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+}
+
+@{
+    Guid EmployeeID = new Guid(ViewBag.EmployeeID.ToString());
+    string returnUrl=Request.QueryString["returnUrl"];
+}
+<script src="@Url.Content("~/Scripts/Custom/CarryForward.js")"></script>
+<style type="text/css">
+    .error
+    {
+        border:1px solid red !important;
+    }
+</style>
+<script type="text/javascript">
+    $(function () {
+        reports.loadCarryForward('@EmployeeID','@returnUrl');
+    });
+</script>
+@{Html.RenderPartial("Notification");}
+<div id="main-content" class="row-fluid">
+</div>
+
+

@@ -1,0 +1,49 @@
+﻿@model DAO.Notification
+@{
+    ViewBag.Title = "Detail";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+}
+
+
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        <span style="width: 200px; display: inline-block;">Notification Detail</span>
+        <div class="toolbar">
+            <a href="@Url.Content("~/Notification")">Back</a>
+
+
+        </div>
+    </div>
+    <div class="mws-panel-body no-padding" style="position: relative">
+
+        <form action="/Employee/requestForLeave" class="mws-form" method="post" novalidate="novalidate">
+            <input type="hidden" id="hfEmployeeID" value="634814e9-d0a9-48a4-b7eb-1421d09d23d0">
+            <div id="mws-validate-error" class="mws-form-message error" style="display: none;"></div>
+            <div class="mws-form-inline">
+                <div class="mws-form-row">
+                    <div class="grid_4" style="margin-left: 0px;">
+                        <label class="mws-form-label">Message</label>
+                        <div class="mws-form-item">
+                            @Model.Message
+                        </div>
+                    </div>
+                    <div class="grid_4" id="messageDiv">
+                    </div>
+                </div>
+                <div class="mws-form-row">
+                    <label class="mws-form-label">Notification Time</label>
+                    <div class="mws-form-item">
+                        @Model.NotinficationTime
+                    </div>
+                </div>
+
+                <input type="hidden" id="hfFormValid" name="hfFormValid" value="false">
+                <div class="mws-button-row">
+
+                    <a class="btn btn-info" href="@Url.Content("~/Notification")">Back</a>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>

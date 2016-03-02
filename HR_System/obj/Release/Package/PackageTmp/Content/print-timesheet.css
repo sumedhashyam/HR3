@@ -1,0 +1,110 @@
+﻿h2
+{
+    margin: 0px;
+}
+
+/*.signature td, .signature th
+    {
+        border: 0px solid black !important;
+        text-align: center;
+    }*/
+
+.mws-table td, .mws-table th
+{
+    border: 1px solid black;
+    text-align: center;
+}
+
+.mws-table th
+{
+    width: 15px;
+}
+
+.hide-c tbody tr td:first-child
+{
+    display: block !important;
+}
+
+.clear
+{
+    clear: both;
+    display: block;
+    overflow: hidden;
+    visibility: hidden;
+    width: 0;
+    height: 0;
+}
+
+.clearfix
+{
+    *zoom: 1;
+}
+
+    .clearfix:before,
+    .clearfix:after
+    {
+        display: table;
+        line-height: 0;
+        content: "";
+    }
+
+    .clearfix:after
+    {
+        clear: both;
+    }
+
+.signature
+{
+    margin: 10px 0px;
+}
+
+    .signature ul
+    {
+        padding: 0px;
+        margin: 0px;
+        list-style: none;
+        width: 33.33%;
+        float: left;
+        text-align: center;
+    }
+
+        .signature ul li
+        {
+            float: left;
+            width: 45%;
+            margin: 0 2%;
+        }
+
+            .signature ul li .sign
+            {
+                height: 50px;
+                border-bottom: 2px solid #222;
+            }
+
+            .signature ul li .lable
+            {
+                font-size: 16px;
+                font-weight: bold;
+                padding: 15px 0px;
+            }
+
+            .signature ul li .Date
+            {
+                height: 50px;
+                border-bottom: 2px solid #222;
+                font-size: 16px;
+                font-weight: bold;
+            }
+
+            .halfimage {
+    background:url(../../Images/1-2.png);
+
+}
+
+@media print
+{
+    .printbtn
+    {
+        display: none;
+    }
+}

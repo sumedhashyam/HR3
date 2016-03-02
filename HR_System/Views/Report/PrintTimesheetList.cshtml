@@ -1,0 +1,95 @@
+﻿@model IEnumerable<DAO.TimeSheetMaster>
+@using DAO
+@{
+    int workingHours = Convert.ToInt32(ViewBag.workingHours.ToString());
+
+    Employee _Employee = ViewBag.Employee as Employee;
+    List<EmployeeLeaveRequest> leaveRequestList = _Employee.EmployeeLeaveRequests.Where(a => a.Status.Trim().ToLower() == "approved").ToList();
+}
+@{
+    ViewBag.Title = "Timesheet List";
+    Layout = "~/Views/Shared/PrintLayout.cshtml";
+}
+<img src="/images/mws-logo.png" alt="mws admin">
+@{Html.RenderPartial("EmployeeDetail", _Employee);}
+<link href="../../Content/print.css" rel="stylesheet" />
+
+<div style="text-align: center">
+    <h4>TimeSheet List for the Year <span id="year">@ViewBag.year</span></h4>
+    <span id="empid" style="display:none;">@ViewBag.EmployeeID</span>
+</div>
+
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        <span style="width: 200px; display: inline-block;"><i class="icon-table"></i>&nbsp;</span>       
+    </div>
+    <div class="mws-panel-body no-padding">
+        <table class="mws-datatable-fn mws-table">
+
+            <thead>
+                <tr role="row">
+                    <th>Year
+                    </th>
+                    <th>Month
+                    </th>
+                    <th>Total Hours
+                    </th>
+                    <th>Status
+                    </th>
+                    
+
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    string returnUrl = "";              
+                }
+                @foreach (var item in Model)
+                {
+                    //returnUrl = Url.Content("~/Report/Timesheet/" + item.EmpID + "?returnUrl=/Report/Index");
+
+                    int leavesHours = 0;
+                    if (leaveRequestList.Count() > 0)
+                    {
+                        int halfDay = leaveRequestList.Where(a => a.HalfDay == true).Count();
+                        int fullDay = leaveRequestList.Count() - halfDay;
+                        leavesHours = (fullDay * workingHours) + (halfDay * (workingHours / 2));
+                    }
+                    decimal TotalHours = item.TimeSheets.Sum(a => a.Hours) ?? 0;
+                    TotalHours += leavesHours;
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Year)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Month)
+                        </td>
+                        <td>
+                            @TotalHours Hrs
+                        </td>
+                        <td>
+                            @if (item.IsSubmit == true)
+                            {
+                                if (item.Status != null && item.Status.ToLower().Trim() == "approved")
+                                {
+                                @:Approved
+                                }
+                                else
+                                {
+                                @:Pending
+                                }
+                            }
+                            else
+                            {
+                                @:Not Submitted
+                            }
+                        </td>
+                        
+
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>

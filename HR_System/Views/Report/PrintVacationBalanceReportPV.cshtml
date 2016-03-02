@@ -1,0 +1,76 @@
+﻿@model IEnumerable<HR_System.Models.EmployeeLeaveModified>
+@using DAO
+
+@{
+    ViewBag.Title = "Vacation Balance Report";
+    Layout = "~/Views/Shared/PrintLayout.cshtml";
+}
+<link href="../../Content/print.css" rel="stylesheet" />
+<img src="/images/mws-logo.png" alt="mws admin">
+
+<div style="text-align: center">
+    <h4>Vacation Balance Report for the Year <span id="year">@ViewBag.year</span></h4>
+</div>
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        <span style="width: 300px; display: inline-block;"><i class="icon-table"></i>&nbsp;</span>
+       
+    </div>
+    <div class="mws-panel-body no-padding">
+        <table class="mws-datatable-fn mws-table">
+
+            <thead>
+
+                <tr>
+                    <th>Employee Name
+                    </th>
+                    <th>Leave Type
+                    </th>
+                    <th>Carry-Forward days
+                    </th>
+                    <th>Days in Current Year
+                    </th>
+                    <th>No. of Leave Days Taken
+                    </th>
+                    <th>Balance
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @{int i = 1;}
+                @foreach (var item in Model)
+                {
+                   
+                    <tr>
+                        <td>
+                            @item.EmpName
+                        </td>
+
+                        <td>
+                            @item.LeaveTypeName
+                        </td>
+                        <td>
+                            @item.PrevLeaves
+                        </td>
+                        <td>
+                            @item.IssuedLeaves
+                        </td>
+                        <td>
+
+                            @(item.TotalLeaves - item.BalanceLeaves)
+
+                        </td>
+                        <td>
+                            @item.BalanceLeaves
+                        </td>
+
+                    </tr>
+                        i++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="leaveDetail">
+</div>

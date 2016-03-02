@@ -1,0 +1,110 @@
+﻿@model IEnumerable<DAO.Employee>
+@using DAL;
+@using DAO;
+
+<script type="text/javascript">
+    $(".mws-datatable-fn").dataTable();
+</script>
+<h2>Manage Staff</h2>
+<div class="grid_8" style="text-align: right; margin-bottom: 10px; display: none">
+    <a class="btn btn-primary" href="@Url.Content("~/Employee/detailedLeaveForSupervisor")">Employee Leaves</a>
+    <a class="btn btn-primary" href="@Url.Content("~/Employee/EmployeetimeSheet")">Employee TimeSheet</a>
+    <a class="btn btn-primary" href="@Url.Content("~/Employee/timeSheetWithProjects")">Employee Projects</a>
+</div>
+
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        <span style="width: 200px; display: inline-block;"><i class="icon-table"></i>Manage Staff</span>
+
+
+        <div class="toolbar">
+
+            <a href="javascript:"><i class="icon-refresh" onclick="hr.loadManageStaff();"></i></a>
+
+
+        </div>
+    </div>
+    <div class="mws-panel-body no-padding">
+        <table class="mws-datatable-fn hide-c mws-table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Name En</th>
+                    <th>Office</th>
+                    <th>Job Title</th>
+                    <th>Hire Date</th>
+                    @*  <th>Department
+                    </th>*@
+                    <th>Leaves</th>
+                    <th>Timesheets</th>
+                    <th>Projects</th>
+                    <th>Projects Timesheet</th>
+                    <th>Weekend Working Day</th>
+                </tr>
+            </thead>
+
+            <tbody role="alert" aria-live="polite" aria-relevant="all">
+                @{
+                    string returnUrl = Url.Content("~/Employee/ManageStaff");
+                }
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td></td>
+                        <td>
+                            @{
+                    string englishName = "";
+                    HR_System.Models.Utils.Try(() => englishName = string.Format("{0} {1} {2} {3}", item.FirstNameEn, item.SecondNameEn, item.ThirdNameEn, item.LastNameEn));
+                            }
+                            @englishName
+                        </td>
+                        <td>
+                            @if (item.EmployeeLocation != null)
+                            {                      
+                                @item.EmployeeLocation.LocationName
+                            }
+                        </td>
+                        <td>
+                            @if (item.JobType != null)
+                            {                      
+                                @item.JobType.JobTypeName
+                            }
+                        </td>
+                        <td>
+                            @if (item.HireDate.HasValue)
+                            {
+                                @item.HireDate.Value.ToString("dd-MMM-yyyy")
+                            }
+                        </td>
+                        @* <td>
+                            @item.Department.DepartmentNameEn
+                        </td>*@
+
+                        <td>
+                           @* @Html.ActionLink("Leave", "detailedLeaveForSupervisor", new { id = @item.EmployeeID, returnUrl = returnUrl }, new { @class = "btn btn-primary" })*@
+                            @Html.ActionLink("Leave", "LeaveSummary", new { employeeID = item.EmployeeID, returnUrl = returnUrl }, new { @class = "btn btn-primary" })
+                        </td>
+                        <td>
+                            @Html.ActionLink("Timesheet", "EmployeetimeSheet", new { id = @item.EmployeeID, returnUrl = returnUrl }, new { @class = "btn btn-info" })
+                        </td>
+                        <td>
+                            @Html.ActionLink("Projects", "EmployeeProjects", new { id = @item.EmployeeID, returnUrl = returnUrl }, new { @class = "btn btn-warning" })
+                        </td>
+                        <td>
+                            @Html.ActionLink("Timesheet (P)", "timeSheetWithProjects", new { id = @item.EmployeeID, returnUrl = returnUrl }, new { @class = "btn btn-success" })
+                        </td>
+                        <td>
+                            @{DateTime todayDate = DateTime.Now.Date;
+                              Guid? supervisorID = (item.SupervisorID.HasValue && item.SupervisorID.Value!= Guid.Empty) ? item.SupervisorID : ((todayDate >= item.AltFromDate && todayDate <= item.AltEndDate) ?( new Guid(item.AlternativeSupervisorID.ToString())): new Guid());
+                              }
+                            @Html.ActionLink(" ","SetWeekendWorkingDays", "Employee", new { staffID = item.EmployeeID,supervisorID=supervisorID.ToString()}, new { @class = "icon-cog-2 btn btn-default" ,title="Set Weekend Working Days For This Employee"})
+</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+
+
+    </div>
+</div>

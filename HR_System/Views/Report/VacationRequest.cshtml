@@ -1,0 +1,19 @@
+﻿@{
+    ViewBag.Title = "VacationRequest";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+}
+
+
+@{
+    Guid EmployeeID = new Guid(ViewBag.EmployeeID.ToString()); 
+}
+
+<script type="text/javascript">
+    $(function () {
+        reports.loadVacationRequests('@EmployeeID','@DateTime.Now.Year')
+    });
+</script>
+@{Html.RenderPartial("Notification");}
+<div id="main-content" class="row-fluid">
+</div>
+

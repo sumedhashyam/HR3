@@ -1,0 +1,171 @@
+﻿@{
+    ViewBag.Title = "TIME SHEET REPORT";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+}
+<script type="text/javascript">
+
+    $(function () {
+
+        loadTimesheetReport();
+        //loadTimesheetReportOld();
+    });
+    collspan();
+    function DoSubmit() {
+        if ($('#FrmVacationRpSearch').valid()) {
+
+            $.ajax({
+                type: "POST",
+                data: $('#FrmVacationRpSearch').serialize(),
+                url: '/Report/TimesheetReportPV',
+                success: function (data) {
+                    $('#main-content').html(data);
+                    $(".mws-collapsible").removeClass('mws-collapsed');
+                    collspan();
+                    goToByScroll("data-grid");
+                },
+                error: function (data) {
+                    alert("error occured");
+                }
+
+            });
+        } else {
+            return false;
+        }
+    }
+    function loadTimesheetReport() {
+        var month = $('#dllMonth').val();
+        var year = $('#dllYear').val();
+        var Status = $('#dllStatus').val();
+        var Department = $('#dllDepartment').val();
+        var OfficeLocation = $('#dllOfcLocation').val();
+        hr.timesheetReportNew(month, year, Status, Department, OfficeLocation);
+    }
+
+    function openPrintPopupWithPar(btn, event) {
+        event.preventDefault();
+        var url = $(btn).attr('href');
+        url = url + "&month=" + $("#dllMonth").val();
+        url = url + "&year=" + $("#dllYear").val();
+        url = url + "&Status=" + $("#dllStatus").val();
+        url = url + "&Department=" + $("#dllDepartment").val();
+        url = url + "&OfficeLocation=" + $("#dllOfcLocation").val();
+        window.open(url, 'PingStatistics', 'status=0,toolbar=0,menubar=0,scrollbars=1,location=0,resizable=0,width=1200,height=800');
+    }
+
+    function loadTimesheetReportOld() {
+        var month = '@DateTime.Now.Month';
+        var year = '@DateTime.Now.Year';
+        if ($('#dllMonth').length > 0 && !isNullOrEmpty($('#dllMonth').val())) {
+            month = $('#dllMonth').val();
+        }
+        if ($('#dllYear').length > 0 && !isNullOrEmpty($('#dllYear').val())) {
+            year = $('#dllYear').val();
+        }
+        $('#dllMonth').val(month);
+        $('#dllYear').val(year);
+        hr.timesheetReport(month, year);
+    }
+
+    function resetdata() {
+        $("#dllMonth").val("");
+        $("#dllYear").val("");
+        $("#dllStatus").val("");
+        $("#dllDepartment").val("");
+        $("#dllOfcLocation").val("");
+        loadTimesheetReport();
+        $(".mws-collapsible").removeClass('mws-collapsed');
+        collspan();
+        goToByScroll("data-grid");
+        return false;
+    }
+</script>
+
+<form id="FrmVacationRpSearch" class="mws-form">
+    <div class="mws-panel grid_8 mws-collapsible mws-collapsed mws-form" @*style="margin-top: 35px;"*@>
+        <div class="mws-panel-header">
+            <span style="width: 200px; display: inline-block;">Filter Result</span>
+        </div>
+        <div class="mws-panel-body no-padding" style="position: relative">
+
+            @*<div class="mws-form-row">
+                <div class="grid_2" style="margin-left: 0px;">
+                    <label class="mws-form-label">Select Month</label>
+                    <div class="mws-form-item">
+                        @Html.DropDownList("month", ViewBag.monthslist as List<SelectListItem>, new { onchange = "loadTimesheetReportOld()" ,style="width:200px" })
+                    </div>
+                </div>
+                <div class="grid_2" style="margin-left: 100px;">
+                    <label class="mws-form-label">Select Year</label>
+                    <div class="mws-form-item">
+                        @Html.DropDownList("year", ViewBag.yearlist as List<SelectListItem>, new { onchange = "loadTimesheetReportOld()" ,style="width:200px"})
+                    </div>
+                </div>
+            </div>*@
+
+            <div class="mws-form-inline">
+                <div class="mws-form-row">
+
+                    <div class="grid_2" style="/*padding: 20px*/ margin-left: 0px;">
+                        <label class="mws-form-label">Select Month</label>
+                        <div class="mws-form-item">
+                            @Html.DropDownList("month", ViewBag.monthslist as List<SelectListItem>, new { style = "width:200px", id = "dllMonth" })
+                        </div>
+                    </div>
+                    <div class="grid_2" style="margin-left: 100px;">
+                        <label class="mws-form-label">Select Year</label>
+                        <div class="mws-form-item">
+                            @Html.DropDownList("year", ViewBag.yearlist as List<SelectListItem>, new { style = "width:200px", id = "dllYear" })
+                        </div>
+                    </div>
+                    <div class="grid_2" style="margin-left: 100px;">
+                        <label class="mws-form-label">Select Status</label>
+                        <div class="mws-form-item">
+                          @*  @Html.DropDownList("Status", ViewBag.StatusList as List<SelectListItem>, new { style = "width:200px", id = "dllStatus" })*@
+                            <select id="dllStatus" name="Status" style="width:200px">
+                            <option selected="selected" value="">Select status</option>
+                            <option value="approved">Approved</option>
+                            <option value="pending">Pending</option>
+
+                            <option value="disapproved">Disapproved</option>
+                                <option value="notsubmitted">Not Submitted</option>
+                            </select>
+
+
+
+
+                         
+
+                        </div>
+                    </div>
+                </div>
+                <div class="mws-form-row">
+                    <div class="grid_2" style="margin-left: 0px;">
+                        <label class="mws-form-label">Select Department</label>
+                        <div class="mws-form-item">
+                            @Html.DropDownList("Department", ViewBag.DepartmentList as List<SelectListItem>, new { style = "width:200px", id = "dllDepartment" })
+                        </div>
+                    </div>
+                    <div class="grid_2" style="margin-left: 100px;">
+                        <label class="mws-form-label">Select Office Location</label>
+                        <div class="mws-form-item">
+                            @Html.DropDownList("OfficeLocation", ViewBag.OfficeLocationList as List<SelectListItem>, new { style = "width:200px", id = "dllOfcLocation" })
+                        </div>
+                    </div>
+                </div>
+                <div class="mws-button-row">
+                    <input type="button" id="Search" value="Search" class="btn btn-info" onclick="return DoSubmit()" />
+                    <input type="reset" value="reset" class="btn btn-danger" onclick="return resetdata()">
+                </div>
+                <div style="clear: both"></div>
+            </div>
+        </div>
+
+    </div>
+</form>
+<div class="mws-panel grid_8"></div>
+@{Html.RenderPartial("Notification");}
+<div id="main-content" class="row-fluid">
+</div>
+
+
+

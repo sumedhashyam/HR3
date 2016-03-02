@@ -1,0 +1,130 @@
+﻿@model DAO.EmployeeLeaveRequest
+@{
+    ViewBag.Title = "requestForLeave";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+}
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Custom/leaveRequest.js")"></script>
+<script>
+    $(document).ready(function () {
+      
+    });
+
+
+    function showToDate(chkEnd) {
+        if ($(chkEnd).is(':checked')) {
+            $("#divDay").hide();
+            $("#endDateDiv").show();
+        }
+        else {
+            $("#divDay").show();
+            $("#endDateDiv").hide();
+            $("#endDate").val('');
+        }
+    }
+</script>
+<style type="text/css">
+    .validation .field-validation-error
+    {
+        display: inline-block;
+    }
+
+    .field-validation-error
+    {
+        display: block;
+    }
+
+    #messageDiv
+    {
+        position: absolute;
+        right: 0px;
+        top: 20px;
+    }
+</style>
+<div class="mws-panel grid_8" style="text-align: right; box-shadow: none;">
+</div>
+@{Html.RenderPartial("Notification");}
+@{
+    string employeeID = ViewBag.employeeID != null ? ViewBag.employeeID.ToString() : "";
+}
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        <span style="width: 200px; display: inline-block;">Request For Leave</span>
+        <div class="toolbar">
+            @Html.ActionLink("Back", "leaveData", "Employee", null)
+
+
+        </div>
+    </div>
+    <div class="mws-panel-body no-padding" style="position: relative">
+
+        @using (Html.BeginForm("requestForLeave", "Employee", FormMethod.Post, new { @class = "mws-form" }))
+        {
+            @Html.ValidationSummary(true)
+            <input type="hidden" id="hfEmployeeID" value="@employeeID" />
+            <div id="mws-validate-error" class="mws-form-message error" style="display: none;"></div>
+            <div class="mws-form-inline">
+                <div class="mws-form-row">
+                    <div class="grid_4" style="margin-left: 0px;">
+                        <label class="mws-form-label">Select Leave Type</label>
+                        <div class="mws-form-item">
+                            @{ List<SelectListItem> locationList = (List<SelectListItem>)ViewData["listLeave"];
+                            }
+                            @Html.DropDownListFor(a => a.LeaveTypeID, locationList, new { @class = "required", style = "width:352px;" })
+                            @Html.ValidationMessageFor(model => model.LeaveTypeID)
+
+                        </div>
+                    </div>
+                    <div class="grid_4" id="messageDiv">
+                    </div>
+                </div>
+                <div class="mws-form-row">
+                    <label class="mws-form-label">From:</label>
+                    <div class="mws-form-item">
+                        @Html.TextBoxFor(a => a.FromDate, new { id = "news_date", @class = "startdate datepicker" })
+
+                        &nbsp;To
+                         @Html.TextBoxFor(a => a.ToDate, new { id = "endDate", @class = "enddate datepicker" })
+                        <div class="validation">
+                            @Html.ValidationMessageFor(a => a.FromDate)
+                            <label style="display: inline-block; width: 50px;">&nbsp;</label>
+                            @Html.ValidationMessageFor(a => a.ToDate)
+                        </div>
+                        <span id="erreor"></span>
+                    </div>
+                </div>
+                <div class="mws-form-row" id="divFullHalfDay" style="display: none">
+                    <label class="mws-form-label">Length:</label>
+                    <div class="mws-form-item">
+                        <select name="divFullHalfDay" onchange="ddlOnchange()" style="width: 347px;">
+                            <option value="FullDay">Full Day
+                            </option>
+                            <option value="HalfDay">Half Day
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
+                <input type="hidden" id="hfFormValid" name="hfFormValid" value="false" />
+                                <div class="mws-form-row" >
+                    <label class="mws-form-label">Reason For Leave</label>
+                    <div class="mws-form-item">
+                        @Html.TextAreaFor(a => a.LeaveReason, new { @class = "required", cols = 45, style = "height:60px;" })
+                        @Html.ValidationMessageFor(a => a.LeaveReason)
+                    </div>
+                </div>
+
+                <div class="mws-button-row">
+                    <input type="submit" class="btn btn-info" onclick="return validateForm();" />
+                    @Html.ActionLink("Cancel", "leaveData", "Employee", null, new { @class = "btn btn-danger" })
+                </div>
+            </div>
+        }
+
+
+    </div>
+</div>
+
+

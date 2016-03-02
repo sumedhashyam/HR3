@@ -1,0 +1,27 @@
+C:\Users\NK\Desktop\CRS HR System\2015-05-11 (Ethiopia - Adjusted the Balance To Date  Calculation)\HR-3\HR_System\bin\HR_System.dll
+C:\Users\NK\Desktop\CRS HR System\2015-05-11 (Ethiopia - Adjusted the Balance To Date  Calculation)\HR-3\HR_System\bin\HR_System.pdb
+C:\Users\NK\Desktop\CRS HR System\2015-05-11 (Ethiopia - Adjusted the Balance To Date  Calculation)\HR-3\HR_System\bin\DAL.dll
+C:\Users\NK\Desktop\CRS HR System\2015-05-11 (Ethiopia - Adjusted the Balance To Date  Calculation)\HR-3\HR_System\bin\DAO.dll
+C:\Users\NK\Desktop\CRS HR System\2015-05-11 (Ethiopia - Adjusted the Balance To Date  Calculation)\HR-3\HR_System\bin\DAL.pdb
+C:\Users\NK\Desktop\CRS HR System\2015-05-11 (Ethiopia - Adjusted the Balance To Date  Calculation)\HR-3\HR_System\bin\DAO.pdb
+C:\Users\NK\Desktop\CRS HR System\2015-05-11 (Ethiopia - Adjusted the Balance To Date  Calculation)\HR-3\HR_System\obj\Release\HR_System.csprojResolveAssemblyReference.cache
+C:\Users\NK\Desktop\CRS HR System\2015-05-11 (Ethiopia - Adjusted the Balance To Date  Calculation)\HR-3\HR_System\obj\Release\HR_System.dll
+C:\Users\NK\Desktop\CRS HR System\2015-05-11 (Ethiopia - Adjusted the Balance To Date  Calculation)\HR-3\HR_System\obj\Release\HR_System.pdb
+C:\Users\NK\Desktop\CRS HR System\2015-05-11 (Ethiopia - As Above AND fixed error when requesting leave) - B\HR-3\HR_System\bin\HR_System.dll
+C:\Users\NK\Desktop\CRS HR System\2015-05-11 (Ethiopia - As Above AND fixed error when requesting leave) - B\HR-3\HR_System\bin\HR_System.pdb
+C:\Users\NK\Desktop\CRS HR System\2015-05-11 (Ethiopia - As Above AND fixed error when requesting leave) - B\HR-3\HR_System\bin\DAL.dll
+C:\Users\NK\Desktop\CRS HR System\2015-05-11 (Ethiopia - As Above AND fixed error when requesting leave) - B\HR-3\HR_System\bin\DAO.dll
+C:\Users\NK\Desktop\CRS HR System\2015-05-11 (Ethiopia - As Above AND fixed error when requesting leave) - B\HR-3\HR_System\bin\DAL.pdb
+C:\Users\NK\Desktop\CRS HR System\2015-05-11 (Ethiopia - As Above AND fixed error when requesting leave) - B\HR-3\HR_System\bin\DAO.pdb
+C:\Users\NK\Desktop\CRS HR System\2015-05-11 (Ethiopia - As Above AND fixed error when requesting leave) - B\HR-3\HR_System\obj\Release\HR_System.csprojResolveAssemblyReference.cache
+C:\Users\NK\Desktop\CRS HR System\2015-05-11 (Ethiopia - As Above AND fixed error when requesting leave) - B\HR-3\HR_System\obj\Release\HR_System.dll
+C:\Users\NK\Desktop\CRS HR System\2015-05-11 (Ethiopia - As Above AND fixed error when requesting leave) - B\HR-3\HR_System\obj\Release\HR_System.pdb
+C:\Users\NK\Desktop\CRS HR System\2016-01-21 (Ethiopia - Added Gender field to Employee details)\HR-3\HR_System\bin\HR_System.dll
+C:\Users\NK\Desktop\CRS HR System\2016-01-21 (Ethiopia - Added Gender field to Employee details)\HR-3\HR_System\bin\HR_System.pdb
+C:\Users\NK\Desktop\CRS HR System\2016-01-21 (Ethiopia - Added Gender field to Employee details)\HR-3\HR_System\bin\DAL.dll
+C:\Users\NK\Desktop\CRS HR System\2016-01-21 (Ethiopia - Added Gender field to Employee details)\HR-3\HR_System\bin\DAO.dll
+C:\Users\NK\Desktop\CRS HR System\2016-01-21 (Ethiopia - Added Gender field to Employee details)\HR-3\HR_System\bin\DAL.pdb
+C:\Users\NK\Desktop\CRS HR System\2016-01-21 (Ethiopia - Added Gender field to Employee details)\HR-3\HR_System\bin\DAO.pdb
+C:\Users\NK\Desktop\CRS HR System\2016-01-21 (Ethiopia - Added Gender field to Employee details)\HR-3\HR_System\obj\Release\HR_System.csprojResolveAssemblyReference.cache
+C:\Users\NK\Desktop\CRS HR System\2016-01-21 (Ethiopia - Added Gender field to Employee details)\HR-3\HR_System\obj\Release\HR_System.dll
+C:\Users\NK\Desktop\CRS HR System\2016-01-21 (Ethiopia - Added Gender field to Employee details)\HR-3\HR_System\obj\Release\HR_System.pdb

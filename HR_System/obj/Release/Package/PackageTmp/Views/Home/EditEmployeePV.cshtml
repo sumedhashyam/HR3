@@ -1,0 +1,206 @@
+﻿@model HR_System.Models.EmpPersonalDetailModel
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script>
+    addDatepicker();
+
+    changeDateFormat();
+</script>
+<div class="add-new">
+    <div class="toolbar">
+        <a href="/Home/Employee/" style="margin-right: 19px;">Back</a>
+    </div>
+</div>
+
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        <span><i class="icon-magic"></i>Edit Employee</span>
+    </div>
+    <div class="mws-panel-body no-padding">
+        @using (Html.BeginForm("EditEmployeePV", "Home", FormMethod.Post, new { id = "formEditEmployeePV" }))
+        {
+            @Html.HiddenFor(a => a.UserID)        
+            @Html.HiddenFor(a => a.EmployeeID)
+                    
+            <input type="hidden" id="id" name="id" value="@ViewBag.EmployeeID" />
+            <div class="span12 widget">
+                <div class="widget-content form-container">
+                    <div class="wizard-nav wizard-nav-horizontal">
+                        <ul>
+                            <li data-wzd-id="wzd_180ppj0k51dh91h061c4v_0" class="current"><span><i class="icon-book"></i>Personal Information</span></li>
+                            <li data-wzd-id="wzd_180ppj0k51dh91h061c4v_1" onclick="hr.loadJobinfoTab('@Model.EmployeeID')"><span><i class="icon-user"></i>Job Information</span></li>
+                            <li data-wzd-id="wzd_180ppj0k51dh91h061c4v_2" onclick="hr.loadEmpLeaveinfoTab()"><span><i class="icon-pencil"></i>Leave Type</span></li>
+                            <li data-wzd-id="wzd_180ppj0k51dh91h061c4v_2" onclick="hr.loadEmpProjectinfoTab()"><span><i class="icon-user"></i>Project</span></li>
+                        </ul>
+                        <button type="button" class="btn responsive-prev-btn" disabled="disabled"><i class="icon-caret-left"></i></button>
+                        <button type="button" class="btn responsive-next-btn"><i class="icon-caret-right"></i></button>
+                    </div>
+                    <div id="wizard-demo-2" class="form-horizontal wizard-form wizard-form-horizontal" data-forward-only="false">
+
+
+                        @Html.ValidationSummary(true)
+
+                        <fieldset class="wizard-step">
+                            @if (TempData["error"] != null)
+                            { 
+                                <span style="color: red">@TempData["error"]</span>
+                            }
+
+                            @if (HR_System.Models.MVCUtility.IsSuperAdmin())
+                            {
+                                <div class="control-group" style="margin-bottom: 5px;">
+                                    <label class="control-label">Country<span class="required">*</span></label>
+                                    <div class="controls">
+
+                                        @Html.DropDownListFor(model => model.country, ViewBag._Country as IEnumerable<SelectListItem>, new { style = "width: 161px;" })
+                                        @Html.ValidationMessageFor(model => model.country)
+
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                string CurrentCountryID = ViewBag.CurrentCountryID.ToString();                   
+                                @Html.HiddenFor(a => a.country, new { value = CurrentCountryID })
+                            }
+
+
+
+                            <div class="control-group">
+                                <label class="control-label">Name Ar*</label>
+                                <div class="controls mws-form-item">
+                                    @Html.TextBoxFor(model => model.FirstNameAr, new { placeHolder = "FirstNameAr" })
+                                    @Html.ValidationMessageFor(model => model.FirstNameAr)
+
+
+                                    @Html.TextBoxFor(model => model.SecondNameAr, new { placeHolder = "SecondNameAr" })
+                                    @Html.ValidationMessageFor(model => model.SecondNameAr)
+
+
+                                    @Html.TextBoxFor(model => model.ThirdNameAr, new { placeHolder = "ThirdNameAr" })
+                                    @Html.ValidationMessageFor(model => model.ThirdNameAr)
+
+
+                                    @Html.TextBoxFor(model => model.LastNameAr, new { placeHolder = "LastNameAr" })
+                                    @Html.ValidationMessageFor(model => model.LastNameAr)
+                                </div>
+
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Name en*</label>
+                                <div class="controls mws-form-item">
+                                    @Html.TextBoxFor(model => model.FirstNameEn, new { placeHolder = "FirstNameEn" })
+                                    @*  @Html.ValidationMessageFor(model => model.FirstNameEn)*@
+
+
+                                    @Html.TextBoxFor(model => model.SecondNameEn, new { placeHolder = "SecondNameEn" })
+                                    @Html.ValidationMessageFor(model => model.SecondNameEn)
+
+
+                                    @Html.TextBoxFor(model => model.ThirdNameEn, new { placeHolder = "ThirdNameEn" })
+                                    @Html.ValidationMessageFor(model => model.ThirdNameEn)
+
+
+                                    @Html.TextBoxFor(model => model.LastNameEn, new { placeHolder = "LastNameEn" })
+                                    @Html.ValidationMessageFor(model => model.LastNameEn)
+                                </div>
+
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Email*</label>
+                                <div class="controls">
+                                    @Html.TextBoxFor(model => model.Email, new { })
+                                    @Html.ValidationMessageFor(model => model.Email)
+                                    @Html.HiddenFor(model => model.Email)
+                                </div>
+                            </div>
+                            <div class="control-group" style="display: none;">
+                                <label class="control-label">Password*</label>
+                                <div class="controls">
+                                    <input type="text" name="Password" value="132456" />
+
+                                </div>
+                            </div>
+                            <div class="control-group" style="display: none;">
+                                <label class="control-label">Confirm Password*</label>
+                                <div class="controls">
+                                    <input type="text" name="ConfirmPassword" value="132456" />
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Birth Date<span class="required">*</span></label>
+                                <div class="controls">
+                                    @Html.TextBoxFor(model => model.DateOfBirth, new { @class = "datepicker" })
+                                    @Html.ValidationMessageFor(model => model.DateOfBirth)
+                                    @Html.HiddenFor(model => model.UserName)
+                                </div>
+                            </div>
+                         
+
+                            <div class="control-group">
+                                <label class="control-label">Marital Status<span class="required">*</span></label>
+                                <div class="controls">
+                                    @Html.DropDownListFor(model => model.MaritalStatus, ViewBag._MaritalStatus as IEnumerable<SelectListItem>, new { style = "width: 161px;" })
+                                    @Html.ValidationMessageFor(model => model.MaritalStatus)
+
+                                </div>
+                            </div>
+                             <div class="control-group">
+                                <label class="control-label">Gender<span class="required">*</span></label>
+                                <div class="controls">
+                                    @Html.DropDownListFor(model => model.Gender, ViewBag._Gender as IEnumerable<SelectListItem>, new { style = "width: 161px;" })
+                                    @Html.ValidationMessageFor(model => model.Gender)
+
+                                </div>
+                            </div>
+                            @{
+                            bool hrRole = Convert.ToBoolean(ViewBag.hrRole.ToString());
+                            bool setupRole = Convert.ToBoolean(ViewBag.setupRole.ToString());
+                            bool adminRole = Convert.ToBoolean(ViewBag.adminRole.ToString());
+                            }
+
+
+                            @if (HR_System.Models.MVCUtility.IsSuperAdmin() || HR_System.Models.MVCUtility.IsAdmin())
+                            {
+                                <div class="control-group">
+                                    <label class="control-label">Select Roles</label>
+                                    <div class="controls">
+
+                                        <label for="role_hr">@HR_System.Models.SiteRoles.HR.ToUpper()</label>
+                                        @Html.CheckBox("role_hr", hrRole, new { style = "margin-right: 15px;" })
+
+                                        <label for="role_setup">@HR_System.Models.SiteRoles.Setup.ToUpper()</label>
+                                        @Html.CheckBox("role_setup", setupRole, new { style = "margin-right: 15px;" })
+
+                                        <label for="role_admin">@HR_System.Models.SiteRoles.Admin.ToUpper()</label>
+                                        @Html.CheckBox("role_admin", adminRole)
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <input type="hidden" name="role_hr" value="false" />
+                                <input type="hidden" name="role_setup" value="false" />
+                                <input type="hidden" name="role_admin" value="false" />
+                                  
+                            }
+
+                        </fieldset>
+
+
+
+                        <div class="form-actions btn-toolbar">
+                            <button type="button" class="btn" disabled="disabled">Prev</button>
+                            <input type="submit" class="btn" value="Save & Move Next" onclick="return hr.UpdateEmployee()" />
+                            <button type="button" class="btn btn-primary pull-right" name="wizard-submit" style="display: none;">Submit</button>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        
+        }
+    </div>
+</div>

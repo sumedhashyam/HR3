@@ -1,0 +1,171 @@
+﻿@model IEnumerable<DAO.TimeSheetMaster>
+@using DAL;
+@using DAO;
+@using HR_System.Models
+<script src="@Url.Content("~")js/dataTables.dateFormat.js"></script>
+<script src="@Url.Content("~")js/jquery.dataTables.columnFilter.js"></script>
+<script>
+    $(".mws-datatable-fn").dataTable();
+</script>
+@{
+    Guid? EmployeeId = ViewBag.EmployeeId as Guid?;
+
+    string currentUrl = Url.Content("~/Employee/EmployeetimeSheet");
+    if (EmployeeId.HasValue)
+    {
+        currentUrl = Url.Content("~/Employee/EmployeetimeSheet/" + EmployeeId.Value + "?returnUrl=/Employee/EmployeeFiles");
+    }
+    string currentUrlEncrypted = DataEncryptorNew.EncryptString(currentUrl);
+
+
+
+    string returnUrl = ViewBag.returnUrl != null ? ViewBag.returnUrl.ToString() : "";
+    if (string.IsNullOrEmpty(returnUrl))
+    {
+        returnUrl = Url.Content("~/Employee/ManageStaff");
+    }
+    int i = 1;
+    int sum = 0;
+}
+<div class="mws-panel grid_8" style="text-align: right; box-shadow: none;">
+</div>
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        <span style="width: 400px; display: inline-block;"><i class="icon-table"></i>
+            @if (EmployeeId.HasValue)
+            {
+                @:TimeSheet for @HR_System.Models.MVCUtility.getEmployeeName(EmployeeId)
+                }
+            else
+            {
+                @:Employee TimeSheet
+                }
+        </span>
+
+
+        <div class="toolbar">
+            @if (EmployeeId.HasValue)
+            {
+                <a style="margin-right:10px;" href="@returnUrl" >Back</a> 
+            }
+            <a href="javascript:"><i class="icon-refresh" onclick="hr.loadAllTimeSheetForSupervisor(null, '@returnUrl');"></i></a>
+
+
+        </div>
+    </div>
+    <div class="mws-panel-body no-padding">
+        <table class="mws-datatable-fn hide-c mws-table">
+            <thead>
+
+                <tr role="row">
+                    <th>SNo.</th>
+                    @*  <th>Name</th>*@
+                    <th>Year</th>
+                    <th>Month</th>
+                    <th>Total Hour</th>
+                    <th>Status</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th>Recall</th>
+                </tr>
+            </thead>
+
+            <tbody role="alert" aria-live="polite" aria-relevant="all">
+
+                @{ string _returnUrl = "";}
+                @foreach (var item in Model)
+                {
+
+
+                    _returnUrl = Url.Content("~/Employee/EmployeetimeSheet/" + item.EmpID);
+                    <tr>
+
+                        <td>
+
+                            @i
+
+                        </td>
+
+                        @*<td>
+                            @{ string name = string.Format("{0} {1}", item.Employee.FirstNameEn, item.Employee.LastNameEn); }
+                            @name
+                        </td>*@
+                        <td>
+                            @if (item.Year != null)
+                            {
+                                @Html.DisplayFor(modelItem => item.Year)
+                            }
+
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Month)
+                        </td>
+
+                        <td>
+
+                            @item.TimeSheets.Where(a => a.TimeSheetMasterID == item.TimeSheetMasterID).ToList().Where(a => a.Date.Value.ToString("yyyy") == item.Year && a.Date.Value.ToString("MMM") == item.Month).Sum(a => a.Hours)
+
+
+                        </td>
+
+                        <td>
+
+
+                            @if (item.IsSubmit == false && item.Status == null)
+                            {
+                                @:NOT SUBMITTED  
+                            }
+
+                            else if (item.IsSubmit == true && item.Status == null)
+                            {
+                                @:PENDING
+                            }
+                            else if (item.Status.ToLower().Trim() == "disapproved")
+                            {
+                                @:DISAPPROVED
+                            }
+                            else if (item.Status.ToLower().Trim() == "approved")
+                            {
+                                @:APPROVED
+                             }
+
+
+
+                        </td>
+                        <td>
+
+                            @Html.ActionLink("View", "editTimeSheet", "Employee", new { month = @item.Month, year = @item.Year, timM_ID = @item.TimeSheetMasterID, returnUrl = _returnUrl }, new { @class = "btn btn-info" })
+                        </td>
+                        <td>
+
+                            @Html.ActionLink("Summary", "TimesheetSummary", "Employee", new { EmployeeID = item.EmpID, TimesheetMasterId = item.TimeSheetMasterID, encryptedUrl = currentUrlEncrypted }, new { @class = "btn btn-warning" })
+                        </td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.Status) && item.Status.ToLower().Trim() == "approved")
+                            {   
+                                @Html.ActionLink("Print", "printTimesheet", "Employee", new { month = item.Month, year = @item.Year, timM_ID = @item.TimeSheetMasterID }, new { @class = "btn btn-primary", onclick = "openPrintPopup(this,event)" })
+                            }
+                        </td>
+                        <td>
+
+                            @if (!string.IsNullOrEmpty(item.Status) && item.Status.ToLower().Trim() == "approved")
+                            {    
+                                <a class="btn btn-danger" data-toggle="modal" onclick="hr.recallTimesheet('@item.TimeSheetMasterID')">Recall</a>
+
+                            }
+
+                        </td>
+                    </tr>
+                            i++;
+                }
+
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    $('.recall').popover();
+</script>

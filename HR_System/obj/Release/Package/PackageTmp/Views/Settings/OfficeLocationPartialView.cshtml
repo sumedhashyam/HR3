@@ -1,0 +1,74 @@
+﻿@model IEnumerable<DAO.EmployeeLocation>
+<script>
+    $(".mws-datatable-fn").dataTable({
+        sPaginationType: "full_numbers"
+    });
+</script>
+
+
+
+<div class="mws-panel grid_8" style="text-align: right; box-shadow: none;">
+   @* @Html.ActionLink("Add New Office Location", "addOfficeLocation", "Settings", null, new { @class = "btn btn-primary" })*@
+</div>
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        <span style="width: 200px; display: inline-block;"><i class="icon-table"></i>Office Location</span>
+        @*<span style="float: right;"><i class="icon-repeat" onclick=" hr.loadofficeLocation();"></i></span>*@
+        <div class="toolbar">
+            <a><i class="icon-plus"></i>@Html.ActionLink("Add New Office Location", "addOfficeLocation", "Settings", null, new { @style = "margin-right:19px;" })</a>
+            <a href="javascript:"><i class="icon-refresh" onclick=" hr.loadofficeLocation();"></i></a>
+        </div>
+    </div>
+    <div class="mws-panel-body no-padding">
+        <table class="mws-datatable-fn mws-table">
+            <thead>
+                <tr role="row">
+
+                    <th class="sorting" role="columnheader" tabindex="0" aria-controls="demo-dtable-01" rowspan="1" colspan="1" style="width: 226px;" aria-label="Country: activate to sort column ascending">Location Name</th>
+                    <th class="sorting" role="columnheader" tabindex="0" aria-controls="demo-dtable-01" rowspan="1" colspan="1" style="width: 226px;" aria-label="Country: activate to sort column ascending">City</th>
+                    <th class="sorting_desc" role="columnheader" tabindex="0" aria-controls="demo-dtable-01" rowspan="1" colspan="1" style="width: 148px;" aria-sort="descending" aria-label="Death rate per 1,000 people: activate to sort column ascending">Country</th>
+                    <th class="sorting_desc" role="columnheader" tabindex="0" aria-controls="demo-dtable-01" rowspan="1" colspan="1" style="width: 148px;" aria-sort="descending" aria-label="Death rate per 1,000 people: activate to sort column ascending">Edit</th>
+                    <th>Delete
+
+                    </th>
+
+                </tr>
+            </thead>
+            @using DAO;
+            <tbody role="alert" aria-live="polite" aria-relevant="all">
+
+                @foreach (var item in Model)
+                {
+                    dbHRSystemEntities db = new dbHRSystemEntities();
+                    City c = new City();
+                    c = db.Cities.Where(a => a.CityID == item.CityID).FirstOrDefault();
+                       
+                    <tr>
+                        <td>
+                            @item.LocationName
+                        </td>
+                        <td>
+                            @c.City1
+
+                        </td>
+                        <td>
+
+                            @c.CountryOffice.CountryName
+                        </td>
+
+                        <td class=" sorting_1" align="center">
+                            @Html.ActionLink(" ", "editOfficeLocation", new { id = item.LocationID }, new { @class = "btn btn-primary btn-small icon-edit" })
+                        </td>
+
+                        <td class=" sorting_1" align="center">
+                            @Html.ActionLink(" ", "delOfficeLocation", new { id = item.LocationID }, new { @class = "btn btn-danger btn-small icon-trash", onclick = "return confirm('Are you sure want to delete this record ?')" })
+                        </td>
+                    </tr>
+                }
+
+
+            </tbody>
+        </table>
+    </div>
+
+</div>

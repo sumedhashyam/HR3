@@ -1,0 +1,27 @@
+﻿@model DAO.TimeSheetMaster
+@{
+    ViewBag.Title = "timeSheetWithProjects";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+}
+
+
+@{
+    Guid? EmployeeId = ViewBag.EmployeeId as Guid?;
+    string returnUrl = ViewBag.returnUrl != null ? ViewBag.returnUrl.ToString() : "";
+   
+}
+@{
+    if(EmployeeId.HasValue){
+    <input type="hidden" id="hfEmployeeID" value="@EmployeeId" />
+    }
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        hr.loadTimesheetForProjects('@returnUrl');
+    });
+</script>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+@{Html.RenderPartial("Notification");}
+<div id="main-content" class="row-fluid">
+</div>

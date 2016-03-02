@@ -1,0 +1,315 @@
+﻿@model IEnumerable<HR_System.Models.EmployeeLeaveModified>
+@using DAO
+
+
+<script>
+    //collspan();
+    //$("#ddlYear").val($("#year").html());
+    $(".mws-datatable-fn").dataTable({
+        sPaginationType: "full_numbers"
+    });
+</script>
+<script type="text/javascript">
+    collspan();
+    function DoSubmit() {
+        if ($('#FrmVacationSummaryReport').valid()) {
+
+            $.ajax({
+                type: "POST",
+                data: $('#FrmVacationSummaryReport').serialize(),
+                url: '/Report/VacationBalanceReportPV',
+                success: function (data) {
+                    $('#main-content').html(data);
+                    $(".mws-collapsible").removeClass('mws-collapsed');
+                    collspan();
+                    goToByScroll("data-grid");
+                },
+                error: function (data) {
+                    alert("error occured");
+                }
+
+            });
+        } else {
+            return false;
+        }
+    }
+    function resetdata() {
+        $("#ddlYear").val("");
+        $("#ddlLeaveType").val("");
+        $("#ddlLocation").val("");
+        $("#ddlDepartment").val("");
+        $("#ddlEmpName").val("");
+        reports.loadResetVacationBalanceReport();
+        return false;
+    }
+    function openPrintPopupWithPar(btn, event) {
+        event.preventDefault();
+        var url = $(btn).attr('href');
+        url = url + "?year=" + $("#ddlYear").val();
+        url = url + "&leavetype=" + $("#ddlLeaveType").val();
+        url = url + "&location=" + $("#ddlLocation").val();
+        url = url + "&department=" + $("#ddlDepartment").val();
+        url = url + "&empname=" + $("#ddlEmpName").val();
+        window.open(url, 'PingStatistics', 'status=0,toolbar=0,menubar=0,scrollbars=1,location=0,resizable=0,width=1200,height=800');
+    }
+
+</script>
+<div style="text-align: center">
+     <h4>Vacation Balance Report for the Year <span id="year">@ViewBag.year</span></h4>
+</div>
+@*@if (ViewBag.returnUrl != "/Employee/HRFunctions")
+{*@
+
+<form id="FrmVacationSummaryReport" class="mws-form">
+        <div class="mws-panel grid_8 mws-collapsible mws-collapsed mws-form" @*style="margin-top: 35px;"*@>
+            <div class="mws-panel-header">
+                <span style="width: 200px; display: inline-block;">Filter Result</span>
+            </div>
+            <div class="mws-panel-body no-padding" style="position: relative">
+                <div class="mws-form-inline">
+                    <div class="mws-form-row">
+
+                        <div class="grid_2">
+                            <label class="mws-form-label">Select Year</label>
+                            <div class="mws-form-item">
+                                @* @Html.DropDownList("ddlYear", ViewBag.yearsList as List<SelectListItem>, new {  })*@
+                                <select id="ddlYear" name="ddlYear" style="width: 210px;">
+                                    @foreach (SelectListItem li in ViewBag._Year)
+                                    {
+                                        if (li.Value == ViewBag._YearSelected)
+                                        {
+                                        <option selected="selected" value="@li.Value">
+                                            @li.Text
+                                        </option>
+                                        }
+                                        else
+                                        {
+                                        <option value="@li.Value">
+                                            @li.Text
+                                        </option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid_2" style="margin-left: 100px;">
+                            <label class="mws-form-label">Leave Type</label>
+                            <div class="mws-form-item">
+                                <select id="ddlLeaveType" name="ddlLeaveType" style="width: 210px;">
+                                    @foreach (SelectListItem li in ViewBag._LeaveType)
+                                    {
+                                        if (li.Value == ViewBag._LeaveTypeSelected)
+                                        {
+                                        <option selected="selected" value="@li.Value">
+                                            @li.Text
+                                        </option>
+                                        }
+                                        else
+                                        {
+                                        <option value="@li.Value">
+                                            @li.Text
+                                        </option>
+                                        }
+                                    }
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="grid_2" style="margin-left: 100px;">
+                            <label class="mws-form-label">Location</label>
+                            <div class="mws-form-item">
+                                <select id="ddlLocation" name="ddlLocation" style="width: 210px;">
+                                    @foreach (SelectListItem li in ViewBag._OfficeLocation)
+                                    {
+                                        if (li.Value == ViewBag._OfficeLocationSelected)
+                                        {
+                                        <option selected="selected" value="@li.Value">
+                                            @li.Text
+                                        </option>
+                                        }
+                                        else
+                                        {
+                                        <option value="@li.Value">
+                                            @li.Text
+                                        </option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mws-form-row">
+
+
+                        <div class="grid_2">
+                            <label class="mws-form-label">Department</label>
+                            <div class="mws-form-item">
+
+                                <select id="ddlDepartment" name="ddlDepartment" style="width: 210px;">
+                                    @foreach (SelectListItem li in ViewBag._Department)
+                                    {
+                                        if (li.Value == ViewBag._DepartmentSelected)
+                                        {
+                                        <option selected="selected" value="@li.Value">
+                                            @li.Text
+                                        </option>
+                                        }
+                                        else
+                                        {
+                                        <option value="@li.Value">
+                                            @li.Text
+                                        </option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid_2" style="margin-left: 100px;">
+                            <label class="mws-form-label">Emp Name</label>
+                            <div class="mws-form-item">
+                                <select id="ddlEmpName" name="ddlEmpName" style="width: 210px;">
+                                    @foreach (SelectListItem li in ViewBag._EmpName)
+                                    {
+                                        if (li.Value == ViewBag._EmpNameSelected)
+                                        {
+                                        <option selected="selected" value="@li.Value">
+                                            @li.Text
+                                        </option>
+                                        }
+                                        else
+                                        {
+                                        <option value="@li.Value">
+                                            @li.Text
+                                        </option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mws-button-row">
+                        <input type="button" id="Search" value="Search" class="btn btn-info" onclick="return DoSubmit()" />
+                        <input type="button" value="reset" class="btn btn-danger" onclick="return resetdata()" />
+                    </div>
+                    <div style="clear: both"></div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+@*}*@
+
+<div class="mws-panel grid_8"></div>
+
+<div class="mws-panel grid_8" id="data-grid">
+    <div class="mws-panel-header">
+        <span style="width: 300px; display: inline-block;"><i class="icon-table"></i>Vacation Balance Report - Year @ViewBag.year</span>
+        <div class="toolbar">
+            @if (ViewBag.returnUrl == "/Employee/HRFunctions")
+            {
+                <a style="margin-right:20px" href="@Url.Content("~/Employee/HRFunctions")">Back</a>
+            }
+            else if (ViewBag.returnUrl == "/Report/Index")
+            {
+                <a style="margin-right:20px" href="@Url.Content("~/Report")">Back</a>
+                @Html.ActionLink("Print", "PrintVacationBalanceReportPV", "Report", new { @year = @ViewBag.year }, new { onclick = "openPrintPopupWithPar(this,event)" })
+                
+            }
+            else
+            {
+                @Html.ActionLink("Print", "PrintVacationBalanceReportPV", "Report", new { @year = @ViewBag.year }, new { onclick = "openPrintPopupWithPar(this,event)" })
+            }
+            @*&nbsp;*@
+           @* <a><i class="icon-refresh" onclick="reports.loadVacationBalanceReport('@ViewBag.year');"></i></a>*@
+        </div>
+
+    </div>
+    <div class="mws-panel-body no-padding">
+        <table class="mws-datatable-fn mws-table">
+
+            <thead>
+
+                <tr>
+                    <th>Employee Name
+                    </th>
+                    <th>Leave Type
+                    </th>
+                    <th>Carry-Forward days
+                    </th>
+                    <th>Days in Current Year
+                    </th>
+                    <th>No. of Leave Days Taken
+                    </th>
+                    <th>Balance
+                    </th>
+                    @* @if (!isEmployeee)
+                    {
+                        <th></th>
+                        if (ViewBag.returnUrl == "/Employee/HRFunctions")
+                        {
+                        <th></th>
+                        }
+                    }
+                    else
+                    {
+                        <th></th>
+                    }*@
+                </tr>
+            </thead>
+            <tbody>
+                @{int i = 1;}
+                @foreach (var item in Model)
+                {
+                   
+                    <tr>
+                        <td>
+                            @item.EmpName
+                        </td>
+
+                        <td>
+                            @item.LeaveTypeName
+                        </td>
+                        <td>
+                            @item.PrevLeaves
+                        </td>
+                        <td>
+                            @item.IssuedLeaves
+                        </td>
+                        <td>
+
+                            @(item.TotalLeaves - item.BalanceLeaves)
+
+                        </td>
+                        <td>
+                            @item.BalanceLeaves
+                        </td>
+
+                        @* @if (!isEmployeee)
+                        {
+                            <td>
+                                <a onclick="hr.showLeavesDetail('@item.EmpId', '@item.LeaveTypeID',true);" class="btn btn-info">Show Detail</a>
+                            </td>
+                            if (ViewBag.returnUrl == "/Employee/HRFunctions")
+                            {
+                            <td>
+                                <a href="@Url.Content("~/Report/CarryForward/" + item.EmpId+"?returnUrl=/Employee/HRFunctions")" class="btn btn-info">Carry Forward</a>
+                            </td>
+                            }
+                        }
+                        else
+                        {
+                            <td>
+                                <a onclick="hr.showLeavesDetail('@item.EmpId', '@item.LeaveTypeID',true);" class="btn btn-info">Show Detail</a>
+                            </td>
+                        }*@
+                    </tr>
+                    i++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="leaveDetail">
+</div>

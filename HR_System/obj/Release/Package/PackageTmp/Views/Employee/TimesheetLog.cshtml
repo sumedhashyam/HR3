@@ -1,0 +1,61 @@
+﻿@model IEnumerable<DAO.LogTable>
+<script src="@Url.Content("~")js/dataTables.dateFormat.js"></script>
+<script src="@Url.Content("~")js/jquery.dataTables.columnFilter.js"></script>
+
+
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        <span style="width: 400px; display: inline-block;"><i class="icon-table"></i>TimeSheet Log            
+        </span>
+        <div class="toolbar">
+        </div>
+    </div>
+    <div class="mws-panel-body no-padding">
+        <table class="mws-datatable-fn hide-c mws-table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Actor
+                    </th>
+                    <th>Action
+                    </th>
+                    <th>Notes
+                    </th>
+                    <th>Date
+                    </th>
+
+                </tr>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td></td>
+                            <td>
+                                @if (item.Employee != null)
+                                {
+                                    try
+                                    {
+                                    @string.Format("{0} {1}", item.Employee.FirstNameEn, item.Employee.LastNameEn)
+                                    }
+                                    catch (Exception ee) { }
+                                }
+                                else
+                                {
+                                    @:Superadmin
+                                }
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Operation)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Notes)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.RecordDate)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+        </table>
+    </div>
+</div>

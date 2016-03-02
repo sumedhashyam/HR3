@@ -1,0 +1,21 @@
+﻿
+@{
+    ViewBag.Title = "LeaveDetail";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+}
+
+<h2>LeaveDetail</h2>
+<script type="text/javascript">
+
+    $(function () {
+        hr.loadLeaveTypePV()();
+        $('#navigation li').removeClass('active');
+        $('#msystem').addClass('active');
+
+    });
+</script>
+
+  @{Html.RenderPartial("Notification");}
+<div id="main-content" class="row-fluid">
+
+</div>

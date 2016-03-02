@@ -1,0 +1,116 @@
+﻿@model IEnumerable<HR_System.Models.ReportTimeSheet>
+@using DAO
+
+<script>
+    $(".mws-datatable-fn").dataTable({
+        sPaginationType: "full_numbers"
+    });
+</script>
+@{dbHRSystemEntities db=new dbHRSystemEntities();}
+
+<div class="mws-panel grid_8" id="data-grid">
+    <div class="mws-panel-header">
+        <span style="width: 200px; display: inline-block;"><i class="icon-table"></i>Timesheet Report</span>
+        <div class="toolbar">
+           @* <a style="margin-right:20px" href="@Url.Content("~/Report")">Back</a>*@
+             @Html.ActionLink("Print", "PrintTimesheetReport", "Report", new {onclick = "openPrintPopupWithPar(this,event)"})
+        </div>
+
+    </div>
+    <div class="mws-panel-body no-padding">
+        <table class="mws-datatable-fn mws-table">
+
+            <thead>
+                <tr role="row">
+                    <th>Month Year</th>
+                    <th>Employee Name
+                    </th>
+                    <th>Project Name
+                    </th>
+                    <th>Project Number
+                    </th>
+                    <th>Working Hours
+                    </th>
+                    <th>Percentage
+                    </th>
+                    <th>Status
+                    </th>
+                    <th></th>
+
+
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var item in Model)
+                {
+                    decimal totalEmpHours = Model.Where(A => A.TimeSheetMasterID == item.TimeSheetMasterID).Sum(A => A.TotalHours);
+                    var timesheetDetail = db.TimeSheetMasters.Where(t => t.TimeSheetMasterID == item.TimeSheetMasterID).FirstOrDefault();
+                    int noOfHolidayes = db.Holidays.Where(a => a.LocationID == item.OfficeLocationID && a.HolidayDate.Year == item.Year && a.HolidayDate.Month == timesheetDetail.MonthNumber).Count();
+                    noOfHolidayes=noOfHolidayes>0?(noOfHolidayes*8):0;
+                    decimal projectHour = item.TotalHours;
+                    decimal percentage = 0;
+                    decimal totalhoursIcludedHoliday = totalEmpHours + noOfHolidayes;
+                    try
+                    {
+                        percentage = (projectHour * 100) / totalEmpHours;
+                        percentage = Math.Round(percentage, 2);
+                    }
+                    catch (Exception ee) { }
+                   
+                    <tr>
+                        <td>
+                            @item.Month @item.Year
+
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EmployeeName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ProjectName)
+                        </td>
+                        <td>
+                            @item.ProjectNumber
+                        </td>
+                        <td>
+                           @totalhoursIcludedHoliday Hrs
+                        </td>
+
+                        <td>@percentage %</td>
+                        <td>
+
+                            @if (item.IsSubmit == false && string.IsNullOrEmpty(item.Status))
+                            {
+                                @:Not Submitted  
+                            }
+
+                            else if (item.IsSubmit == true && string.IsNullOrEmpty(item.Status))
+                            {
+                                @:Pending
+                            }
+                            else if (item.Status.ToLower().Trim() == "disapproved")
+                            {
+                                @:Disapproved
+                            }
+                            else if (item.Status.ToLower().Trim() == "approved")
+                            {
+                            
+                                @:Approved
+                             }
+
+                        </td>
+                        <td>
+                            @if(item.Status!=null&& item.Status=="approved")
+                    {
+
+                            @Html.ActionLink("Print", "printTimesheet", "Employee", new { month = item.Month, year = item.Year, timM_ID = @item.TimeSheetMasterID }, new { @class = "btn btn-primary", onclick = "openPrintPopup(this,event)" })
+                        }
+                        </td>
+
+                    </tr>
+                
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

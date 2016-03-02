@@ -1,0 +1,17 @@
+﻿@{
+    ViewBag.Title = "ManageStaff";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        hr.loadManageStaff();
+    });
+</script>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+@{Html.RenderPartial("Notification");}
+<div id="main-content" class="row-fluid">
+</div>
+
+

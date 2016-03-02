@@ -1,0 +1,97 @@
+﻿@model IEnumerable<HR_System.Models.EmployeeLeaveModified>
+@using DAO
+@{
+    Employee _Employee = ViewBag.Employee as Employee;
+  
+}
+
+
+
+
+@{
+    string returnUrl = ViewBag.returnUrl != null ? ViewBag.returnUrl.ToString() : "";
+    Html.RenderPartial("EmployeeDetail", _Employee);
+}
+<div style="text-align: center">
+    <h4>Leave Balance for the Year  @DateTime.Now.Year</h4>
+</div>
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        <span style="width: 200px; display: inline-block;"><i class="icon-table"></i>Leave Balance</span>
+        <div class="toolbar">
+            <a style="margin-right:20px" href="@returnUrl">Back</a>
+
+        </div>
+
+    </div>
+    <div class="mws-panel-body no-padding">
+        <table class="mws-datatable-fn mws-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>Type
+                    </th>
+                    <th>Total (Prev. Balance + Current Assigned)
+                    </th>
+                    <th>Balance
+                    </th>
+
+                    <th></th>
+
+
+
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var item in Model)
+                {
+                   
+                    <tr>
+
+                        <td>
+                            @item.LeaveTypeName
+                        </td>
+                        <td>
+                            @if (item.TotalLeaves % 2 == 0)
+                            {
+                                @item.TotalLeaves.ToString()
+
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(modelItem => item.TotalLeaves)
+                            }
+                        </td>
+                        <td>
+                            @item.BalanceLeaves
+                        </td>
+
+
+                        <td>
+                            <a class="btn btn-info" onclick="hr.showLeavesDetail('@item.EmpId', '@item.LeaveTypeID',false);">Show Detail</a>
+                        </td>
+
+
+                    </tr>
+                     
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style type="text/css">
+    .modal
+    {
+        position: fixed;
+        top: 50%;
+        left: 33%;
+        z-index: 1050;
+        width: 1000px !important;
+    }
+</style>
+<div id="leaveDetail">
+</div>

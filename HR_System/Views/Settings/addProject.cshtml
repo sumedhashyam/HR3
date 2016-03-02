@@ -1,0 +1,123 @@
+﻿@model DAO.Project
+@{
+    ViewBag.Title = "addProject";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+}
+@{
+ 
+    Guid CurrentCountryID = new Guid(ViewBag.CurrentCountryID.ToString());
+    bool isSuperadmin = Convert.ToBoolean(ViewBag.isSuperadmin);
+
+}
+<script>
+    $(document).ready(function () {
+
+        $(".mws-datepicker").datepicker({
+            //showOtherMonths: true
+        });
+        changeDateFormat();
+    });
+</script>
+<script src="@Url.Content("~/Scripts/jquery-1.7.1.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+@{Html.RenderPartial("Notification");}
+<div class="mws-panel grid_8" style="text-align: right; box-shadow: none;">
+    @* @Html.ActionLink("Back", "Project", "Settings", null, new { @class = "btn btn-primary" })*@
+</div>
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        <span style="width: 200px; display: inline-block;"><i class="icon-ok"></i>Add New Project</span>
+        <div class="toolbar">
+            @Html.ActionLink("Back", "Project", "Settings", null, new { })
+        </div>
+    </div>
+    <div class="mws-panel-body no-padding">
+
+        @using (Html.BeginForm("addProject", "Settings", FormMethod.Post, new { @class = "mws-form" }))
+        {
+            @Html.ValidationSummary(true)
+
+          
+            <div id="mws-validate-error" class="mws-form-message error" style="display: none;"></div>
+            <div class="mws-form-inline">
+
+
+
+                @*        updated Block *@
+                @if (isSuperadmin)
+                {
+                    <div class="mws-form-row">
+                        <label class="mws-form-label">Country Name</label>
+                        <div class="mws-form-item">
+
+                            @{ List<SelectListItem> CountryList = (List<SelectListItem>)ViewData["Country"];  
+                            }
+                            @Html.DropDownListFor(model => model.CountryID, CountryList, new { style = "width: 147px;", @class = "required large" })
+                            @Html.ValidationMessageFor(model => model.CountryID)
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <input type="hidden" value="@CurrentCountryID" name="CountryID" />
+                }
+
+                <div class="mws-form-row">
+                    <label class="mws-form-label">Project Name</label>
+                    <div class="mws-form-item">
+                        @Html.TextBoxFor(model => model.ProjectName, new { @class = "required large" })
+                        @Html.ValidationMessageFor(model => model.ProjectName)
+                    </div>
+                </div>
+                <div class="mws-form-row">
+                    <label class="mws-form-label">Project Number</label>
+                    <div class="mws-form-item">
+                        @Html.TextBoxFor(model => model.ProjectNumber, new { @class = "required large" })
+                        @Html.ValidationMessageFor(model => model.ProjectNumber)
+                    </div>
+                </div>
+
+
+                <div class="mws-form-row">
+                    <label class="mws-form-label">Project Name in Arabic</label>
+                    <div class="mws-form-item">
+                        @Html.TextBoxFor(model => model.ProjectNameAr, new { @class = "large" })
+                        @Html.ValidationMessageFor(model => model.ProjectNameAr)
+                    </div>
+                </div>
+
+                <div class="mws-form-row">
+                    <label class="mws-form-label">From Date</label>
+                    <div class="mws-form-item">
+                        @Html.TextBoxFor(model => model.FromDate, new { @class = "mws-datepicker datepicker required large" })
+                        @Html.ValidationMessageFor(model => model.FromDate)
+                    </div>
+                </div>
+
+                <div class="mws-form-row">
+                    <label class="mws-form-label">End Date</label>
+                    <div class="mws-form-item">
+                        @Html.TextBoxFor(model => model.EndDate, new { @class = "mws-datepicker datepicker required large" })
+                        @Html.ValidationMessageFor(model => model.EndDate)
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+            </div>
+            <div class="mws-button-row">
+                <input type="submit" class="btn btn-info" value="Save Changes">
+                @Html.ActionLink("Cancel", "Project", "Settings", null, new { @class = "btn btn-danger" })
+            </div>
+        }
+
+    </div>
+</div>

@@ -1,0 +1,136 @@
+﻿@model HR_System.Models.EmpPersonalDetailModel
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+
+<div class="mws-panel grid_12" style="text-align: right; box-shadow: none;">
+    @Html.ActionLink("Back", "Employee", "Home", null, new { @class = "btn btn-primary" })
+</div>
+<div class="row-fluid">
+    @using (Html.BeginForm("", "", FormMethod.Post, new { id = "" }))
+    {
+                    
+        @Html.HiddenFor(a => a.EmployeeID)
+                    
+        <input type="hidden" id="id" name="id" value="@ViewBag.EmployeeID" />
+        <div class="span12 widget">
+            <div class="widget-content form-container">
+                <div class="wizard-nav wizard-nav-horizontal">
+                    <ul>
+                        <li data-wzd-id="wzd_180ppj0k51dh91h061c4v_0" class="current"><span><i class="icon-book"></i>Personal Information</span></li>
+                        <li data-wzd-id="wzd_180ppj0k51dh91h061c4v_1" onclick="hr.loadJobinfoTab('@Model.EmployeeID')"><span><i class="icon-list2"></i>Job Information</span></li>
+                        <li data-wzd-id="wzd_180ppj0k51dh91h061c4v_2" onclick="hr.loadEmpLeaveinfoTab()"><span><i class="icon-snowy-2"></i>Leave Type</span></li>
+
+                    </ul>
+                    <button type="button" class="btn responsive-prev-btn" disabled="disabled"><i class="icon-caret-left"></i></button>
+                    <button type="button" class="btn responsive-next-btn"><i class="icon-caret-right"></i></button>
+                </div>
+                <div id="wizard-demo-2" class="form-horizontal wizard-form wizard-form-horizontal" data-forward-only="false">
+
+
+                    @Html.ValidationSummary(true)
+
+                    <fieldset class="wizard-step">
+                        <div class="control-group">
+                            <div class="control-group">
+                                <label class="control-label">Name Ar*</label>
+
+                                @Html.TextBoxFor(model => model.FirstNameAr, new { @class = "required", @placeHolder = "FirstNameAr", @readonly = true })
+                                @Html.ValidationMessageFor(model => model.FirstNameAr)
+
+
+                                @Html.TextBoxFor(model => model.SecondNameAr, new { @placeHolder = "SecondNameAr", @readonly = true })
+                                @Html.ValidationMessageFor(model => model.SecondNameAr)
+
+
+                                @Html.TextBoxFor(model => model.ThirdNameAr, new { @placeHolder = "ThirdNameAr", @readonly = true })
+                                @Html.ValidationMessageFor(model => model.ThirdNameAr)
+
+
+                                @Html.TextBoxFor(model => model.LastNameAr, new { @class = "required", @placeHolder = "LastNameAr", @readonly = true })
+                                @Html.ValidationMessageFor(model => model.LastNameAr)
+
+
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Name en*</label>
+
+                                @Html.TextBoxFor(model => model.FirstNameEn, new { @class = "required", @placeHolder = "FirstNameEn", @readonly = true })
+                                @Html.ValidationMessageFor(model => model.FirstNameEn)
+
+
+                                @Html.TextBoxFor(model => model.SecondNameEn, new { @placeHolder = "SecondNameEn", @readonly = true })
+                                @Html.ValidationMessageFor(model => model.SecondNameEn)
+
+
+                                @Html.TextBoxFor(model => model.ThirdNameEn, new { @placeHolder = "ThirdNameEn", @readonly = true })
+                                @Html.ValidationMessageFor(model => model.ThirdNameEn)
+
+
+                                @Html.TextBoxFor(model => model.LastNameEn, new { @class = "required", @placeHolder = "LastNameEn", @readonly = true })
+                                @Html.ValidationMessageFor(model => model.LastNameEn)
+
+
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Email*</label>
+                                <div class="controls">
+                                    @Html.TextBoxFor(model => model.Email, new { @readonly = true })
+                                    @Html.ValidationMessageFor(model => model.Email)
+                                    @Html.HiddenFor(model => model.Email)
+                                </div>
+                            </div>
+                            <div class="control-group" style="display: none;">
+                                <label class="control-label">Password*</label>
+                                <div class="controls">
+                                    <input type="text" name="Password" value="13245" />
+
+                                </div>
+                            </div>
+                            <div class="control-group" style="display: none;">
+                                <label class="control-label">Confirm Password*</label>
+                                <div class="controls">
+                                    <input type="text" name="ConfirmPassword" value="13245" />
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Birth Date*<span class="required">*</span></label>
+                                <div class="controls">
+                                    @Html.TextBoxFor(model => model.DateOfBirth, new { @class = "datepicker required", @readonly = true })
+                                    @Html.ValidationMessageFor(model => model.DateOfBirth)
+
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label">Marital Status<span class="required">*</span></label>
+                                <div class="controls">
+                                    @Html.DropDownListFor(model => model.MaritalStatus, ViewBag._MaritalStatus as IEnumerable<SelectListItem>, new { @class = "required", @readonly = true, @style = "width: 161px;" })
+                                    @Html.ValidationMessageFor(model => model.MaritalStatus)
+
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+
+
+
+                    @*  <div class="form-actions btn-toolbar">
+                        <button type="button" class="btn" disabled="disabled">Prev</button>
+                        <input type="submit" class="btn" value="Next" onclick="return hr.UpdateEmployee()" />
+                        <button type="button" class="btn btn-primary pull-right" name="wizard-submit" style="display: none;">Submit</button>
+                    </div>*@
+
+                </div>
+            </div>
+
+        </div>
+
+        
+    }
+</div>
+
+
+
+
+

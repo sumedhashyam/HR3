@@ -1,0 +1,131 @@
+﻿@model IEnumerable<DAO.Employee>
+@using DAL;
+@using DAO;
+
+@{
+    Guid? currentEmployeeID = HR_System.Models.MVCUtility.getCurrentEmployeeID();
+}
+<script type="text/javascript">
+    $(".mws-datatable-fn").dataTable();
+</script>
+<h2>Employee Files</h2>
+
+
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        <span style="width: 200px; display: inline-block;"><i class="icon-table"></i>Employee Files</span>
+
+
+        <div class="toolbar">
+
+            <a href="javascript:"><i class="icon-refresh" onclick="hr.loadEmployeeFiles();"></i></a>
+
+
+        </div>
+    </div>
+    <div class="mws-panel-body no-padding">
+        <table class="mws-datatable-fn hide-c mws-table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Name En
+                    </th>
+                    <th>Office
+                    </th>
+
+                    <th>Job Title
+                    </th>
+                    <th>Hire Date
+                    </th>
+
+                    @*  <th>Department
+                    </th>*@
+                    <th>Leaves
+                    </th>
+                    <th>Timesheets
+                    </th>
+                    <th>Projects
+                    </th>
+                    <th>Projects
+                         Timesheet
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody role="alert" aria-live="polite" aria-relevant="all">
+                @{
+                    string returnUrl = Url.Content("~/Employee/EmployeeFiles");
+                }
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td></td>
+                        <td>
+                            @{
+                    string englishName = "";
+                    HR_System.Models.Utils.Try(() => englishName = string.Format("{0} {1} {2} {3}", item.FirstNameEn, item.SecondNameEn, item.ThirdNameEn, item.LastNameEn));
+                            }
+                            @englishName
+                        </td>
+                        <td>
+                            @if (item.EmployeeLocation != null)
+                            {                      
+                                @item.EmployeeLocation.LocationName
+                            }
+                        </td>
+                        <td>
+                            @if (item.JobType != null)
+                            {                      
+                                @item.JobType.JobTypeName
+                            }
+                        </td>
+                        <td>
+                            @if (item.HireDate.HasValue)
+                            {
+                                @item.HireDate.Value.ToString("dd-MMM-yyyy")
+                            }
+                        </td>
+                        @* <td>
+                            @item.Department.DepartmentNameEn
+                        </td>*@
+
+                        <td>
+
+                            @Html.ActionLink("Leave", "LeaveSummary", new { employeeID = item.EmployeeID, returnUrl = returnUrl }, new { @class = "btn btn-primary" })
+
+                        </td>
+                        <td>
+                            @if (currentEmployeeID == item.EmployeeID)
+                            {
+                                <a title="do not have permission" class="btn btn-info" disabled="disabled">Timesheet</a>
+                            }
+                            else
+                            {
+                                @Html.ActionLink("Timesheet", "EmployeetimeSheet", new { id = @item.EmployeeID, returnUrl = returnUrl }, new { @class = "btn btn-info" })
+                            }
+                        </td>
+                        <td>
+                            @Html.ActionLink("Projects", "EmployeeProjects", new { id = @item.EmployeeID, returnUrl = returnUrl }, new { @class = "btn btn-warning" })
+
+                        </td>
+                        <td>
+                            @if (currentEmployeeID == item.EmployeeID)
+                            {
+                                <a title="do not have permission" class="btn btn-success" disabled="disabled">Timesheet (P)</a>
+                            }
+                            else
+                            {
+                                @Html.ActionLink("Timesheet (P)", "timeSheetWithProjects", new { id = @item.EmployeeID, returnUrl = returnUrl }, new { @class = "btn btn-success" })
+
+                            }
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+
+
+    </div>
+</div>

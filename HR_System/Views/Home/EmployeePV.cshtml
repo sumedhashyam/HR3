@@ -1,0 +1,125 @@
+﻿@model IEnumerable<DAO.Employee>
+@using HR_System.Models
+<script>
+    $(".mws-datatable-fn").dataTable({
+        sPaginationType: "full_numbers"
+    });
+</script>
+
+@{
+    Guid? currentEmployeeID = MVCUtility.getCurrentEmployeeID();
+}
+
+<div class="mws-panel grid_8" style="text-align: right; box-shadow: none;">
+    @*@Html.ActionLink("Add New Employee", "AddEmployee", "Home", null, new { @class = "btn btn-primary" })*@
+</div>
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        <span style="width: 200px; display: inline-block;"><i class="icon-table"></i>Employee</span>
+        <div class="toolbar">
+            <a href="/Home/AddEmployee" style="margin-right: 19px;"><i class='icon-plus'></i>Add New Employee</a>
+            <a href="javascript:;"><i class="icon-refresh" onclick="hr.loadEmployeePV();"></i></a>
+        </div>
+
+    </div>
+    <div class="mws-panel-body no-padding">
+        <table class="mws-datatable-fn mws-table">
+            <thead>
+                <tr role="row">
+
+                    @* <th class="sorting" role="columnheader" tabindex="0" aria-controls="demo-dtable-01" rowspan="1" colspan="1" style="width: 226px;" aria-label="Country: activate to sort column ascending">Employee Name Ar</th>*@
+                    <th>Employee Name En</th>
+                    <th>Hire Date</th>
+                    <th>Department</th>
+                    @* <th class="sorting_desc" role="columnheader" tabindex="0" aria-controls="demo-dtable-01" rowspan="1" colspan="1" style="width: 148px;" aria-sort="descending" aria-label="Death rate per 1,000 people: activate to sort column ascending">Employee Status</th>*@
+                    <th>Location</th>
+                    @* <th>Job Title</th>*@
+                    @*  <th>Projects</th>*@
+                    <th>Detail</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+
+                </tr>
+            </thead>
+            @using DAO;
+            <tbody role="alert" aria-live="polite" aria-relevant="all">
+
+
+                @foreach (var item in Model)
+                {
+                       
+                    <tr>
+                        @*<td>
+                            @item.FirstNameAr @item.SecondNameAr @item.ThirdNameAr @item.LastNameAr
+                        </td>*@
+                        <td>
+                            @item.FirstNameEn @item.SecondNameEn @item.ThirdNameEn @item.LastNameEn
+                        </td>
+                        <td>@if (item.HireDate != null)
+                            {
+                            @item.HireDate.Value.ToShortDateString()
+                            }
+                        </td>
+                        <td>@if (item.DepartmentID != null)
+                            {
+                            @item.Department.DepartmentNameEn
+                            }
+                        </td>
+                        <td>
+                            @if (item.OfficeLocationID != null && item.OfficeLocationID.ToString()!="")
+                            {
+                               @item.EmployeeLocation.LocationName
+                            }
+                        </td>
+                        @*<td>@item.JobTitle</td>*@
+                        @*  <td>
+                            @{var status = "Unmarried";}
+                            @if (Convert.ToBoolean(item.EmployeeStatus))
+                            {
+                                status = "Married";
+
+                            }
+                            @status
+
+                        </td>*@
+
+                        @* <td class=" sorting_1" align="center">
+                            @Html.ActionLink(" ", "EmployeeHolidays", "Home", new { id = item.EmployeeID }, new { @class = "btn btn-success btn-small icon-table" })
+                        </td>*@
+                        @*<td class=" sorting_1" align="center">
+                            @Html.ActionLink(" ", "EmployeeProjects", "Home", new { id = item.EmployeeID }, new { @class = "btn btn-success btn-small icon-table" })
+                        </td>*@
+                        <td class=" sorting_1" align="center">
+                            @Html.ActionLink(" ", "EmployeeDetail", "Home", new { id = item.EmployeeID }, new { @class = "btn btn-primary btn-small icon-table" })
+                        </td>
+                        <td class=" sorting_1" align="center">
+                            @if (currentEmployeeID == item.EmployeeID)
+                            {
+                                <a class="btn btn-primary btn-small icon-edit"  title="can not edit" disabled="disabled"></a>
+                            }
+                            else
+                            {
+                                @Html.ActionLink(" ", "EditEmployee", "Home", new { id = item.EmployeeID }, new { @class = "btn btn-primary btn-small icon-edit" })
+                            }
+                        </td>
+
+                        <td class=" sorting_1" align="center">
+                            @if (currentEmployeeID == item.EmployeeID)
+                            {
+                                <a class="btn btn-danger btn-small icon-trash" title="can not delete" disabled="disabled"></a>
+                            }
+                            else
+                            {
+                                @Html.ActionLink(" ", "DeleteEmployee", "Home", new { id = item.EmployeeID, userid = item.UserID }, new { @class = "btn btn-danger btn-small icon-trash", onclick = "return confirm('Are you sure want to delete this record ?')" })
+                            }
+                        </td>
+
+                    </tr>
+                }
+
+
+            </tbody>
+        </table>
+    </div>
+
+</div>

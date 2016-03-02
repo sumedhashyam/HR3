@@ -1,0 +1,461 @@
+﻿@model DAO.TimeSheet
+@using DAO;
+@using DAL;
+
+@using HR_System.Models;
+@{
+    ViewBag.Title = "editTimeSheet";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        makeDecimal();
+    });
+</script>
+
+
+@{
+   
+  
+    List<Project> list = (List<Project>)ViewData["lstProjects"];
+    List<TimeSheet> listTime = (List<TimeSheet>)ViewData["listTime"];
+    List<Holiday> listHoliday = (List<Holiday>)ViewData["HolidayList"];
+    List<EmployeeLeaveRequest> listEmployeeleaveReq = (List<EmployeeLeaveRequest>)ViewData["listLeave"];
+
+    string month = ViewData["Month"].ToString();
+
+    TimeSheetMaster timeSheetM = (TimeSheetMaster)ViewData["Data"];
+    bool check = false;
+    Guid eid = (Guid)ViewData["_EmpID"];
+    //Guid empId = (Guid)ViewData["empID"];
+    Guid emp_ID = (Guid)ViewData["empIDByLeave"];
+
+    string date = "";
+    int _year = Convert.ToInt32(ViewData["year"]);
+    int _month = DateTime.ParseExact(month, "MMM", System.Globalization.CultureInfo.CurrentCulture).Month;
+    int days = DateTime.DaysInMonth(_year, _month);
+    //DateTime currentDate = new DateTime(_year, _month, 1);
+    //list=list
+    string timesheetOwner = "";
+    decimal? TotalHours = null;
+    try
+    {
+        timesheetOwner = string.Format("{0} {1} {2} {3}", timeSheetM.Employee.FirstNameEn, timeSheetM.Employee.SecondNameEn, timeSheetM.Employee.ThirdNameEn, timeSheetM.Employee.LastNameEn);
+        TotalHours = timeSheetM.TimeSheets.Sum(a => a.Hours);
+    }
+    catch (Exception ee)
+    {
+    }
+
+    //This section Get Weekend working Days for above Employee
+    clsWeekend _objclsWeekend = new clsWeekend();
+    Guid supervisorID = new Guid();
+    supervisorID = MVCUtility.getSupervisorIDByEmployeeID(timeSheetM.Employee.EmployeeID.ToString());
+    List<WeekendWorkingDay> weekWorkDayli = _objclsWeekend.getAllEmployeeWeekendworkingDay(supervisorID);
+    List<WeekendWorkingDay> employeeweekWorkDayli = new List<WeekendWorkingDay>();
+    if (weekWorkDayli != null && weekWorkDayli.Count > 0)
+    {
+        employeeweekWorkDayli = weekWorkDayli.Where(a => a.EmployeeID == timeSheetM.Employee.EmployeeID).ToList();
+    }
+    //END
+}
+@{Html.RenderPartial("Notification");}
+<link href="@Url.Content("~/Content/timesheet.css")" rel="stylesheet" />
+
+@{dbHRSystemEntities db = new dbHRSystemEntities();
+  var Wkditem = db.Weekends.Where(a => a.EmployeeID == eid).ToList();
+  string wkdDay = "";
+  foreach (var wkd in Wkditem)
+  {
+
+      wkdDay = wkdDay + "" + wkd.WeekEndName + ",";
+
+  }
+  string status = ViewBag.status != null ? ViewBag.status.ToString() : "";
+  bool canApproveDisapprove = ViewBag.canApproveDisapprove != null ? Convert.ToBoolean(ViewBag.canApproveDisapprove.ToString()) : false;
+
+
+  string returnUrl = ViewBag.returnUrl != null ? ViewBag.returnUrl.ToString() : "";
+  if (!string.IsNullOrEmpty(returnUrl))
+  {
+      // Use the return url
+  }
+  else
+  {
+      if (string.IsNullOrEmpty(returnUrl) && Request.UrlReferrer != null)
+      {
+          returnUrl = Request.UrlReferrer.ToString();
+      }
+
+      if (string.IsNullOrEmpty(returnUrl))
+      {
+          returnUrl = "~/Employee/timeSheet";
+      }
+      // If user has come on this page after creating timesheet the redirect him to timesheet grid
+      if (returnUrl.Contains("Employee/timesheetMaster"))
+      {
+          returnUrl = Url.Content("~/Employee/timeSheet");
+      }
+
+  }
+}
+
+<div class="mws-panel grid_8" style="text-align: right; box-shadow: none;">
+    <h2 class="h2_hed">Time Sheet Details</h2>
+
+    <span class="span_head" style="text-align: center">
+        <h2 style="margin-top: 0px;">@timesheetOwner</h2>
+        <label>@month -  @_year</label>
+        @if (TotalHours.HasValue)
+        {
+        
+            <h4>Total Working Hours @TotalHours</h4>
+  
+        }
+    </span>
+
+    @* @if (canApproveDisapprove)
+    {
+        @Html.ActionLink("Back", "EmployeetimeSheet", "Employee", null, new { @class = "btn btn-primary" })
+    }
+    else
+    {
+        @Html.ActionLink("Back", "timeSheet", "Employee", null, new { @class = "btn btn-primary" })
+    }*@
+
+    @if (!string.IsNullOrEmpty(status) && status.ToLower().Trim() == "approved")
+    {                           
+        @Html.ActionLink("Print", "printTimesheet", "Employee", new { month = @timeSheetM.Month, year = @timeSheetM.Year, timM_ID = @timeSheetM.TimeSheetMasterID }, new { @class = "btn btn-info", onclick = "openPrintPopup(this, event)" })
+    }
+    <a href="@Url.Content(returnUrl)" class="btn btn-primary">Back</a>
+
+
+</div>
+<div class="grid_8">
+
+    <div class="grid_4">
+
+        @if (ViewBag.message != null)
+        {
+            <h4>@ViewBag.message</h4>
+        }
+    </div>
+
+
+    <div class="grid_2">
+        &nbsp;
+      <div style="display: none">
+          @if (status == "pending" && canApproveDisapprove)
+          {
+              @:Take Action
+
+              @Html.ActionLink("Approve", "ApproveTimeSheet", new { id = timeSheetM.TimeSheetMasterID, approve = true }, new { @class = "btn btn-info", onclick = "return confirm('Are you sure you want to approve it ?')" });
+              @:  &nbsp;  &nbsp;                                                                                                                                                                                                           
+              @Html.ActionLink("Disapprove", "ApproveTimeSheet", new { id = timeSheetM.TimeSheetMasterID, approve = false }, new { @class = "btn btn-danger", onclick = "return confirm('Are you sure you want to disapprove it ?')" });
+
+          }
+          else if (status == "disapproved")
+          {
+@* 
+            <a class="btn btn-info">Edit & Resubmit</a>*@
+          }
+      </div>
+    </div>
+    <div class="grid_2" style="text-align: right">
+        <b>Status</b>
+        @switch (status)
+        {
+
+            case "notsubmitted":
+            @: <a class="btn btn-primary">Not Submitted</a>
+                            break;
+            case "pending":
+            @: <a class="btn btn-primary">Pending</a>
+                            break;
+            case "approved":
+            @: <a class="btn btn-success">Approved</a>
+                            break;
+            case "disapproved":
+            @: <a class="btn btn-danger">Disapproved</a>
+                            break;
+            default:
+            @:<a class="btn btn-danger">Status Not Found</a>
+                            break;
+
+        }
+    </div>
+</div>
+<div class="mws-panel grid_8">
+
+    <table class="mws-datatable-fn hide-c mws-table table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Projects
+                </th>
+                @for (int i = 1; i <= days; i++)
+                {
+                          
+                    <th>@i</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @if (list.Count() > 0)
+            {
+                @Html.Hidden("dyM", month, new { @id = "hdnmonth" })
+                @Html.Hidden("dyY", _year, new { @id = "hdnyear" })
+                @Html.Hidden("dy", days, new { @id = "hdn" })
+                foreach (Project P in list)
+                {
+                    if (P != null)
+                    {
+                <tr>
+                    <td></td>
+                    <td>@P.ProjectName (@P.ProjectNumber)</td>
+                    @for (int i = 1; i <= days; i++)
+                    {
+                        TimeSheet timeshee = new TimeSheet();
+
+                        DateTime currentDate = new DateTime(_year, _month, i);
+                        EmployeeLeaveRequest leaveDay = null;
+                        Holiday _hoilday = null;
+                        bool isWeekend = false;
+                        leaveDay = listEmployeeleaveReq.Where(a => currentDate >= a.FromDate && currentDate <= a.ToDate).FirstOrDefault();
+                        _hoilday = listHoliday.Where(a => a.HolidayDate == currentDate).FirstOrDefault();
+                        isWeekend = wkdDay.Contains(Convert.ToDateTime(currentDate).DayOfWeek.ToString());
+                        if (listTime != null)
+                        {
+                            timeshee = listTime.Where(a => a.Date == currentDate && a.ProjectID == P.ProjectId).FirstOrDefault();
+                        }
+                        if (employeeweekWorkDayli != null && employeeweekWorkDayli.Count > 0)
+                        {
+                            WeekendWorkingDay isExists = employeeweekWorkDayli.Where(a => a.WeekendDate == currentDate && a.EmployeeID == timeSheetM.Employee.EmployeeID && a.SupervisorID == supervisorID).FirstOrDefault();
+                            if (isWeekend)
+                            {
+                                isWeekend = isExists != null ? false : true;
+                            }
+                        }
+@*if (status == "notsubmitted")
+                        {
+                        }
+                        else
+                        {
+
+                            if (timeshee != null && timeshee.isOff == 1)
+                            {
+                        <input type="text" value="W" style="width: 25px; background-color: lightseagreen; color: white" disabled="disabled" /></td>  
+                            }
+                            else if (timeshee != null && timeshee.isOff == 2)
+                            {
+                        <td>
+                            <input type="text" value="H" style="width: 25px; background-color: yellow" disabled="disabled" /></td> 
+                            }
+                            else if (leaveDay != null)
+                            {            
+                        <td><span class="leave" style="background-color:@leaveDay.LeaveType.LeaveTypeColor">@leaveDay.LeaveType.LeaveTypeCode</span></td>      
+                            }
+                        }*@
+
+                        if (isWeekend)
+                        {
+                        <td>
+                            
+                            <input type="text" value="" style="width: 28px; background-color: grey; color: white" disabled="disabled" />
+                            
+                        </td>
+                        }
+                        else if (_hoilday != null)
+                        { 
+                        <td>
+                            <input type="text" value="H" style="width: 28px; background-color: white" disabled="disabled" /></td>
+                        }
+                        else if (leaveDay != null)
+                        {
+                            if (leaveDay.HalfDay != null && leaveDay.HalfDay.Value == true)
+                            {
+                                if (timeshee != null)
+                                {
+                        <td>
+                            <input type="text" style="width: 28px;padding-left: 3px;"
+                             class="decimal txt-@i" maxlength="3"  name="txtHR_'@i'" onblur="hr.saveTimeSheetHalf('@month','@_year','@i','@timeSheetM.TimeSheetMasterID','@P.ProjectId',this,'@timeshee.TimeSheetID');" value="@timeshee.Hours" />
+                        </td>
+                                }
+                                else
+                                {
+                        <td>
+                            <input type="text" style="width: 28px;padding-left: 3px;" 
+                                class="decimal txt-@i" maxlength="3" name="txtHR_'@i'" onblur="hr.saveTimeSheetHalf('@month','@_year','@i','@timeSheetM.TimeSheetMasterID','@P.ProjectId',this);" /></td>
+                                }
+                            }
+                            else
+                            {  
+                        <td><span class="leave" style="background-color:@leaveDay.LeaveType.LeaveTypeColor">@leaveDay.LeaveType.LeaveTypeCode</span></td>      
+                            }
+                        }
+
+                        else
+                        {
+                            if (timeshee != null)
+                            {
+                        <td>
+                            <input type="text" style="width: 28px;padding-left: 3px;"
+                             class="decimal txt-@i" maxlength="3"  name="txtHR_'@i'" onblur="hr.saveTimeSheet('@month','@_year','@i','@timeSheetM.TimeSheetMasterID','@P.ProjectId',this,'@timeshee.TimeSheetID');" value="@timeshee.Hours" />
+                        </td>
+                            }
+                            else
+                            {
+                        <td>
+                            <input type="text" style="width: 28px;padding-left: 3px;" 
+                                class="decimal txt-@i" maxlength="3" name="txtHR_'@i'" onblur="hr.saveTimeSheet('@month','@_year','@i','@timeSheetM.TimeSheetMasterID','@P.ProjectId',this);" /></td>
+                            }
+                        }
+
+                    }
+
+
+
+
+                </tr> }
+                }
+            }
+            else
+            {
+                foreach (Project P in list)
+                {
+                   
+                <tr>
+                    <td></td>
+                    <td>@P.ProjectName (@P.ProjectNumber)</td>
+
+                    @for (int i = 1; i <= 31; i++)
+                    {
+                        TimeSheet timeshee = new TimeSheet();
+
+                        DateTime currentDate = new DateTime(_year, _month, i);
+                        EmployeeLeaveRequest leaveDay = null;
+                        Holiday _hoilday = null;
+                        bool isWeekend = false;
+                        leaveDay = listEmployeeleaveReq.Where(a => currentDate >= a.FromDate && currentDate <= a.ToDate).FirstOrDefault();
+                        _hoilday = listHoliday.Where(a => a.HolidayDate == currentDate).FirstOrDefault();
+                        isWeekend = wkdDay.Contains(Convert.ToDateTime(currentDate).DayOfWeek.ToString());
+                        if (listTime != null)
+                        {
+                            timeshee = listTime.Where(a => a.Date == currentDate && a.ProjectID == P.ProjectId).FirstOrDefault();
+                        }
+                        if (employeeweekWorkDayli != null && employeeweekWorkDayli.Count > 0)
+                            {
+                                WeekendWorkingDay isExists = employeeweekWorkDayli.Where(a => a.WeekendDate == currentDate && a.EmployeeID == timeSheetM.Employee.EmployeeID && a.SupervisorID == supervisorID).FirstOrDefault();
+
+                                if (isWeekend)
+                                {isWeekend = isExists != null ? false : true;
+                                }
+                        }
+                        
+                        if (isWeekend)
+                        {
+                        <td>
+                           
+                            <input type="text" value="" style="width: 28px; background-color: grey; color: white" disabled="disabled" />
+
+                        </td>
+                        
+                    }
+                        else if (_hoilday != null)
+                        { 
+                        <td>
+                            <input type="text" value="H" style="width: 28px; background-color: white" disabled="disabled" /></td>
+                        }
+                        else if (leaveDay != null)
+                        {            
+                        <td><span class="leave" style="background-color:@leaveDay.LeaveType.LeaveTypeColor">@leaveDay.LeaveType.LeaveTypeCode</span></td>      
+                        }
+
+                        else
+                        {
+                            if (timeshee != null)
+                            {
+                        <td>
+                            <input type="text" style="width: 28px;padding-left: 3px;"
+                             class="decimal txt-@i" maxlength="3"  name="txtHR_'@i'" onblur="hr.saveTimeSheet('@month','@_year','@i','@timeSheetM.TimeSheetMasterID','@P.ProjectId',this,'@timeshee.TimeSheetID');" value="@timeshee.Hours" />
+                        </td>
+                            }
+                            else
+                            {
+                        <td>
+                            <input type="text" style="width: 28px;padding-left: 3px;" 
+                                class="decimal txt-@i" maxlength="3" name="txtHR_'@i'" onblur="hr.saveTimeSheet('@month','@_year','@i','@timeSheetM.TimeSheetMasterID','@P.ProjectId',this);" /></td>
+                            }
+                        }
+
+                    }
+
+                </tr> 
+                
+                }
+            }
+        </tbody>
+    </table>
+
+</div>
+
+
+@{var lt = db.LeaveTypes.ToList();
+  
+    <div class="grid_4" style="margin-bottom: 48px; clear: both;">
+        <div style="display: block; margin-bottom: 5px;">
+            <input type="text" value="L" style="width: 50px; color: black;background-color:yellow" disabled="disabled" />
+            <span>Leave Day</span>
+        </div>
+        <div style="display: block; margin-bottom: 5px;">
+            <input type="text" value="" style="width: 50px; color: black; background: grey;" disabled="disabled" />
+            <span>WeekEnd</span>
+        </div>
+
+        @foreach (var ltype in lt)
+        {
+            <div style="display: block; margin-bottom: 5px;">
+                <input type="text" value="@ltype.LeaveTypeCode" style="width: 50px;font-size: 10px;color:black;background: @ltype.LeaveTypeColor;" disabled="disabled"/>
+                <span>@ltype.LeaveTypeName</span>
+            </div>
+        }
+
+             <div style="display: block; margin-bottom: 5px;">
+            <input type="text" value="H"  style="width: 50px;text-align:center; color: black" disabled="disabled" />
+            <span>Holiday</span>
+        </div>
+
+    </div>
+}
+
+
+@if (status == "notsubmitted" || status == "disapproved")
+{
+    <div class="grid_4" style="text-align: right;">
+        <input type="button" class="btn btn-success" value="Submit" id="btnSubmit" onclick="return hr.submitTimesheet();" />
+        @*  @Html.ActionLink("cancel", "timeSheet", "Employee", null, new { @class = "btn btn-danger" })*@
+        <a href="@Url.Content(returnUrl)" class="btn btn-danger">Cancel</a>
+    </div>
+}
+
+
+@{
+    bool disable = false;
+    if (canApproveDisapprove && status == "approved")
+    {
+        disable = true;
+    }
+    else
+    {
+        if (status == "pending" || status == "approved")
+        {
+            disable = true;
+        }
+    }
+}
+@if (disable)
+{
+    <script type="text/javascript">
+        $('input[type=text]').attr('disabled', 'disabled');
+    </script>
+}

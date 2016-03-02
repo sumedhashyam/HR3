@@ -1,0 +1,74 @@
+﻿@model DAO.Department
+@{
+    ViewBag.Title = "addDepartment";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+}
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script>
+    $(function () {
+        addDatepicker();
+    });
+</script>
+@{Html.RenderPartial("Notification");}
+
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        <div class="toolbar">
+            @Html.ActionLink("Back", "Department", "Settings", null, new { @style = "margin-right:19px;" })
+        </div>
+        <span><i class="icon-ok"></i>Add New Department</span>
+    </div>
+    <div class="mws-panel-body no-padding">
+
+        @using (Html.BeginForm("addDepartment", "Settings", FormMethod.Post, new { @class = "mws-form" }))
+        {
+            @Html.ValidationSummary(true)
+
+          
+            <div id="mws-validate-error" class="mws-form-message error" style="display: none;"></div>
+            <div class="mws-form-inline">
+                <div class="mws-form-row">
+                    <label class="mws-form-label">Department Code</label>
+                    <div class="mws-form-item">
+                        @Html.TextBoxFor(model => model.DepartmentCode, new { @class = "required large" })
+                        @Html.ValidationMessageFor(model => model.DepartmentCode)
+                    </div>
+                </div>
+                <div class="mws-form-row">
+                    <label class="mws-form-label">Department Name Ar</label>
+                    <div class="mws-form-item">
+                        @Html.TextBoxFor(model => model.DepartmentNameAr, new { @class = "large" })
+                        @Html.ValidationMessageFor(model => model.DepartmentNameAr)
+                    </div>
+                </div>
+                <div class="mws-form-row">
+                    <label class="mws-form-label">Department Name En</label>
+                    <div class="mws-form-item">
+                        @Html.TextBoxFor(model => model.DepartmentNameEn, new { @class = "required large" })
+                        @Html.ValidationMessageFor(model => model.DepartmentNameEn)
+                    </div>
+                </div>
+                 <div class="mws-form-row">
+                    <label class="mws-form-label">Active From Date</label>
+                    <div class="mws-form-item">
+                        @Html.TextBoxFor(model => model.ActiveFromDate, new { @class = "datepicker large" })
+                        @Html.ValidationMessageFor(model => model.ActiveFromDate)
+                    </div>
+                </div>
+                <div class="mws-form-row">
+                    <label class="mws-form-label">Is Active</label>
+                    <div class="mws-form-item">
+                        <input type="checkbox" name="chkActive" />
+                    </div>
+                </div>
+            </div>
+            <div class="mws-button-row">
+                <input type="submit" class="btn btn-info" value="Save Changes">
+                @Html.ActionLink("Cancel", "Department", "Settings", null, new { @class = "btn btn-danger" })
+            </div>
+        }
+
+    </div>
+</div>

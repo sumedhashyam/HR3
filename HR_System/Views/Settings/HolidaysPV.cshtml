@@ -1,0 +1,111 @@
+﻿@model DAO.Holiday
+
+<link rel="stylesheet" type="text/css" href="@Url.Content("~/bootstrapnew/css/bootstrap.min.css")" media="screen">
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        loadCalender();
+        hr.HolidaysPV();
+    });
+
+    function loadCalender() {
+        $.ajax({
+            type: "post",
+            url: '@Url.Action("getHolidays", "Settings")',
+            success: function (d) {
+                var list = [];
+                for (var i = 0, len = d.length; i < len; i++) {
+                    var item = d[i];
+                    item.start = new Date(item.start);
+                    list.push(item);
+                }
+                makeCalender(list);
+                //callback(list);
+            },
+            error: function (e) {
+                debugger;
+            }
+        });
+    }
+    function makeCalender(list) {
+        // Full Calendar
+        if ($.fn.fullCalendar) {
+
+            var date = new Date();
+
+            var d = date.getDate();
+            var m = date.getMonth();
+            var y = date.getFullYear();
+
+
+            $("#mws-calendar").fullCalendar({
+                // dayClick: function() {
+
+                dayClick: function (date) {
+
+                    //var eventDate = date.getMonth() + "/" + date.getDate() + "/" + date.getFullYear();
+                    var eventDate = (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear().toString().substr(2, 2);
+
+                    AddHolidayPV(eventDate);
+                },
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+               editable: true,
+                eventRender: function (event, element, view) {
+                    element.bind('click', function () {
+                        var day = ($.fullCalendar.formatDate(event.start, 'dd'));
+                        var month = ($.fullCalendar.formatDate(event.start, 'MM'));
+                        var year = ($.fullCalendar.formatDate(event.start, 'yyyy'));
+                        var evdate = year + '-' + month + '-' + day;
+                        EditHolidayPV(evdate);
+                    });
+                },
+                events: list
+            });
+        }
+    }
+
+    function AddHolidayPV(eventDate) {
+       
+        doAjax(settingController + "AddHolidayPV", { date: eventDate }, function (data) {
+            $('.modal-body').html(data);
+            $('#myModal').modal();
+            $('#myModal').modal('show');
+
+        });
+    }
+    function EditHolidayPV(evdate) {
+       
+        doAjax(settingController + "EditHolidayPV", { date: evdate }, function (data) {
+            $('.modal-body').html(data);
+            $('#myModal').modal();
+            $('#myModal').modal('show');
+
+        });
+    }
+</script>
+
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        <span><i class="icon-calendar"></i>Calendar</span>
+    </div>
+    <div class="mws-panel-body no-padding no-border">
+        <div id="mws-calendar"></div>
+    </div>
+</div>
+<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">Holiday Details</h3>
+  </div>
+  <div class="modal-body">
+    
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+    
+  </div>
+</div>

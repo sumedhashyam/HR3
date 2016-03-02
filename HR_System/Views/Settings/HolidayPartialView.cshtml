@@ -1,0 +1,101 @@
+﻿@model IEnumerable<DAO.Holiday>
+<script>
+    $(".mws-datatable-fn").dataTable({
+        sPaginationType: "full_numbers"
+    });
+</script>
+@using HR_System.Models
+@{
+    string _countryID = ViewBag.countryID.ToString();
+}
+<script>
+    $('select[name=DDLCountry]').val('@_countryID');
+    function loadHolidayByCountry(ddl) {
+        var ddlVal = $(ddl).val();
+        if (!isNullOrEmpty(ddlVal))
+            hr.Holiday(ddlVal);
+        else
+            hr.Holiday(null);
+    }
+</script>
+
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+
+        <span style="width: 200px; display: inline-block;"><i class="icon-table"></i>Holidays</span>
+        <div class="toolbar">
+            @if (MVCUtility.IsSuperAdmin())
+            {
+
+                List<SelectListItem> locationList = (List<SelectListItem>)ViewData["countryList"];
+               
+                
+                @Html.DropDownList("DDLCountry", locationList, new { onchange = "loadHolidayByCountry(this)", @id = "DLLCid" })
+                
+            }
+            <a><i class="icon-plus"></i>@Html.ActionLink("Add New Holiday", "addHoliday", "Settings", null, new { @style = "margin-right:19px;" })</a>
+            <a href="javascript:"><i class="icon-refresh" onclick="hr.Holiday(null);"></i></a>
+        </div>
+    </div>
+    <input type="hidden" name="cname" id="cid" />
+    <div class="mws-panel-body no-padding">
+        <table class="mws-datatable-fn mws-table">
+            <thead>
+                <tr role="row">
+                    <th>Office Location</th>
+                    <th>Holiday Name</th>
+                    <th>Holiday Date</th>
+                    <th>Apply To Staff</th>
+                    <th>Edit
+
+                    </th>
+                    <th>Delete
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody role="alert" aria-live="polite" aria-relevant="all">
+
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @if (item.EmployeeLocation != null)
+                            {
+                                @item.EmployeeLocation.LocationName
+                            }
+                        </td>
+                        <td>
+                            @item.HolidayName
+                        </td>
+                        <td>@if (item.HolidayDate != null)
+                            {
+                            @item.HolidayDate.ToShortDateString()
+                            }
+                        </td>
+                        <td>@if (item.ApplyToStaff == true)
+                            {
+                                @:Yes
+                            }
+                            else
+                            {
+                                @:No
+                            }
+                        </td>
+                        <td class=" sorting_1">
+                            @Html.ActionLink(" ", "editHoliday", new { id = item.HolidayID }, new { @class = "btn btn-primary btn-small icon-edit" })
+                        </td>
+
+                        <td class=" sorting_1">
+                            @Html.ActionLink(" ", "deleteHoliday", new { id = item.HolidayID }, new { @class = "btn btn-danger btn-small icon-trash", onclick = "return confirm('Are you sure want to delete this record ?')" })
+                        </td>
+                    </tr>
+                }
+
+
+            </tbody>
+        </table>
+    </div>
+
+</div>

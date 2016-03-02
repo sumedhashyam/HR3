@@ -1,0 +1,136 @@
+﻿@model IEnumerable<DAO.EmployeeLeaveRequest>
+
+@{
+    ViewBag.Title = "Vacation Report";
+    Layout = "~/Views/Shared/PrintLayout.cshtml";
+}
+
+<link href="../../Content/print.css" rel="stylesheet" />
+<img src="/images/mws-logo.png" alt="mws admin">
+<div style="text-align: center">
+    <h4>Vacation Report of Year @DateTime.Now.Year</h4>
+</div>
+
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        <span style="width: 200px; display: inline-block;">&nbsp;</span>
+    </div>
+    <div class="mws-panel-body no-padding">
+        <table class="mws-datatable-fn mws-table">
+
+            <thead>
+
+                <tr>
+                    <th>Employee
+                    </th>
+                    <th>Location</th>
+                    <th>Department</th>
+                    <th>Vacation/Leave
+                    </th>
+                    <th>Start Date
+                    </th>
+                    <th>End Date
+                    </th>
+                    @*<th>No. of Days
+                    </th>*@
+                    <th>No. of Leave Days
+                    </th>
+
+                    <th>Status
+                    </th>
+                    @*<th>Show
+                    </th>*@
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    bool isHalfDay = false;
+                    if (item.HalfDay == true && item.AssignedDate == 1)
+                    {
+                        isHalfDay = true;
+                    }
+
+                    bool isCancelled = false;
+                    if (item.Status.Trim().ToLower() == "approved" && item.Cancel.HasValue && item.Cancel.Value == true)
+                    {
+                        isCancelled = true;
+                    }
+                    <tr>
+                        <td>
+                            @item.Employee.FirstNameEn &nbsp;@item.Employee.LastNameEn
+                        </td>
+                        <td>
+                            @if (item.Employee.EmployeeLocation != null)
+                            {
+                                @item.Employee.EmployeeLocation.LocationName
+                            }
+                        </td>
+                        <td>
+                            @if (item.Employee.Department != null)
+                            {
+                                @item.Employee.Department.DepartmentNameEn
+                            }
+                        </td>
+                        <td>
+
+                            @if (item.LeaveType != null)
+                            {
+                                @item.LeaveType.LeaveTypeName
+                            }
+                        </td>
+                        <td>
+                            @if (item.FromDate.HasValue)
+                            {
+                                @item.FromDate.Value.DayOfWeek @:,  @item.FromDate.Value.ToString("dd-MMM-yyyy")
+                           }
+                        </td>
+                        <td>
+                            @if (item.ToDate.HasValue)
+                            {
+                                @item.ToDate.Value.DayOfWeek @:,  @item.ToDate.Value.ToString("dd-MMM-yyyy")
+                           }
+                        </td>
+                        @*  <td>
+                            @if (isHalfDay)
+                            {
+                                @:1/2
+                            }
+                            else if (item.ActualDate != null)
+                            { 
+                                @item.ActualDate
+                            }
+                        </td>*@
+                        <td>
+                            @if (isHalfDay)
+                            {
+                                @:1/2
+                            }
+                            else if (item.AssignedDate != null)
+                            { 
+                                @Html.DisplayFor(modelItem => item.AssignedDate)
+                            }
+                        </td>
+                        <td>
+                            @if (isCancelled)
+                            {
+                                @:CANCELLED
+                            }
+                            else
+                            {
+                                @item.Status.ToUpper()
+                            }
+                        </td>
+                        @*<td>
+                            <a class="btn btn-info">Show</a>
+                        </td>*@
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+

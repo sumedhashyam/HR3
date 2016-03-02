@@ -1,0 +1,29 @@
+﻿@if (TempData["success"] != null)
+{
+ <style type="text/css">
+
+     .alignCenter {
+         margin: 7px auto;
+     }
+
+     .width400 {
+         width: 400px;
+     }
+     
+ </style>
+
+        <div class="alert alert-success  width400 fade in alignCenter" >
+            <a href="#" class="close" data-dismiss="alert">×</a>
+            @TempData["success"].ToString()
+        </div>
+    
+}
+else if (TempData["error"] != null)
+{
+   
+        <div class="alert alert-danger width400 fade in alignCenter" style="margin:7px auto; width:309px; margin-bottom:26px;">
+            <a href="#" class="close" data-dismiss="alert">×</a>
+            @TempData["error"].ToString()
+        </div>
+    
+}

@@ -1,0 +1,36 @@
+﻿@model IEnumerable<DAO.TimeSheetMaster>
+@{
+    List<DAO.TimeSheetMaster> li = Model.Where(a => a.IsSubmit.HasValue == true && a.Status == null).ToList();
+}
+<div id="mws-user-notif" class="mws-dropdown-menu">
+    <a href="#" data-toggle="dropdown" class="mws-dropdown-trigger"><i class="icon-calendar"></i></a>
+
+    <!-- Unread notification count -->
+    <span class="mws-dropdown-notif">@li.Count()</span>
+
+    <!-- Notifications dropdown -->
+    <div class="mws-dropdown-box">
+        <div class="mws-dropdown-content">
+            <ul class="mws-notifications">
+                @foreach (var item in li)
+                {
+                    <li class="read">
+                        <a href="@Url.Content("~/Employee/TimesheetSummary?EmployeeID=" + item.EmpID + "&TimesheetMasterId=" + item.TimeSheetMasterID)">
+                            <span class="message">
+                                @if (item.Employee != null)
+                                {
+                                    @string.Format("{0} {1} ", item.Employee.FirstNameEn, item.Employee.LastNameEn);
+                                }
+                            </span>
+                            <span class="time">Timesheet Pending @item.Month , @item.Year</span>
+                        </a>
+                    </li>
+                }
+
+            </ul>
+            <div class="mws-dropdown-viewall">
+                <a href="@Url.Content("~/Employee/PendingTimesheets")">View All Timesheet Notifications</a>
+            </div>
+        </div>
+    </div>
+</div>

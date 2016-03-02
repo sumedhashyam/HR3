@@ -1,0 +1,226 @@
+﻿@model IEnumerable<HR_System.Models.EmployeeLeaveModified>
+@using DAO
+@{
+    Employee _Employee = ViewBag.Employee as Employee;
+}
+
+<script>
+    //$(".mws-datatable-fn").dataTable({
+    //    sPaginationType: "full_numbers"
+    //});
+    makeNumeric();
+    bindOnchnageOfNumber();
+    if (isInEditMode()) {
+
+    } else {
+        setData();
+    }
+
+</script>
+
+
+@{Html.RenderPartial("EmployeeDetail", _Employee);}
+@{
+    bool edit = ViewBag.edit != null ? Convert.ToBoolean(ViewBag.edit.ToString()) : false;
+    string year = ViewBag.currentYear.ToString();
+    string returnUrl = Url.Content("~/Report/LeaveBalance/" + _Employee.EmployeeID + "?returnUrl=" + ViewBag.returnUrl);
+
+    List<LeaveType> leaveTypeList = ViewBag.leaveTypeList as List<LeaveType>;
+}
+
+<div style="text-align: center">
+    <h4>Carry Forward - Year @year</h4>
+</div>
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        <span style="width: 200px; display: inline-block;"><i class="icon-table"></i>Carry Forward - Year @year</span>
+        <div class="toolbar">
+            <a style="margin-right:20px" href="@returnUrl">Back</a>
+            <a><i class="icon-refresh" onclick="reports.loadCarryForward('@_Employee.EmployeeID');"></i></a>
+        </div>
+
+    </div>
+    <form id="carry-forward">
+        <input type="hidden" id="returnurl" value="@returnUrl" />
+        <input type="hidden" name="hfEdit" value="@edit.ToString().ToLower()" />
+        <input type="hidden" name="hfyear" value="@year" />
+        <input type="hidden" name="hfemployeeID" value="@_Employee.EmployeeID" />
+        <input type="hidden" name="hfCount" value="@Model.Count()" />
+
+
+        @* @if (!edit)
+        { *@
+        <div class="mws-panel-body no-padding">
+            <table class="mws-datatable-fn mws-table">
+
+                <thead>
+
+                    <tr>
+                        <th>No.</th>
+                        <th>Type</th>
+@*                       <th>@{string lastyear = (int.Parse(System.DateTime.Now.Date.Year.ToString()) - 1).ToString();}@lastyear</th>*@
+                        <th>@{string lastyear = (int.Parse(System.DateTime.Now.Date.Year.ToString()) - 1).ToString();}@lastyear</th>
+                        <th>Carry-Forward(@System.DateTime.Now.Date.Year.ToString())</th>
+                        <th>Current</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @{int i = 1;
+                      Dictionary<Guid, decimal> lastYearBalance = new Dictionary<Guid, decimal>();
+                      if (ViewBag.lastYearBalance != null)
+                      {
+                          lastYearBalance = ViewBag.lastYearBalance as Dictionary<Guid, decimal>;
+                      }
+                      Dictionary<Guid, decimal> postponedBalance = new Dictionary<Guid, decimal>();
+                      if (ViewBag.PostponedLeaves != null)
+                      {
+                          postponedBalance = ViewBag.PostponedLeaves as Dictionary<Guid, decimal>;
+                      }
+                      int MaxCarryForward = 15;
+                      if (System.Web.Configuration.WebConfigurationManager.AppSettings["MaxCarryForward"] != null)
+                      {
+                          MaxCarryForward = Convert.ToInt32(System.Web.Configuration.WebConfigurationManager.AppSettings["MaxCarryForward"].ToString());
+                      }
+                    
+                    }
+                    @foreach (var item in Model)
+                    {
+                        LeaveType objLeaveType = null;
+                        if (leaveTypeList != null)
+                        {
+                            objLeaveType = leaveTypeList.Where(a => a.LeaveTypeID == item.LeaveTypeID).FirstOrDefault();
+                        }
+
+
+                        bool leaveCheckBox = false;
+                        bool postponedCheckBox = false;
+                        decimal defaultLeaves = 0;
+                        if (edit)
+                        {
+                            defaultLeaves = item.IssuedLeaves;
+                            //leaveCheckBox = lastYearBalance.Any(b => (b.Value == item.BalanceLeaves && b.Key == item.LeaveTypeID));
+                            #region getting previous year balance
+                            bool exist = lastYearBalance.Any(b => b.Key == item.LeaveTypeID);
+                            
+                            if (exist)
+                            {
+                                KeyValuePair<Guid, decimal> keyVal = lastYearBalance.Where(b => b.Key == item.LeaveTypeID).FirstOrDefault();
+                                if (keyVal.Value >0)
+                                {
+                                    leaveCheckBox = lastYearBalance.Any(b => (b.Value == item.BalanceLeaves && b.Key == item.LeaveTypeID));
+                                }
+                                else
+                                {
+                                    leaveCheckBox = lastYearBalance.Any(b => (item.BalanceLeaves == MaxCarryForward && b.Key == item.LeaveTypeID));
+
+                                }
+                            }
+                            bool isExist = postponedBalance.Any(b => b.Key == item.LeaveTypeID);
+                            if (isExist)
+                            {
+                                KeyValuePair<Guid, decimal> keyVal = postponedBalance.Where(b => b.Key == item.LeaveTypeID).FirstOrDefault();
+                                if (keyVal.Value > 0)
+                                {
+                                    postponedCheckBox = postponedBalance.Any(b => (b.Value == item.PostponedLeave && b.Key == item.LeaveTypeID));
+                                }
+                                else
+                                {
+                                    postponedCheckBox = postponedBalance.Any(b => (item.PostponedLeave == MaxCarryForward && b.Key == item.LeaveTypeID));
+
+                                }
+                            }
+                            item.BalanceLeaves = lastYearBalance[item.LeaveTypeID];
+                            item.PrevLeaves = postponedBalance[item.LeaveTypeID];
+                            #endregion
+                        }
+                        else
+                        {
+                            if (objLeaveType != null)
+                            {
+                                defaultLeaves = objLeaveType.DefaultLeaves ?? 0;
+                            }
+                        }
+                           
+                        <tr class="carryforward">
+                            <td>@i</td>
+                            <td>
+                                @if (objLeaveType != null)
+                                {
+                                    @objLeaveType.LeaveTypeName
+                                }
+                                <input type="hidden" name="@string.Format("hfLeaveTypeID_{0}", i)" value="@item.LeaveTypeID"/>
+                            </td>
+@*                            <td>@Html.DisplayFor(modelItem => item.PostponedLeave)
+                                @if (item.PostponedLeave > MaxCarryForward)
+                                {
+                                    string _MaxCarryForward = MaxCarryForward.ToString() + ".00";                                   
+                                    <input type="hidden" class="postpBalance" name="@string.Format("postpBalance_{0}", i)" value="@_MaxCarryForward" />
+                                }
+                                else
+                                {
+                                  <input type="hidden" class="postpBalance" name="@string.Format("postpBalance_{0}", i)" value="@item.PostponedLeave" />
+                                }
+                            </td>*@
+                            <td>@*@Html.DisplayFor(modelItem => item.PrevLeaves)*@                               
+                                @if (item.PrevLeaves > MaxCarryForward)
+                                {
+                                    string _MaxCarryForward = MaxCarryForward.ToString() + ".00"; 
+                                     @Html.CheckBox("chboxpostponedLeaves_" + i, true, new { @class = "chboxpostponedLeaves", onchange = "setData()" })
+                                    @_MaxCarryForward                                  
+                                    <input type="hidden" class="postpBalance" name="@string.Format("postpBalance_{0}", i)" value="@_MaxCarryForward" />
+                                }
+                                else
+                                {
+                                    @*@Html.CheckBox("chboxpostponedLeaves_" + i, postponedCheckBox, new { @class = "chboxpostponedLeaves", onchange = "setData()" })*@
+                                    
+                                        @Html.CheckBox("chboxpostponedLeaves_" + i, true, new { @class = "chboxpostponedLeaves", onchange = "setData()" })
+                                   @Html.DisplayFor(modelItem =>item.PrevLeaves)
+                                  <input type="hidden" class="postpBalance" name="@string.Format("postpBalance_{0}", i)" value="@item.PrevLeaves" />
+                                }
+                            </td>
+                            <td>@*@if (item.BalanceLeaves > MaxCarryForward)
+                                {
+                                    string _MaxCarryForward = MaxCarryForward.ToString() + ".00";
+                                    @Html.CheckBox("chboxBalanceLeaves_" + i, leaveCheckBox, new { @class = "chboxBalanceLeaves", onchange = "setData()" })
+                                    @_MaxCarryForward
+                                    <input type="hidden" class="hfbalanceLeaves" name="@string.Format("balanceLeaves_{0}", i)" value="@_MaxCarryForward" />
+                                }
+                                else
+                                { *@
+@*                                      @Html.CheckBox("chboxBalanceLeaves_" + i,leaveCheckBox, new { @class = "chboxBalanceLeaves", onchange = "setData()" })*@
+
+                                    @Html.CheckBox("chboxBalanceLeaves_" + i, true, new { @class = "chboxBalanceLeaves", onchange = "setData()" })
+                                    @Html.DisplayFor(modelItem => item.IssuedLeaves)
+                                   <input type="hidden" class="hfbalanceLeaves" name="@string.Format("balanceLeaves_{0}", i)" value="@item.IssuedLeaves" />
+                               @* }*@
+                            </td>
+                            <td><input type="number" class="txtleaves numeric" name="@string.Format("leaves_{0}", i)" min="0" max="50" value="@Convert.ToInt32(defaultLeaves)" /></td>
+
+                            <td>
+                                <label class="lbltotalLeaves">@defaultLeaves </label>
+                                <input type="hidden" class="txttotalLeaves" name="@string.Format("totalLeaves_{0}", i)" value="@defaultLeaves" />
+                            </td>
+
+                        </tr>
+                                i++;
+                    }
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+
+                        <td>
+                            <a class="btn btn-info" onclick="return saveCarryForward();">Save</a>
+                            <a href="@returnUrl" class="btn btn-danger">Cancel</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        @* }*@
+
+    </form>
+</div>

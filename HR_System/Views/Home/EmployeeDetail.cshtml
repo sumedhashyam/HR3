@@ -1,0 +1,278 @@
+﻿@model HR_System.Models.EmpPersonalDetailModel
+@using DAO;
+@{
+    ViewBag.Title = "EditEmployee";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+}
+
+@*<h2>Employee Detail</h2>*@
+<style type="text/css">
+    .mws-form-item {
+        line-height: 28px;
+    }
+
+    .days-week {
+        width: 110px;
+    }
+
+        .days-week p {
+            text-align: right;
+        }
+
+        .days-week ul.inline {
+            list-style: none;
+            margin: 0px;
+            padding: 0px;
+        }
+
+            .days-week ul.inline li {
+                display: inline-block;
+                padding: 5px;
+            }
+
+                .days-week ul.inline li .d {
+                    margin-left: 38px;
+                }
+
+    .mws-form .mws-form-row {
+        padding: 6px 24px;
+    }
+
+    .mws-form .mws-form-inline .mws-form-label {
+        font-weight: bold;
+    }
+
+    .mws-form fieldset {
+        padding-top: 15px;
+    }
+</style>
+<script type="text/javascript">
+
+    $(function () {
+        $wzd_v_form = $('.wzd-vertical').validate({ onsubmit: false });
+
+        $('.wzd-vertical').wizard({
+            orientation: 'vertical',
+            buttonContainerClass: 'mws-button-row',
+            onStepLeave: function (wizard, step) {
+                return $wzd_v_form.form();
+            },
+            onBeforeSubmit: function () {
+                return $wzd_v_form.form();
+            }
+        });
+
+        //hr.loadEmployeeDetailPV('@ViewBag.EmployeeID');
+        $('#navigation li').removeClass('active');
+        $('#msystem').addClass('active');
+
+
+        $('button[name=wizard-submit]').remove();
+    });
+
+</script>
+<input type="hidden" id="empid" name="id" value="@ViewBag.EmployeeID" />
+
+@{Html.RenderPartial("Notification");}
+<div id="main-content" class="row-fluid">
+
+    <div class="mws-panel grid_8">
+        <div class="mws-panel-header" style="position: relative">
+            <span><i class="icon-magic"></i>Employee Information
+
+                 <div class="toolbar" style="position: absolute; right: 20px; top: 13px;">
+                     <a href="@Url.Content("~/Home/Employee")">Back</a>
+                 </div>
+
+            </span>
+
+        </div>
+        <div class="mws-panel-body no-padding">
+            <form class="mws-form wzd-vertical">
+                @{ Employee ObjEmp = (Employee)ViewBag.EmpDetail;
+               
+
+                    <fieldset class="wizard-step mws-form-inline">
+                        <legend class="wizard-label"><i class="icol-accept"></i>Personal Information</legend>
+                        <div class="mws-form-row">
+                            <label class="mws-form-label">Country</label>
+                            <div class="mws-form-item">
+                                @ObjEmp.CountryOffice.CountryName
+                            </div>
+                        </div>
+                        <div class="mws-form-row">
+                            <label class="mws-form-label">Name Ar.</label>
+                            <div class="mws-form-item">
+                                @string.Format("{0} {1} {2} {3}", ObjEmp.FirstNameAr, ObjEmp.SecondNameAr, ObjEmp.ThirdNameAr, ObjEmp.LastNameAr)
+                            </div>
+                        </div>
+                        <div class="mws-form-row">
+                            <label class="mws-form-label">Name En.</label>
+                            <div class="mws-form-item">
+                                @string.Format("{0} {1} {2} {3}", ObjEmp.FirstNameEn, ObjEmp.SecondNameEn, ObjEmp.ThirdNameEn, ObjEmp.LastNameEn)
+                            </div>
+                        </div>
+                        <div class="mws-form-row">
+                            <label class="mws-form-label">Birth Date</label>
+                            <div class="mws-form-item">
+                                @if (ObjEmp.DateOfBirth.HasValue)
+                                {
+                                    @ObjEmp.DateOfBirth.Value.ToShortDateString()
+                                }
+                            </div>
+                        </div>
+                        <div class="mws-form-row">
+                            <label class="mws-form-label">Marital Status</label>
+                            <div class="mws-form-item">
+                                @if (ObjEmp.MaritalStatus == true)
+                                {
+                                    <span>Married</span>}
+                                @if (ObjEmp.MaritalStatus == false)
+                                {
+                                    <span>Unmarried</span>}
+                            </div>
+                        </div>
+                        <div class="mws-form-row">
+                            <label class="mws-form-label">Gender</label>
+                            <div class="mws-form-item">
+                                <span>@ObjEmp.Gender</span>
+                            </div>
+                        </div>
+                        @if (ObjEmp.aspnet_Users != null)
+                        {
+                            <div class="mws-form-row">
+                                <label class="mws-form-label">Username</label>
+                                <div class="mws-form-item">
+                                    @ObjEmp.aspnet_Users.UserName
+                                </div>
+                            </div>
+                            <div class="mws-form-row">
+                                <label class="mws-form-label">Email</label>
+                                <div class="mws-form-item">
+                                    @ObjEmp.Email
+                                </div>
+                            </div>
+                        }
+
+                    </fieldset>
+               
+                    <fieldset class="wizard-step mws-form-inline">
+                        <legend class="wizard-label"><i class="icon-list-2"></i>Job Information</legend>
+                        <div class="mws-form-row">
+                            <label class="mws-form-label">Hire Date</label>
+                            <div class="mws-form-item">
+                                @if (ObjEmp.HireDate.HasValue)
+                                {
+                                    @ObjEmp.HireDate.Value.ToShortDateString()}
+                            </div>
+                        </div>
+                        <div class="mws-form-row">
+                            <label class="mws-form-label">Office Location</label>
+                            <div class="mws-form-item">
+                                @ViewBag.LocationName
+                            </div>
+                        </div>
+                        <div class="mws-form-row">
+                            <label class="mws-form-label">Department</label>
+                            <div class="mws-form-item">
+                                @if (ObjEmp.Department != null)
+                                {
+                                    @ObjEmp.Department.DepartmentNameEn}
+                            </div>
+                        </div>
+                        <div class="mws-form-row">
+                            <label class="mws-form-label">Job Type (Designation)</label>
+                            <div class="mws-form-item">
+                                @if (ObjEmp.JobType != null)
+                                {
+                                    @ObjEmp.JobType.JobTypeName}
+                            </div>
+                        </div>
+
+                        <div class="mws-form-row">
+                            <label class="mws-form-label">Employee Status</label>
+                            <div class="mws-form-item">
+                                @if (ObjEmp.EmployeeStatus.Value == true)
+                                {
+                                    <span>Active</span>}
+                                @if (ObjEmp.EmployeeStatus.Value == false)
+                                {
+                                    <span>InActive</span>}
+                            </div>
+                        </div>
+                        <div class="mws-form-row">
+                            <label class="mws-form-label">Supervisor</label>
+                            <div class="mws-form-item">
+                                @ViewBag.Supervisor
+                            </div>
+                        </div>
+                        <div class="mws-form-row">
+                            <label class="mws-form-label">Alternative Supervisor</label>
+                            <div class="mws-form-item">
+                                @ViewBag.AlternativeSupervisor
+                            </div>
+                        </div>
+
+                        <div class="mws-form-row">
+                            <label class="mws-form-label">Weekend</label>
+                            <div class="mws-form-item">
+                                <div class="days-week">
+
+                                    <ul class="inline">
+                                        <li><span class="d"><b>Day</b></span></li>
+                                        @foreach (Weekend objw in ObjEmp.Weekends)
+                                        {
+                                       
+                                            <li><span class="d">@objw.WeekEndName</span></li>
+                                        
+                                        }
+                                    </ul>
+
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                }
+                <fieldset class="wizard-step mws-form-inline">
+                    <legend class="wizard-label"><i class="icon-snowy-2"></i>Leaves</legend>
+
+                    <div class="mws-form-row">
+                        <label class="mws-form-label">Leaves - Year @DateTime.Now.Year</label>
+                        <div class="mws-form-item">
+                            <ul>
+                                @foreach (var item in ObjEmp.EmployeeLeaves.Where(a => a.Year == DateTime.Now.Year))
+                                {
+                                    if (item.LeaveType != null)
+                                    {
+                                    <li>@item.LeaveType.LeaveTypeName - @item.TotalLeaves</li>
+                                    }
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset class="wizard-step mws-form-inline">
+                    <legend class="wizard-label"><i class="icol-table"></i>Projects</legend>
+
+                    <div class="mws-form-row">
+                        <label class="mws-form-label">Projects</label>
+                        <div class="mws-form-item">
+                            <ul>
+                                @foreach (var item in ObjEmp.EmployeeProjects)
+                                {
+                                    if (item.Project != null && item.FromDate.HasValue && item.ToDate.HasValue)
+                                    {
+                                    <li>
+                                        @item.Project.ProjectName From <b>@item.FromDate.Value.ToString("dd-MMM-yyyy")</b> To <b>@item.ToDate.Value.ToString("dd-MMM-yyyy")</b>
+                                    </li>
+                                    }
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+
+</div>

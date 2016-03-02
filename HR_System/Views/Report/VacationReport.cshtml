@@ -1,0 +1,57 @@
+﻿@{
+    ViewBag.Title = "VacationReport";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+}
+
+<script src="@Url.Content("~/Scripts/Custom/CarryForward.js")"></script>
+<style type="text/css">
+    .error {
+        border: 1px solid red !important;
+    }
+</style>
+<script type="text/javascript">
+    $(function () {
+        reports.loadVacationReport();
+    });
+</script>
+@*<script>
+    addDatepickerSimple();
+</script>*@
+
+
+<script type="text/javascript">
+
+    function DoSubmit() {
+
+        $.ajax({
+            type: "POST",
+            data: $('#FormTerm').serialize(),
+            url: '/Employee/HRFunctionsTerminatePV',
+            success: function (data) {
+                if (data.success) {
+                    window.location.href = "HRFunctions";
+                }
+                else {
+                    alert('Error');
+                }
+            },
+            error: function (data) {
+                alert("error occured");
+            }
+
+        });
+    }
+
+
+</script>
+
+
+
+@{Html.RenderPartial("Notification");}
+
+
+
+
+<div id="main-content" class="row-fluid">
+</div>
+

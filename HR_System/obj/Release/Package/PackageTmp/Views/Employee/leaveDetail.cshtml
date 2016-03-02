@@ -1,0 +1,70 @@
+﻿@model DAO.EmployeeLeaveRequest
+@{
+    ViewBag.Title = "leaveDetail";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+}
+@{
+    Guid? req_ID = (Guid)ViewData["req_ID"];
+}
+<h2>Detail For This Leave</h2>
+
+<div class="mws-panel grid_8" style="text-align: right; box-shadow: none;">
+    @Html.ActionLink("Back", "leaveData", "Employee", null, new { @class = "btn btn-primary" })
+</div>
+@{Html.RenderPartial("Notification");}
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        <span>Detail For This Leave</span>
+    </div>
+    <div class="mws-panel-body no-padding">
+
+        @using (Html.BeginForm("", "Employee", FormMethod.Post, new { @class = "mws-form" }))
+        {
+            @Html.ValidationSummary(true)
+     
+            <div id="mws-validate-error" class="mws-form-message error" style="display: none;"></div>
+            <div class="mws-form-inline">
+                <div class="mws-form-row">
+                    <label class="mws-form-label">Select Leave Type</label>
+                    <div class="mws-form-item">
+                        @{ List<SelectListItem> locationList = (List<SelectListItem>)ViewData["listLeave"];
+                        }
+                        @Html.DropDownListFor(a => a.LeaveTypeID, locationList, new { @style = "width: 347px;margin-left:22px;" })
+
+                        @Html.ValidationMessageFor(model => model.LeaveTypeID)
+
+
+                    </div>
+                    <div class="mws-form-row">
+                        <label class="mws-form-label">Reason</label>
+                        <div class="mws-form-item">
+                            @Html.TextAreaFor(a => a.LeaveReason, new { @class = "required", @cols = 40, @readonly = true })
+                            @Html.ValidationMessageFor(a => a.LeaveReason)
+                        </div>
+                    </div>
+                    <div class="mws-form-row">
+                        <label class="mws-form-label">From:</label>
+                        <div class="mws-form-item">
+                            @Html.TextBoxFor(a => a.FromDate, new { @id = "news_date", @name = "news_date", @class = "required", @style = "width: 347px;", @readonly = true })
+                            @* <input type="text" id="news_date" name="news_date" class="required" style="width: 347px;" />*@
+                            <span id="erreor"></span>
+                        </div>
+                    </div>
+
+                    <div class="mws-form-row" id="endDateDiv">
+                        <label class="mws-form-label">To:</label>
+                        <div class="mws-form-item">
+                            @Html.TextBoxFor(a => a.ToDate, new { @id = "endDate", @name = "end_date", @style = "width: 347px;", @readonly = true })
+                            @*  <input type="text" id="endDate" name="end_date" style="width: 347px;" />*@
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
+
+
+

@@ -1,0 +1,106 @@
+﻿@model IEnumerable<HR_System.Models.LeaveSummaryVM>
+@using DAO
+@{
+    //reports.loadTimesheetSummary('@EmployeeID', '@TimeSheetMasterID')
+    Guid TimesheetMasterId = new Guid(ViewBag.TimesheetMasterId.ToString());
+    Employee _Employee = ViewBag.Employee as Employee;
+    string returnUrl = "";
+    string returnUrlAsParam = null;
+    if (ViewBag.returnUrl != null && !string.IsNullOrEmpty(ViewBag.returnUrl.ToString()))
+    {
+        returnUrl = ViewBag.returnUrl.ToString();
+        returnUrlAsParam = returnUrl;
+    }
+    else
+    {
+        returnUrl = Url.Content("~/Report/Timesheet/" + _Employee.EmployeeID + "?returnUrl=/Report/Index");
+    }
+}
+
+<script>
+    $(".mws-datatable-fn").dataTable({
+        sPaginationType: "full_numbers"
+    });
+</script>
+
+
+@{Html.RenderPartial("EmployeeDetail", _Employee);}
+<div style="text-align: center">
+
+    <h4>@ViewBag.monthyear</h4>
+    <h4>@ViewBag.totalHours</h4>
+    <h4>@ViewBag.productiveHours </h4>
+    <h4>@ViewBag.status</h4>
+</div>
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        <span style="width: 200px; display: inline-block;"><i class="icon-table"></i>Timesheet Summary</span>
+        <div class="toolbar">
+            <a style="margin-right:20px" href="@Url.Content(returnUrl)">Back</a>
+            <a onclick="reports.loadTimesheetSummary('@_Employee.EmployeeID','@TimesheetMasterId','@returnUrlAsParam');"><i class="icon-refresh"></i></a>
+        </div>
+
+    </div>
+    <div class="mws-panel-body no-padding">
+        <table class="mws-datatable-fn mws-table">
+
+            <thead>
+                <tr role="row">
+                    <th>Project Name
+                    </th>
+                    <th>Project Number
+                    </th>
+                    <th>Total Hours
+                    </th>
+                    <th>Percentage
+                    </th>
+
+
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                 
+                    decimal TotalHours = Model.Where(a => a.isLeave == false).Sum(a => a.hour);
+
+                    foreach (var item in Model)
+                    {
+
+                        decimal hour = item.hour;
+                        decimal percentage = 0;
+                        try
+                        {
+                            percentage = (hour * 100) / TotalHours;
+                        }
+                        catch (Exception ee)
+                        {
+                        }
+                        item.percentage = Math.Round(percentage, 2);
+                    <tr>
+                        <td>
+                            @item.projectName
+                        </td>
+                        <td>@item.projectNumber</td>
+                        <td>
+                            @item.hour
+                        </td>
+                        <td>
+                            @if (item.isLeave == true)
+                            {
+
+                            }
+                            else if (item.percentage.HasValue)
+                            {
+                                @item.percentage @:%
+                            }
+                        </td>
+
+
+                    </tr>
+                    }
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>

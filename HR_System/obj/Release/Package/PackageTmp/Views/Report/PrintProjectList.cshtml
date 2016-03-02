@@ -1,0 +1,79 @@
+﻿@model IEnumerable<DAO.EmployeeProject>
+@using DAO
+@{
+    Employee _Employee = ViewBag.Employee as Employee;
+}
+
+@{
+    ViewBag.Title = "Project List";
+    Layout = "~/Views/Shared/PrintLayout.cshtml";
+}
+<link href="../../Content/print.css" rel="stylesheet" />
+<img src="/images/mws-logo.png" alt="mws admin">
+@{Html.RenderPartial("EmployeeDetail", _Employee);}
+<div style="text-align: center">
+    <h4>Project List for the Year <span id="year">@ViewBag.year</span></h4>
+    <span id="empid" style="display:none;">@ViewBag.EmployeeID</span>
+</div>
+
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        <span style="width: 200px; display: inline-block;"><i class="icon-table"></i>&nbsp;</span>        
+    </div>
+    <div class="mws-panel-body no-padding">
+        <table class="mws-datatable-fn mws-table">
+
+            <thead>
+                <tr role="row">
+                    <th>Project Name
+                    </th>
+                    <th>From Date
+                    </th>
+                    <th>To Date
+                    </th>
+                    <th>Is Active
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @if (item.Project != null)
+                            {
+                                @Html.DisplayFor(modelItem => item.Project.ProjectName) <span>-</span> @Html.DisplayFor(modelItem=>item.Project.ProjectNumber)
+                            }
+                        </td>
+                        <td>
+                            @if (item.FromDate.HasValue)
+                            {
+                                @item.FromDate.Value.ToString("dd-MMM-yyyy")
+                            }
+
+                        </td>
+                        <td>
+                            @if (item.ToDate.HasValue)
+                            {
+                                @item.ToDate.Value.ToString("dd-MMM-yyyy")
+                            }
+                        </td>
+                        <td>
+                            @if (item.IsActive == true)
+                            {
+                                @:Yes
+                            }
+                            else
+                            {
+                                @:No
+                            }
+
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

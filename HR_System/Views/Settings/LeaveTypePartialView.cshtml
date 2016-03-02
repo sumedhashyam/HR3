@@ -1,0 +1,75 @@
+﻿<script>
+    $(".mws-datatable-fn").dataTable({
+        sPaginationType: "full_numbers"
+    });
+</script>
+
+
+
+<div class="mws-panel grid_8" style="text-align: right; box-shadow: none;">
+    @*   @Html.ActionLink("Add New", "addLeaveType", "Settings", null, new { @class = "btn btn-primary" })*@
+</div>
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        <span style="width: 200px; display: inline-block;"><i class="icon-table"></i>Leave Type</span>
+        <div class="toolbar">
+            <a><i class="icon-plus"></i>@Html.ActionLink("Add New LeaveType", "addLeaveType", "Settings", null, new { @style = "margin-right:19px;" })</a>
+            <a href="javascript:"><i class="icon-refresh" onclick=" hr.leaveType();"></i></a>
+
+
+        </div>
+    </div>
+    <div class="mws-panel-body no-padding">
+        <table class="mws-datatable-fn mws-table">
+            <thead>
+                <tr role="row">
+                    <th class="sorting" role="columnheader" tabindex="0" aria-controls="demo-dtable-01" rowspan="1" colspan="1" style="width: 226px;" aria-label="Country: activate to sort column ascending">Leave Type</th>
+                    <th>Code
+                    </th>
+
+                    <th>Default Leaves</th>
+                    <th>Color </th>
+                    <th>Edit
+
+                    </th>
+                    <th>Delete
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody role="alert" aria-live="polite" aria-relevant="all">
+
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @item.LeaveTypeName
+                        </td>
+                        <td>
+                            @item.LeaveTypeCode
+                        </td>
+                        <td>
+                            @item.DefaultLeaves
+                        </td>
+                        <td>
+                            <span style="height:50px;width:50px;background-color:@item.LeaveTypeColor">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        </td>
+                        @*  <td class=" sorting_1">
+                                @Html.DisplayFor(modelItem => item.LicenseKey)
+                            </td>*@
+                        <td class=" sorting_1" align="center">
+                            @Html.ActionLink(" ", "editLeaveType", new { id = item.LeaveTypeID }, new { @class = "btn btn-primary btn-small icon-edit" })
+                        </td>
+
+                        <td class=" sorting_1" align="center">
+                            @Html.ActionLink(" ", "delLeaveType", new { id = item.LeaveTypeID }, new { @class = "btn btn-danger btn-small icon-trash", onclick = "return confirm('Are you sure want to delete this record ?')" })
+                        </td>
+                    </tr>
+                }
+
+
+            </tbody>
+        </table>
+    </div>
+</div>

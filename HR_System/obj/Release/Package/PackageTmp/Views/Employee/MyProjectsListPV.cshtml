@@ -1,0 +1,93 @@
+﻿@model IEnumerable<HR_System.Models.EmpProjDetails>
+@using DAO;
+<script>
+    $(".mws-datatable-fn").dataTable({
+        sPaginationType: "full_numbers"
+    });
+</script>
+
+@{
+    string employeeID = ViewBag.employeeID != null ? ViewBag.employeeID.ToString() : "";
+    bool publicEmployee = ViewBag.publicEmployee != null ? Convert.ToBoolean(ViewBag.publicEmployee) : true;
+    string employeeName = ViewBag.Name != null ? ViewBag.Name.ToString() : "";
+    string returnUrl = ViewBag.returnUrl != null ? ViewBag.returnUrl.ToString() : "";
+
+    if (string.IsNullOrEmpty(returnUrl))
+    {
+        returnUrl = Url.Content("~/Employee/ManageStaff");
+    }
+}
+
+
+<div class="mws-panel grid_8">
+    <div class="mws-panel-header">
+        <span style="width: 200px; display: inline-block;"><i class="icon-table"></i>
+            @if (publicEmployee)
+            {
+                @:Projects For @employeeName
+            }
+            else
+            {
+                @:My Projects
+            }
+        </span>
+        <div class="toolbar">
+            @if (publicEmployee)
+            {
+                <a style="margin-right:10px;" href="@returnUrl">Back</a>
+            }else{
+                 
+                @Html.ActionLink("Add Project", "addProject", "Employee", new { id = @employeeID }, new { style="margin-right:10px;"})
+            }
+            <a href="javascript:"><i class="icon-refresh" onclick="hr.loadMyProjectsListPV('@employeeID','@publicEmployee','@returnUrl');"></i></a>
+
+
+        </div>
+
+    </div>
+    <div class="mws-panel-body no-padding">
+        <table class="mws-datatable-fn mws-table">
+            <thead>
+                <tr role="row">
+                    <th>Project Name</th>
+                    <th>From Date</th>
+                    <th>To Date</th>
+                    <th>Is Active</th>
+                </tr>
+            </thead>
+
+            <tbody role="alert" aria-live="polite" aria-relevant="all">
+
+
+                @foreach (var item in Model)
+                {
+                       
+                    <tr>
+                        <td>
+                            @item.ProjectName
+                        </td>
+                        <td>
+                            @item.FromDate.ToString("dd-MMM-yyyy")
+                        </td>
+                        <td>
+                            @item.ToDate.ToString("dd-MMM-yyyy")
+                        </td>
+                        <td>
+                            @if (item.IsProjActive == true)
+                            {
+                                @:Yes
+                            }
+                            else
+                            {
+                                @:No
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+

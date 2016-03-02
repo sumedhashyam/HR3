@@ -1,0 +1,143 @@
+﻿@{
+    ViewBag.Title = "AssignPostponedLeave";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+}
+
+<script type="text/ecmascript">
+    function onsaveClick() {
+        var count = $("#hfCount").val();
+        var i = 0;
+        var isOk = false;
+        if (count != null && count != "") {
+            for (i = 0; i < count; i++) {
+                var posValue = $("#leaves_" + i).val();
+                if (posValue != null && posValue != "") {
+                    isOk = true;
+                }
+                else {
+                    isOk = false;
+                }
+            }
+        }
+        if (isOk) {
+            return isOk;
+        } else {
+            alert("Postponed Leave value can not be empty.");
+            return isOk;
+        }
+
+    }
+</script>
+@{Html.RenderPartial("Notification");}
+<div id="main-content" class="row-fluid">
+    @model IEnumerable<DAO.EmployeeLeaf>
+@using DAO
+    @{
+        Employee _Employee = ViewBag.Employee as Employee;
+    }
+
+
+    @{Html.RenderPartial("EmployeeDetail", _Employee);}
+    @{
+  
+        string year = ViewBag.currentYear.ToString();
+        List<LeaveType> leaveTypeList = ViewBag.leaveTypeList as List<LeaveType>;
+        int i = 0;
+    }
+
+    <div style="text-align: center">
+        <h4>@*Carry Forward - Year @year*@</h4>
+    </div>
+    <div class="mws-panel grid_8">
+        <div class="mws-panel-header">
+            <span style="width: 200px; display: inline-block;"><i class="icon-table"></i>Assign Postponed & Previous Leave@*Carry Forward - Year @year*@</span>
+            <div class="toolbar">
+                <a style="margin-right:20px" href="@Url.Content("~/Employee/HRFunctions")">Back</a>
+
+            </div>
+
+        </div>
+        @using (Html.BeginForm("AssignPostponedLeave", "Employee", FormMethod.Post, new { @class = "mws-form" }))
+        {       
+            <input type="hidden" name="hfyear" value="@year" />
+            <input type="hidden" name="hfemployeeID" value="@_Employee.EmployeeID" />
+            <input type="hidden" name="hfCount" value="@Model.Count()" id="hfCount" />
+
+
+       
+            <div class="mws-panel-body no-padding">
+                <table class="mws-datatable-fn mws-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th align="left">Type</th>
+                            <th colspan="2">Postponed</th>
+                            <th colspan="2">Previous</th>
+                            
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                       
+                        <tr> <th>&nbsp;</th><th>Current</th>
+                            <th>New</th><th>Current</th>
+                            <th>New</th></tr>
+                        @foreach (var item in Model)
+                        {
+                            LeaveType objLeaveType = null;
+                            if (leaveTypeList != null)
+                            {
+                                objLeaveType = leaveTypeList.Where(a => a.LeaveTypeID == item.LeaveTypeID).FirstOrDefault();
+                            }
+
+
+                        
+                            <tr class="carryforward">
+
+                                <td align="left">
+                                    @if (objLeaveType != null)
+                                    {
+                                        @objLeaveType.LeaveTypeName
+                                    }
+                                    <input type="hidden" name="@string.Format("hfLeaveTypeID_{0}", i)" value="@item.LeaveTypeID"/>
+                                    <input type="hidden" name="@string.Format("EmpLeaveID_{0}", i)" value="@item.EmployeeLeaveID"/>
+
+                                </td>
+
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PostponedLeave)
+                                    <input type="hidden" class="postpBalance" name="@string.Format("postpBalance_{0}", i)" value="@item.PostponedLeave" />
+
+                                </td>
+                                <td>
+                                    <input type="text" class="txtleaves numeric" id="@string.Format("leaves_{0}", i)" name="@string.Format("leaves_{0}", i)" value="@item.PostponedLeave" /></td>
+                                <td>@Html.DisplayFor(modelItem => item.BalanceLeaves)
+                                    <input type="hidden" class="prevBalance" name="@string.Format("prevBalance_{0}", i)" value="@item.BalanceLeaves" />
+
+                                </td>
+                                <td><input type="text" class="txtleaves numeric" id="@string.Format("prevleaves_{0}", i)" name="@string.Format("prevleaves_{0}", i)" value="@item.BalanceLeaves" /></td>
+                            </tr>
+                                    i++;
+                        }
+                        <tr>
+                            <td colspan="2"></td>
+                            <td colspan="2"></td>
+
+
+
+                            <td>
+                                <input type="submit" class="btn btn-info" value="Save" onclick="return onsaveClick();" />
+                                <a href="@Url.Content("~/Employee/HRFunctions")" class="btn btn-danger">Cancel</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+     
+
+        }
+    </div>
+
+</div>
