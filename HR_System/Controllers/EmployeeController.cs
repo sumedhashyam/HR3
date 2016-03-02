@@ -541,8 +541,9 @@ namespace HR_System.Controllers
                             }
                             LeaveInmonths = LeaveInmonths * currentMonth;
                         }
-                        leavesRemaining = Math.Round(LeaveInmonths, 2) + serviceBonus;
-                       
+                        //leavesRemaining = Math.Round(LeaveInmonths, 2) + serviceBonus;
+
+                        //leavesRemaining = totalAssignedLeaves;
 
                         #region Calculating leaves taken by user till date
                         var lvs_requset = currentYearsLeaves.Where(a => (a.FromDate.Value.Month >= 10 && a.FromDate.Value.Year == (year - 1)) || (a.ToDate.Value.Month <= currentMonth && a.ToDate.HasValue && a.ToDate.Value.Year == year)).ToList();
